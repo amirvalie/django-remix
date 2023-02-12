@@ -35,12 +35,15 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
     objects=CategoryManager()
+
+    def __str__(self):
+        return self.title
     class Meta:
         verbose_name='دسته بندی'
         verbose_name_plural='دسته بندی ها'
 
 class Artist(models.Model):
-    full_name=models.CharField(
+    name=models.CharField(
         max_length=50,
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
@@ -52,6 +55,8 @@ class Artist(models.Model):
         upload_to='/image/artist',
         verbose_name='عکس هنرمند',
     )
+    def __str__(self):
+        return self.name
     class Meta:
         verbose_name='هنرمند'
         verbose_name_plural='هنرمندان'
@@ -60,13 +65,13 @@ class IpAddress(models.Model):
 	pub_date = models.DateTimeField('زمان اولین بازدید')
 	ip_address = models.GenericIPAddressField(verbose_name='آدرس')
 
+	def __str__(self):
+		return self.ip_address
 	class Meta:
 		verbose_name = "آی‌پی"
 		verbose_name_plural = "آی‌پی ها"
 		ordering = ['pub_date']
 
-	def __str__(self):
-		return self.ip_address
 
 class Track(models.Model):
     title=models.CharField(
@@ -132,6 +137,9 @@ class Track(models.Model):
         )
     preview_url.short_description = "پیش‌نمایش"
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name='موزیک'
         verbose_name_plural='موزیک ها'
@@ -153,6 +161,8 @@ class TrackFile(models.Model):
         upload_to='/music/track_file',
         verbose_name='اپلود فایل'
     )
+    def __str__(self):
+        return 'فایل' + self.track.title
     class Meta:
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
@@ -175,9 +185,13 @@ class Banner(models.Model):
         upload_to='/image/banner',
         verbose_name='عکس',
     )
+
+    def __str__(self):
+        return 'بنر' + self.track.title
     class Meta:
         verbose_name='بنر'
         verbose_name_plural='بنرها'
+
 class OriginalLinkTrack(models.Model):
     MUSIC_PLATFORM=(
         ('youTube.','YouTube'),
@@ -198,6 +212,10 @@ class OriginalLinkTrack(models.Model):
         max_length=500,
         verbose_name='لینک اصلی موزیک را وارد کنید',
     )
+
+    def __str__(self):
+        return 'لینک اصلی' + self.track.title 
+
     class Meta:
         verbose_name='لینک اصلی آهنگ'
         verbose_name_plural='لینک اصلی آهنگ ها'
@@ -242,5 +260,7 @@ class CommingSoon(models.Model):
         default=False,
         verbose_name='وضعیت',
     )
+    def __str__(self):
+        return self.caption
 
 
