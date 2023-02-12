@@ -7,7 +7,7 @@ class About(models.Model):
         verbose_name='توضحیات'
     )
     picture=models.ImageField(
-        upload_to='/',
+        upload_to='/image/profile',
         verbose_name='عکس پروفایل'
     )
     

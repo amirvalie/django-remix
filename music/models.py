@@ -4,6 +4,7 @@ from extentions.utils import jalali_converter
 class TrackManager(models.Manager):
 	def active(self):
 		return self.filter(status=True)
+        
 class CategoryManager(models.Manager):
 	def active(self):
 		return self.filter(status=True)
@@ -24,7 +25,7 @@ class Category(models.Model):
     )
     status=models.BooleanField(
         default=False,
-        verbose_name='انتشار',
+        verbose_name='وضعیت',
     )
     def save(self, *args, **kwargs):
         if not self.status:
@@ -41,14 +42,14 @@ class Category(models.Model):
 class Artist(models.Model):
     full_name=models.CharField(
         max_length=50,
-        verbose_name='نام کامل',
+        verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
     decription=models.TextField(
         verbose_name='توضیحات',
     )
     picture=models.ImageField(
-        upload_to='/artist',
+        upload_to='/image/artist',
         verbose_name='عکس هنرمند',
     )
     class Meta:
@@ -69,11 +70,11 @@ class IpAddress(models.Model):
 
 class Track(models.Model):
     title=models.CharField(
-        max_length=120,
+        max_length=250,
         verbose_name='عنوان',
     )
     slug=models.SlugField(
-        max_length=120,
+        max_length=250,
         verbose_name='لینک',
     )
     category=models.ForeignKey(
@@ -83,26 +84,22 @@ class Track(models.Model):
         verbose_name='دسته بندی',
     )
     description=models.TextField()
-    artist=models.ManyToManyField(
-        Artist,
-        verbose_name='خواننده(ها)',
-    )
     thumbnail=models.ImageField(
-        upload_to='/',
+        upload_to='/image/thumbnail',
         verbose_name='بندانگشتی',
     )
     cover=models.ImageField(
-        upload_to='/cover',
+        upload_to='/image/cover',
         verbose_name='کاور آهنگ',
     )
     best_song=models.BooleanField(
         default=True,
         verbose_name='آهنگ منتخب؟',
-        help_text='اگر میخواهید این آهنگ در قسمت(بهترین هارا گوش داهید)قرار گیرد تیک را بزنید',
+        help_text='اگر میخواهید این آهنگ در قسمت(بهترین هارا گوش دهید)قرار گیرد تیک را بزنید',
     )
     status=models.BooleanField(
         default=False,
-        verbose_name='انتشار',
+        verbose_name='وضعیت',
     )
     hits=models.ForeignKey(
         IpAddress,
@@ -139,27 +136,6 @@ class Track(models.Model):
         verbose_name='موزیک'
         verbose_name_plural='موزیک ها'
 
-class Banner(models.Model):
-    track=models.ForeignKey(
-        Track,
-        on_delete=models.CASCADE,
-        verbose_name='آهنگ',
-        help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
-    )
-    caption=models.CharField(
-        max_length=50,
-        verbose_name='عنوان',
-        help_text='حداکثر 50 کاراکتر مجاز است',
-    )
-    picture=models.ImageField(
-        upload_to='/',
-        verbose_name='عکس',
-    )
-    class Meta:
-        verbose_name='بنر'
-        verbose_name_plural='بنرها'
-
-
 class TrackFile(models.Model):
     MUSIC_QUALITY=(
         ('128','دانلود ترک با کیفیت 128'),
@@ -174,13 +150,34 @@ class TrackFile(models.Model):
         choices=QUALITY,
     )
     track_file=models.FileField(
-        upload_to='/track_file',
+        upload_to='/music/track_file',
         verbose_name='اپلود فایل'
     )
     class Meta:
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
 
+class Banner(models.Model):
+    track=models.ForeignKey(
+        Track,
+        on_delete=models.CASCADE,
+        verbose_name='آهنگ',
+        help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
+    )
+    caption=models.CharField(
+        max_length=50,
+        verbose_name='عنوان',
+        help_text='حداکثر 50 کاراکتر مجاز است',
+        null=True,
+        blank=True
+    )
+    picture=models.ImageField(
+        upload_to='/image/banner',
+        verbose_name='عکس',
+    )
+    class Meta:
+        verbose_name='بنر'
+        verbose_name_plural='بنرها'
 class OriginalLinkTrack(models.Model):
     MUSIC_PLATFORM=(
         ('youTube.','YouTube'),
@@ -189,7 +186,7 @@ class OriginalLinkTrack(models.Model):
     )
     track=models.ForeignKey(
         Track,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
     )
     music_platform_name=models.CharField(
         choices=MUSIC_PLATFORM,
@@ -197,9 +194,9 @@ class OriginalLinkTrack(models.Model):
         verbose_name='شبکه اجتماعی',
         help_text='نام شبکه اجتماعی را وارد کنید',
     )
-    music_platform_link=models.URLField(
+    music_link=models.URLField(
         max_length=500,
-        verbose_name='لینک شبکه اجتماعی هنرمند را وار',
+        verbose_name='لینک اصلی موزیک را وارد کنید',
     )
     class Meta:
         verbose_name='لینک اصلی آهنگ'
@@ -234,12 +231,16 @@ class CommingSoon(models.Model):
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
     thumbnail=models.ImageField(
-        upload_to='/',
+        upload_to='/image/comming_soon',
         verbose_name='بندانگشتی',
     )
     relase_date=models.DateField(
         default=timezone.now(),
         verbose_name='تاریخ انتشار',
+    )
+    status=models.BooleanField(
+        default=False,
+        verbose_name='وضعیت',
     )
 
 
