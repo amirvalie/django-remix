@@ -13,7 +13,10 @@ class About(models.Model):
     )
     def __str__(self):
         return 'درباره'
-
+    
+    class Meta:
+        verbose_name='درباره'
+        
 class Contact(models.Model):
     name=models.CharField(
         max_length=20,
@@ -29,3 +32,7 @@ class Contact(models.Model):
     )
     def __str__(self):
         return self.title
+    class Meta:
+        verbose_name='ارتباط '
+        verbose_name_plural='ارتباط ها'
+        
