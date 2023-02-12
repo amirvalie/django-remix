@@ -16,13 +16,16 @@ class About(models.Model):
     
     class Meta:
         verbose_name='درباره'
+        verbose_name_plural='درباره'
         
 class Contact(models.Model):
     name=models.CharField(
         max_length=20,
         verbose_name='نام'
     )
-    email=models.EmailField()
+    email=models.EmailField(
+        verbose_name='ایمیل'
+    )
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان'
