@@ -1,13 +1,14 @@
 from django.db import models
+from ckeditor.fields import RichTextField 
 
 # Create your models here.
 
 class About(models.Model):
-    description=models.TextField(
+    description=RichTextField(
         verbose_name='توضحیات'
     )
     picture=models.ImageField(
-        upload_to='/image/profile',
+        upload_to='image/profile',
         verbose_name='عکس پروفایل'
     )
     def __str__(self):
@@ -23,7 +24,7 @@ class Contact(models.Model):
         max_length=250,
         verbose_name='عنوان'
     )
-    description=models.TextField(
+    description=RichTextField(
         verbose_name='توضیحات',
     )
     def __str__(self):

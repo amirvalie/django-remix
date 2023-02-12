@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from extentions.utils import jalali_converter
+from ckeditor.fields import RichTextField 
 class TrackManager(models.Manager):
 	def active(self):
 		return self.filter(status=True)
@@ -14,6 +15,8 @@ class Category(models.Model):
         'self',
         on_delete=models.CASCADE,
         verbose_name='والد',
+        blank=True,
+        null=True,
     )
     title=models.CharField(
         max_length=250,
@@ -21,6 +24,7 @@ class Category(models.Model):
     )
     slug=models.SlugField(
         max_length=250,
+        unique=True,
         verbose_name='لینک',
     )
     status=models.BooleanField(
@@ -52,7 +56,7 @@ class Artist(models.Model):
         verbose_name='توضیحات',
     )
     picture=models.ImageField(
-        upload_to='/image/artist',
+        upload_to='image/artist',
         verbose_name='عکس هنرمند',
     )
     def __str__(self):
@@ -80,6 +84,7 @@ class Track(models.Model):
     )
     slug=models.SlugField(
         max_length=250,
+        unique=True,
         verbose_name='لینک',
     )
     category=models.ForeignKey(
@@ -87,14 +92,18 @@ class Track(models.Model):
         on_delete=models.SET_NULL,
         related_name='tracks',
         verbose_name='دسته بندی',
+        null=True,
+        blank=True,
     )
-    description=models.TextField()
+    description=RichTextField(
+        verbose_name='توضحیات'
+    )
     thumbnail=models.ImageField(
-        upload_to='/image/thumbnail',
+        upload_to='image/thumbnail',
         verbose_name='بندانگشتی',
     )
     cover=models.ImageField(
-        upload_to='/image/cover',
+        upload_to='image/cover',
         verbose_name='کاور آهنگ',
     )
     best_song=models.BooleanField(
@@ -122,7 +131,7 @@ class Track(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     publish_time=models.DateTimeField(
-        default=timezone.now()        
+        default=timezone.now       
     )
     objects=TrackManager()
 
@@ -151,14 +160,14 @@ class TrackFile(models.Model):
     )
     track=models.ForeignKey(
         Track,
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
     )
     track_quality=models.CharField(
         max_length=3,
-        choices=QUALITY,
+        choices=MUSIC_QUALITY,
     )
     track_file=models.FileField(
-        upload_to='/music/track_file',
+        upload_to='music/track_file',
         verbose_name='اپلود فایل'
     )
     def __str__(self):
@@ -182,8 +191,9 @@ class Banner(models.Model):
         blank=True
     )
     picture=models.ImageField(
-        upload_to='/image/banner',
+        upload_to='image/banner',
         verbose_name='عکس',
+        help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
     )
 
     def __str__(self):
@@ -242,24 +252,27 @@ class SocialNetwork(models.Model):
         verbose_name='شبکه اجتماعی'
         verbose_name_plural='شبکه های اجتماعی'
 
-class CommingSoon(models.Model):
+class ComingSoon(models.Model):
     caption=models.CharField(
         max_length=50,
         verbose_name='عنوان',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
     thumbnail=models.ImageField(
-        upload_to='/image/comming_soon',
+        upload_to='image/comming_soon',
         verbose_name='بندانگشتی',
     )
     relase_date=models.DateField(
-        default=timezone.now(),
+        default=timezone.now,
         verbose_name='تاریخ انتشار',
     )
     status=models.BooleanField(
         default=False,
         verbose_name='وضعیت',
     )
+    class Meta:
+        verbose_name='به زودی اضافه میشود '
+        verbose_name_plural='به زودی اضافه میشوند'
     def __str__(self):
         return self.caption
 
