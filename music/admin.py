@@ -18,15 +18,15 @@ class OriginalLinkTrackAdmin(admin.TabularInline):
     model=OriginalLinkTrack
     extra=1
 class TrackAdmin(admin.ModelAdmin):
+    list_display=['title','category','best_song','status','jpublish',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
     
-
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    list_display=['title','parent','status',]
+    search_fields=['title']
 
 class ArtistAdmin(admin.ModelAdmin):
-    pass
-
+    list_display=['picture_tag','name']
 class BannerAdmin(admin.ModelAdmin):
     pass
 
