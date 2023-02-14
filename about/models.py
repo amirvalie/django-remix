@@ -38,4 +38,3 @@ class Contact(models.Model):
     class Meta:
         verbose_name='ارتباط '
         verbose_name_plural='ارتباط ها'
-        
