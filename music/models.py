@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 from extentions.utils import jalali_converter
 from ckeditor.fields import RichTextField 
+from django.utils.html import format_html
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
 class TrackManager(models.Manager):
 	def active(self):
 		return self.filter(status=True)
@@ -17,6 +21,7 @@ class Category(models.Model):
         verbose_name='والد',
         blank=True,
         null=True,
+        related_name='child',
     )
     title=models.CharField(
         max_length=250,
@@ -33,12 +38,18 @@ class Category(models.Model):
     )
     def save(self, *args, **kwargs):
         if not self.status:
-            for track in self.tracks.published():
+            for track in self.tracks.active():
                 track.status = 'd'
                 track.save()
         super(Category, self).save(*args, **kwargs)
 
     objects=CategoryManager()
+
+    def clean(self):
+        if self.parent:
+            obj=self.parent
+            if obj.parent:
+                raise ValidationError({'parent':_('غیر مجاز! والد خود دارای والد دیگری میباشد.')})
 
     def __str__(self):
         return self.title
@@ -52,7 +63,7 @@ class Artist(models.Model):
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
-    decription=models.TextField(
+    decription=RichTextField(
         verbose_name='توضیحات',
     )
     picture=models.ImageField(
@@ -61,6 +72,11 @@ class Artist(models.Model):
     )
     def __str__(self):
         return self.name
+    
+    def picture_tag(self):
+        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
+    picture_tag.short_description = " عکس هنرمند"
+
     class Meta:
         verbose_name='هنرمند'
         verbose_name_plural='هنرمندان'
@@ -136,7 +152,7 @@ class Track(models.Model):
     objects=TrackManager()
 
     def jpublish(self):
-        return jalali_converter(self.publish)
+        return jalali_converter(self.publish_time)
     jpublish.short_description = "زمان انتشار"
 
     def preview_url(self):
