@@ -138,12 +138,6 @@ class Track(models.Model):
         null=True,
         editable=False,
     )
-    # comment=models.ForeignKey(
-    #     '',
-    #     on_delete=models.SET_NULL,
-    #     blank=True,
-    #     null=True,
-    # )
 
     created = models.DateTimeField(auto_now_add=True)
     publish_time=models.DateTimeField(
