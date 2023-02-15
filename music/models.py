@@ -131,6 +131,11 @@ class Track(models.Model):
         default=False,
         verbose_name='وضعیت',
     )
+    podcast=models.BooleanField(
+        default=False,
+        verbose_name='پادکست',
+        help_text='اگر این موزیک پادکست است تیک این قسمت را بزنید.'
+    )
     hits=models.ForeignKey(
         IpAddress,
         on_delete=models.SET_NULL,
