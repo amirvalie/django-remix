@@ -7,14 +7,29 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 class TrackManager(models.Manager):
-	def active(self):
-		return self.filter(status=True)
-        
+    def active(self):
+        return self.filter(status=True)
+    def remix(self):
+        return self.filter(status=True,podcast=False)
+    def podcast(self):
+        return self.filter(status=True,podcast=True)
+    def best_songs(self):
+        return self.filter(status=True,best_song=True)
 class CategoryManager(models.Manager):
-	def active(self):
-		return self.filter(status=True)
+    def active(self):
+        return self.filter(status=True)
+
+class AbstractCommon(models.Model):
+    status=models.BooleanField(
+        default=False,
+        verbose_name='وضعیت',
+        help_text='اگر میخواهید این آهنگ منتشر شود تیک این قسمت را بزنید.'
+    )
+    created=models.DateTimeField(auto_now_add=True)
+    class Meta:
+        abstract=True
     
-class Category(models.Model):
+class Category(AbstractCommon):
     parent=models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -32,10 +47,7 @@ class Category(models.Model):
         unique=True,
         verbose_name='لینک',
     )
-    status=models.BooleanField(
-        default=False,
-        verbose_name='وضعیت',
-    )
+
     def save(self, *args, **kwargs):
         if not self.status:
             for track in self.tracks.active():
@@ -70,6 +82,7 @@ class Artist(models.Model):
         upload_to='image/artist',
         verbose_name='عکس هنرمند',
     )
+ 
     def __str__(self):
         return self.name
     
@@ -93,7 +106,7 @@ class IpAddress(models.Model):
 		ordering = ['pub_date']
 
 
-class Track(models.Model):
+class Track(AbstractCommon):
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان',
@@ -125,11 +138,7 @@ class Track(models.Model):
     best_song=models.BooleanField(
         default=True,
         verbose_name='آهنگ منتخب؟',
-        help_text='اگر میخواهید این آهنگ در قسمت(بهترین هارا گوش دهید)قرار گیرد تیک را بزنید',
-    )
-    status=models.BooleanField(
-        default=False,
-        verbose_name='وضعیت',
+        help_text='اگر میخواهید این اهنگ در قسمت بهترین آهنگ ها قرار گیرد تیک این قسمت را بزنید.'
     )
     podcast=models.BooleanField(
         default=False,
@@ -143,8 +152,6 @@ class Track(models.Model):
         null=True,
         editable=False,
     )
-
-    created = models.DateTimeField(auto_now_add=True)
     publish_time=models.DateTimeField(
         default=timezone.now       
     )
@@ -267,7 +274,7 @@ class SocialNetwork(models.Model):
         verbose_name='شبکه اجتماعی'
         verbose_name_plural='شبکه های اجتماعی'
 
-class ComingSoon(models.Model):
+class ComingSoon(AbstractCommon):
     caption=models.CharField(
         max_length=50,
         verbose_name='عنوان',
@@ -280,10 +287,6 @@ class ComingSoon(models.Model):
     relase_date=models.DateField(
         default=timezone.now,
         verbose_name='تاریخ انتشار',
-    )
-    status=models.BooleanField(
-        default=False,
-        verbose_name='وضعیت',
     )
     class Meta:
         verbose_name='به زودی اضافه میشود '
