@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse
+from django.core.mail import send_mail,BadHeaderError
 from django.views.generic import (
     DetailView,
     FormView,
@@ -7,7 +8,7 @@ from .models import(
     About,
     Contact,
 )
-from django.core.mail import send_mail,BadHeaderError
+from .forms import ContactForm
 class About(DetailView):
     template_name='about/about.html'
     context_object_name='owner'
