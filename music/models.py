@@ -15,6 +15,7 @@ class TrackManager(models.Manager):
         return self.filter(status=True,podcast=True)
     def best_songs(self):
         return self.filter(status=True,best_song=True)
+        
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
@@ -22,8 +23,7 @@ class CategoryManager(models.Manager):
 class AbstractCommon(models.Model):
     status=models.BooleanField(
         default=False,
-        verbose_name='وضعیت',
-        help_text='اگر میخواهید این آهنگ منتشر شود تیک این قسمت را بزنید.'
+        verbose_name='انتشار',
     )
     created=models.DateTimeField(auto_now_add=True)
     class Meta:
@@ -69,11 +69,16 @@ class Category(AbstractCommon):
         verbose_name='دسته بندی'
         verbose_name_plural='دسته بندی ها'
 
-class Artist(models.Model):
+class Artist(AbstractCommon):
     name=models.CharField(
         max_length=50,
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
+    )
+    slug=models.SlugField(
+        max_length=250,
+        unique=True,
+        verbose_name='لینک'
     )
     decription=RichTextField(
         verbose_name='توضیحات',
@@ -89,7 +94,7 @@ class Artist(models.Model):
     def picture_tag(self):
         return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
     picture_tag.short_description = " عکس هنرمند"
-
+    objects=ArtistManager()
     class Meta:
         verbose_name='هنرمند'
         verbose_name_plural='هنرمندان'
@@ -155,7 +160,6 @@ class Track(AbstractCommon):
     publish_time=models.DateTimeField(
         default=timezone.now       
     )
-    objects=TrackManager()
 
     def jpublish(self):
         return jalali_converter(self.publish_time)
@@ -198,7 +202,7 @@ class TrackFile(models.Model):
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
 
-class Banner(models.Model):
+class Banner(AbstractCommon):
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
@@ -217,7 +221,6 @@ class Banner(models.Model):
         verbose_name='عکس',
         help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
     )
-
     def __str__(self):
         return 'بنر' + self.track.title
     class Meta:
