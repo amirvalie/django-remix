@@ -6,15 +6,32 @@ from django.utils.html import format_html
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+now=timezone.now()
+
 class TrackManager(models.Manager):
     def active(self):
-        return self.filter(status=True)
+        return self.filter(
+            status=True,
+            published__lte=now,
+        )
     def remix(self):
-        return self.filter(status=True,podcast=False)
+        return self.filter(
+            status=True,
+            podcast=False,
+            published__lte=now,
+        )
     def podcast(self):
-        return self.filter(status=True,podcast=True)
+        return self.filter(
+            status=True,
+            podcast=True,
+            published__lte=now,
+        )
     def best_songs(self):
-        return self.filter(status=True,best_song=True)
+        return self.filter(
+            status=True,
+            best_song=True,
+            published__lte=now,
+        )
         
 class CategoryManager(models.Manager):
     def active(self):
@@ -146,8 +163,17 @@ class Track(AbstractCommonField):
         null=True,
         editable=False,
     )
-    publish_time=models.DateTimeField(
-        default=timezone.now       
+    published=models.DateTimeField(
+        default=timezone.now,
+        verbose_name='زمان انتشار',
+    )
+    created=models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='زمان ساخت'
+    )
+    updated=models.DateTimeField(
+        auto_now=True,
+        verbose_name='زمان اپدیت',
     )
 
     def jpublish(self):
