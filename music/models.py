@@ -20,16 +20,21 @@ class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
 
-class AbstractCommon(models.Model):
+class AbstractCommonField(models.Model):
     status=models.BooleanField(
         default=False,
-        verbose_name='انتشار',
+        verbose_name='منتشر شود؟',
     )
-    created=models.DateTimeField(auto_now_add=True)
+    slug=models.SlugField(
+        max_length=250,
+        unique=True,
+        verbose_name='لینک',
+        allow_unicode=True,
+    )
     class Meta:
         abstract=True
     
-class Category(AbstractCommon):
+class Category(AbstractCommonField):
     parent=models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -42,16 +47,11 @@ class Category(AbstractCommon):
         max_length=250,
         verbose_name='عنوان',
     )
-    slug=models.SlugField(
-        max_length=250,
-        unique=True,
-        verbose_name='لینک',
-    )
 
     def save(self, *args, **kwargs):
         if not self.status:
             for track in self.tracks.active():
-                track.status = 'd'
+                track.status = False
                 track.save()
         super(Category, self).save(*args, **kwargs)
 
@@ -69,16 +69,11 @@ class Category(AbstractCommon):
         verbose_name='دسته بندی'
         verbose_name_plural='دسته بندی ها'
 
-class Artist(AbstractCommon):
+class Artist(AbstractCommonField):
     name=models.CharField(
         max_length=50,
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
-    )
-    slug=models.SlugField(
-        max_length=250,
-        unique=True,
-        verbose_name='لینک'
     )
     decription=RichTextField(
         verbose_name='توضیحات',
@@ -94,7 +89,6 @@ class Artist(AbstractCommon):
     def picture_tag(self):
         return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
     picture_tag.short_description = " عکس هنرمند"
-    objects=ArtistManager()
     class Meta:
         verbose_name='هنرمند'
         verbose_name_plural='هنرمندان'
@@ -111,15 +105,10 @@ class IpAddress(models.Model):
 		ordering = ['pub_date']
 
 
-class Track(AbstractCommon):
+class Track(AbstractCommonField):
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان',
-    )
-    slug=models.SlugField(
-        max_length=250,
-        unique=True,
-        verbose_name='لینک',
     )
     category=models.ForeignKey(
         Category,
@@ -171,6 +160,7 @@ class Track(AbstractCommon):
              kwargs={'slug': self.slug}))
         )
     preview_url.short_description = "پیش‌نمایش"
+    objects=TrackManager()
 
     def __str__(self):
         return self.title
@@ -202,7 +192,7 @@ class TrackFile(models.Model):
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
 
-class Banner(AbstractCommon):
+class Banner(models.Model):
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
@@ -215,6 +205,10 @@ class Banner(AbstractCommon):
         help_text='حداکثر 50 کاراکتر مجاز است',
         null=True,
         blank=True
+    )
+    status=models.BooleanField(
+        default=False,
+        verbose_name='منتشر شود؟',
     )
     picture=models.ImageField(
         upload_to='image/banner',
@@ -277,7 +271,7 @@ class SocialNetwork(models.Model):
         verbose_name='شبکه اجتماعی'
         verbose_name_plural='شبکه های اجتماعی'
 
-class ComingSoon(AbstractCommon):
+class ComingSoon(models.Model):
     caption=models.CharField(
         max_length=50,
         verbose_name='عنوان',
@@ -286,6 +280,10 @@ class ComingSoon(AbstractCommon):
     thumbnail=models.ImageField(
         upload_to='image/comming_soon',
         verbose_name='بندانگشتی',
+    )
+    status=models.BooleanField(
+        default=False,
+        verbose_name='منتشر شود؟',
     )
     relase_date=models.DateField(
         default=timezone.now,

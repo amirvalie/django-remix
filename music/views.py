@@ -20,9 +20,9 @@ class Index(ListView):
         context=super().get_context_data(**kwargs)
         context['podcasts']=Track.objects.podcast()
         context['best_songs']=Track.objects.best_songs()
-        context['atists']=Artist.objects.active()
-        context['banners']=Banner.objects.active()
-        context['coming_soon']=ComingSoon.objects.active()
+        context['atists']=Artist.objects.filter(status=True)
+        context['banners']=Banner.objects.filter(status=True)
+        context['coming_soon']=ComingSoon.objects.filter(status=True)
         return context        
 
 class DetailTrack(DetailView):
@@ -38,7 +38,7 @@ class DetailTrack(DetailView):
         return context
 
 class AllPublicTrackOfCategory(DetailView):
-    queryset=Category.objects.active()
+    queryset=Category.objects.filter(status=True)
     template_name='music/category_tracks.html'
     context_object_name='tracks'
     def get_context_data(self,**kwargs):
@@ -48,11 +48,11 @@ class AllPublicTrackOfCategory(DetailView):
         return context
         
 class ListOfArtist(ListView):
-    queryset=Artist.objects.active()
+    queryset=Artist.objects.filter(status=True)
     template_name='music/list_of_artists.html'
     context_object_name='artists'
 
 class DetailArtist(DetailView):
-    queryset=Artist.objects.active()
+    queryset=Artist.objects.filter(status=True)
     template_name='music/detail_artist.html'
     context_object_name='artist'
