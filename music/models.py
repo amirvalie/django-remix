@@ -146,6 +146,11 @@ class Track(AbstractCommonField):
         upload_to='image/cover',
         verbose_name='کاور آهنگ',
     )
+    artists=models.ManyToManyField(
+        Artist,
+        related_name='tracks',
+        verbose_name='هنرمندان',
+    )
     best_song=models.BooleanField(
         default=True,
         verbose_name='آهنگ منتخب؟',
