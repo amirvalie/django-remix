@@ -8,6 +8,6 @@ urlpatterns=[
     path('track/<slug:slug>/',views.DetailTrack.as_view(),name='detail_track'),
     path('category/<slug:slug>/tracks/',views.AllPublicTrackOfCategory.as_view(),name='tracks_of_category'),
     path('artists/',views.ListOfArtist.as_view(),name='artists'),
-    path('index',views.DetailArtist.as_view(),name='index'),
-    path('index',views.DetailArtist.as_view(),name='index'),
+    path('artist/<slug:slug>/',views.DetailArtist.as_view(),name='artist'),
+    path('search-result/',views.SearchTrackOrArtist.as_view(),name='search'),
 ]
