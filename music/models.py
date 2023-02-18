@@ -182,7 +182,7 @@ class Track(AbstractCommonField):
     )
 
     def jpublish(self):
-        return jalali_converter(self.publish_time)
+        return jalali_converter(self.published)
     jpublish.short_description = "زمان انتشار"
 
     def preview_url(self):
