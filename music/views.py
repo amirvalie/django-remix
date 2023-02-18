@@ -56,3 +56,14 @@ class DetailArtist(DetailView):
     queryset=Artist.objects.filter(status=True)
     template_name='music/detail_artist.html'
     context_object_name='artist'
+
+class SearchTrackOrArtist(ListView):
+    template_name='music/search_result.html'
+    context_object_name='results'
+    def get_queryset(self):
+        query=self.request.GET.get('q',None)
+        result=Track.objects.filter(
+            Q(title__icontains=query) | 
+            Q(artists__name__icontains=query)
+        )
+        return result
