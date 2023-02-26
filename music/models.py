@@ -209,6 +209,7 @@ class TrackFile(models.Model):
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
+        related_name='track_file',
     )
     track_quality=models.CharField(
         max_length=3,
