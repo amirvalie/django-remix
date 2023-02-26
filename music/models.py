@@ -32,7 +32,10 @@ class TrackManager(models.Manager):
             best_song=True,
             published__lte=now,
         )
-        
+    def number_of_hits(self):
+        return self.active().annotate(
+                count=Count('hits')
+            )
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
@@ -161,12 +164,10 @@ class Track(AbstractCommonField):
         verbose_name='پادکست',
         help_text='اگر این موزیک پادکست است تیک این قسمت را بزنید.'
     )
-    hits=models.ForeignKey(
+    hits=models.ManyToManyField(
         IpAddress,
-        on_delete=models.SET_NULL,
         blank=True,
-        null=True,
-        editable=False,
+        # editable=False,
     )
     published=models.DateTimeField(
         default=timezone.now,
@@ -212,6 +213,7 @@ class TrackFile(models.Model):
     track_quality=models.CharField(
         max_length=3,
         choices=MUSIC_QUALITY,
+        verbose_name='کیفیت آهنگ',
     )
     track_file=models.FileField(
         upload_to='music/track_file',
