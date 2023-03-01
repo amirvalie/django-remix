@@ -209,20 +209,13 @@ class Track(AbstractCommonField):
         verbose_name_plural='موزیک ها'
 
 class TrackFile(models.Model):
-    MUSIC_QUALITY=(
-        ('128','دانلود ریمیکس با کیفیت 128'),
-        ('320','دانلود ریمیکس با کیفیت 320'),
-        ('128','دانلود پادکست با کیفیت 128'),
-        ('320','دانلود پادکست با کیفیت 320'),
-    )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
         related_name='track_files',
     )
     track_quality=models.CharField(
-        max_length=3,
-        choices=MUSIC_QUALITY,
+        max_length=250,
         verbose_name='کیفیت آهنگ',
     )
     track_file=models.FileField(
