@@ -186,6 +186,13 @@ class Track(AbstractCommonField):
         return jalali_converter(self.published)
     jpublish.short_description = "زمان انتشار"
 
+    def listen_online(self):
+        return (
+            self.track_files.filter(track_quality='320').first() or
+            self.track_files.filter(track_quality='128').first() or 
+            None
+        )
+
     def preview_url(self):
         return format_html(
             "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
@@ -203,13 +210,15 @@ class Track(AbstractCommonField):
 
 class TrackFile(models.Model):
     MUSIC_QUALITY=(
-        ('128','دانلود ترک با کیفیت 128'),
-        ('320','دانلود ترک با کیفیت 320'),
+        ('128','دانلود ریمیکس با کیفیت 128'),
+        ('320','دانلود ریمیکس با کیفیت 320'),
+        ('128','دانلود پادکست با کیفیت 128'),
+        ('320','دانلود پادکست با کیفیت 320'),
     )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
-        related_name='track_file',
+        related_name='track_files',
     )
     track_quality=models.CharField(
         max_length=3,
@@ -221,7 +230,8 @@ class TrackFile(models.Model):
         verbose_name='اپلود فایل'
     )
     def __str__(self):
-        return 'فایل' + self.track.title
+        return self.track.title + 'کیفیت' + self.track_quality
+        
     class Meta:
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
