@@ -1,0 +1,40 @@
+{% load static %}
+<div class="sidebar">
+    <div class="single-widget">
+        <div class="tabs">
+            <div class="tabby-tab">
+                <input type="radio" id="tab-1" name="tabby-tabs" checked>
+                <label for="tab-1">جدید ترین ریمیکس ها</label>
+                <div class="tabby-content">
+                    <ul>
+                        {% for last_remix in last_remixes %}
+                            <li>
+                                <img src="{{last_remix.thumbnail.url}}">
+                                <a href="{{last_remix.get_absolute_url}}">{{last_remix.title}}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tabby-tab">
+                <input type="radio" id="tab-2" name="tabby-tabs">
+                <label for="tab-2">جدید ترین پادکست ها</label>
+                <div class="tabby-content">
+                    <ul>
+                        {% for last_podcast in last_podcasts %}
+                            <li>
+                                <img src="{{last_podcast.thumbnail.url}}">
+                                <a href="{{last_podcast.get_absolute_url}}">{{last_podcast.title}}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="single-widget">
+        <h4>صفحه یوتوب ما</h4>
+        <a href="#"><img class="youtube" src="{% static 'remix/img/youtube.png' %}"></a>
+    </div>
+</div>

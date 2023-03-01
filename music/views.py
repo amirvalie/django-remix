@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse
-# from django.db import Q
+from django.db.models import Q
+
 from django.views.generic import (
     ListView,
     DetailView,
@@ -14,20 +15,20 @@ from .models import (
 
 class Index(ListView):
     queryset=Track.objects.remix()
-    template_name='music/index.html'
+    template_name='remix/home.html'
     context_object_name='tracks'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
         context['podcasts']=Track.objects.podcast()
         context['best_songs']=Track.objects.best_songs()
-        context['atists']=Artist.objects.filter(status=True)
+        context['artists']=Artist.objects.filter(status=True)
         context['banners']=Banner.objects.filter(status=True)
         context['coming_soon']=ComingSoon.objects.filter(status=True)
         return context        
 
 class DetailTrack(DetailView):
     model=Track
-    template_name='music/track_detail.html'
+    template_name='remix/detail-track.html'
     context_object_name='track'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
@@ -49,16 +50,16 @@ class AllPublicTrackOfCategory(DetailView):
         
 class ListOfArtist(ListView):
     queryset=Artist.objects.filter(status=True)
-    template_name='music/list_of_artists.html'
+    template_name='remix/list_of_artists.html'
     context_object_name='artists'
 
 class DetailArtist(DetailView):
     queryset=Artist.objects.filter(status=True)
-    template_name='music/detail_artist.html'
+    template_name='remix/detail_artist.html'
     context_object_name='artist'
 
 class SearchTrackOrArtist(ListView):
-    template_name='music/search_result.html'
+    template_name='remix/search_result.html'
     context_object_name='results'
     def get_queryset(self):
         query=self.request.GET.get('q',None)

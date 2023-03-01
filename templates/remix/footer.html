@@ -1,0 +1,47 @@
+<!-- Footer -->
+<footer class="footer tag">
+    <div class="container">
+        <div class="divider">
+            <div class="footer-right-head">
+                <h2>سانگ +</h2>
+                <span class="line"></span>
+            </div>
+            <div class="footer-left-head">
+                <a href="#"><i class="fab fa-facebook"></i> </a>
+                <a href="#"><i class="fab fa-twitter"></i> </a>
+                <a href="#"><i class="fab fa-telegram"></i> </a>
+                <a href="#"><i class="fab fa-linkedin"></i> </a>
+                <a href="#"><i class="fab fa-youtube"></i> </a>
+            </div>
+        </div>
+        <div class="box-footer">
+            <div class="footer-right">
+                <h3>درباره سانگ پلاس</h3>
+                <p>
+                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
+                </p>
+            </div>
+            <div class="footer-center">
+                <h3>آخرین آهنگ ها</h3>
+                <ul>
+                    {% for track in tracks %}
+                    <li>
+                        <img src="{{track.thumbnail.url}}">
+                        <a href="{{track.get_absolute_url}}">{{track.title}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="footer-left">
+                <h3>دسترسی سریع</h3>
+                <ul>
+                    <li><a href="#">خانه</a></li>
+                    <li><a href="#">درباره ما</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copy-right">
+            <p>تمام حقوق این سایت متعلق به پیمان رزمجویی طراح این سایت می باشد</p>
+        </div>
+    </div>
+</footer>

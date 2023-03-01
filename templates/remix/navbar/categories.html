@@ -1,0 +1,13 @@
+{% for category in categories %}
+    {% if not category.child.exists and category.parent == None %}
+        <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{category.title}}</a></li>
+    {% elif category.child.active and category.parent == None %}
+        <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{category.title}}</a>
+            <ul class="sub-menu">
+                {% for child_category in category.child.active %}
+                    <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{child_category.title}}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+{% endfor %}

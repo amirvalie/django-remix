@@ -1,0 +1,187 @@
+{% extends 'remix/base.html'%}
+{% block title %}وبسایت سانگ پلاس{% endblock title%}
+{% block body %}
+<!-- Header Slider -->
+<section class="header">
+    <div class="header-slider">
+        <div id="header_slider" class="owl-carousel owl-theme box-header">
+            {% for banner in banners %}
+            <div class="item item-header">
+                <img src="{{banner.picture.url}}">
+                <div class="content-header-slider">
+                    <h3><a href="single-track.html">
+                        <i class="fa fa-microphone"></i>
+                        {{banner.caption}}</a></h3>
+                    <a class="header-more" href="single-track.html">
+                        <i class="fa fa-music"></i>
+                        ادامه مطلب</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Music Player -->
+<div class="music-play">
+    <div class="container">
+        <div class="music-play-head">
+            <h3>برترین ریمیکس ها</h3>
+        </div>
+        <div id="app-cover">
+            <div id="player">
+                <div id="player-track">
+                    <div id="album-name"></div>
+                    <div id="track-name"></div>
+                    <div id="track-time">
+                        <div id="current-time"></div>
+                        <div id="track-length"></div>
+                    </div>
+                    <div id="s-area">
+                        <div id="ins-time"></div>
+                        <div id="s-hover"></div>
+                        <div id="seek-bar"></div>
+                    </div>
+                </div>
+                <div id="player-content">
+                    <div id="album-art">
+                        <img src="img/saman.jpg" class="active" id="_1">
+                        <img src="img/mehdi.jpg" id="_2">
+                        <img src="img/shayea.jpg" id="_3">
+                        <img src="img/sorena.jpg" id="_4">
+                        <img src="img/tataloo.jpg" id="_5">
+                        <div id="buffer-box">Buffering ...</div>
+                    </div>
+                    <div id="player-controls">
+                        <div class="control">
+                            <div class="buttonn" id="play-previous">
+                                <i class="fas fa-backward"></i>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <div class="buttonn" id="play-pause-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="control">
+                            <div class="buttonn" id="play-next">
+                                <i class="fas fa-forward"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Main Single Track -->
+<section class="main-single-track tag">
+    <div class="container">
+        <div class="head-single-track">
+            <h3>جدیدترین ریمیکس ها</h3>
+            <a href="archive-track.html"> ریمیکس ها
+            <i class="fas fa-angle-double-left"></i>
+            </a>
+        </div>
+        <div class="box-single-track">
+            {% for track in tracks %}
+            <div class="single-track">
+                <a href="{{track.get_absolute_url}}">
+                <div class="single-pic">
+                    <img src="{{track.thumbnail.url}}">
+                </div></a>
+                <div class="content-single-track">
+                    <div class="title-single-track">
+                        <a href="{{podcast.get_absolute_url}}"><h4>{{track.title}}</h4></a>
+                        <h6>{{track.title}}</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Main Ads -->
+<div class="ads tag">
+    <div class="container">
+        <div class="box-ads">
+        {% for banner in banners %}
+            <div class="item-ads">
+                <a href="#"><img src="{{banner.picture.url}}"> </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Main Podcast -->
+<section class="main-album tag">
+    <div class="container">
+        <div class="head-album">
+            <h3>جدید ترین پادکست ها</h3>
+            <a href="archive-album.html"> پادکست ها
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </div>
+        <div class="box-album-track">
+            {% for podcast in podcasts %}
+            <div class="album-track">
+                <a href="{{podcast.get_absolute_url}}">
+                    <div class="album-pic">
+                        <img src="{{podcast.thumbnail.url}}">
+                    </div></a>
+                <div class="content-album-track">
+                    <div class="title-album-track">
+                        <a href="{{podcast.get_absolute_url}}"><h4>{{podcast.title}}</h4></a>
+                        <h6>Shayea - New Album Asabani</h6>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Main Ads -->
+<div class="ads tag">
+    <div class="container">
+        <div class="box-ads">
+        {% for banner in banners %}
+            <div class="item-ads">
+                <a href="#"><img src="{{banner.picture.url}}"> </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Main Bio -->
+<section class="bio tag">
+    <div class="container">
+        <div class="head-bio">
+            <h3>بیوگرافی از خوانندگان</h3>
+            <a href="archive-bio.html">  موارد بیشتر
+                <i class="fas fa-angle-double-left"></i>
+            </a>
+        </div>
+        <div class="box-bio">
+            {% for artist in artists %}
+            <div class="bio-item">
+                <a href="single-bio.html">
+                    <div class="bio-pic">
+                        <img src="{{artist.picture.url}}">
+                    </div></a>
+                <div class="title-artist-bio">
+                    <span>{{artist.name}}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<script>
+        trackUrl = [
+            "https://irsv.upmusics.com/99/Saman%20Jalili%20%7C%20Jonoun%20(320).mp3",
+            "https://dls.music-fa.com/tagdl/1401/Mehdi%20Ahmadvand%20-%20Sahel%20(320).mp3",
+            "https://serverdl.mediahits.ir/shayea_mooham_dare_sefid_mishe.mp3",
+            "https://dl.parsmusics.ir/1400/5/Sorena%20-%20Laghzesh.mp3",
+            "https://dl.naslemusic.com/music/1400/10/Amir%20Tataloo%20-%20Man%20Bahat%20Ghahram%20(320-Naslemusic).mp3",
+        ]
+</script>
+{% endblock body%}

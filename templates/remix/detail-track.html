@@ -1,0 +1,209 @@
+
+{% extends 'remix/base.html'%}
+{% load tags %}
+{% block title%}{% endblock title %}
+{% block body %}
+<!-- Main Single -->
+<div class="single">
+    <div class="container">
+        <div class="box-single">
+            <div class="main-single">
+                <div class="post-single">
+                    <div class="head-single">
+                        <h1>{{track.title}}</h1>
+                        {% if track.podcast == True %}
+                            <a href="{% url 'music:tracks_of_category' track.category.slug%}">
+                                پادکست ها
+                            </a>
+                        {% else %}
+                            <a href="{% url 'music:tracks_of_category' track.category.slug%}">
+                                    ریمیکس ها    
+                            </a>
+                        {% endif %}
+                    </div>
+                    <header>
+                        <div class="post-meta">
+                            <i class="fas fa-clock"></i>
+                            <span>{{track.jpublish}}</span>
+                        </div>
+                        <div class="post-meta">
+                            <i class="fas fa-comment"></i>
+                            <span>نظر 4</span>
+                        </div>
+                        <div class="post-meta">
+                            <i class="fas fa-eye"></i>
+                            <span>{{track.number_of_hits}}بازدید</span>
+                        </div>
+                    </header>
+                    <div class="post-thumbnail">
+                        <figure>
+                            <img src="{{track.cover.url}}">
+                        </figure>
+                    </div>
+                    <div class="content-single">
+                        {{track.description|safe}}
+                    </div>
+                </div>
+                <div class="post-single-dl">
+                    <div class="head-dl">
+                        <h2>جعبه دانلود</h2>
+                    </div>
+                    <div class="dlbox">
+                        {% for track_file in track.track_files.all %}
+                            <a href="#">
+                                <i class="fas fa-download"></i>
+                                <span>{{track_file.caption}}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    {% if track.listen_online %}
+                        <p>آنلاین گوش بده</p>
+                        <audio controls autoplay muted>
+                            <source src="{{track.listen_online.track_file.url}}" type="audio/mpeg">
+                        </audio>
+                    {% endif %}
+                </div>
+                <div class="followsocial">
+                    <div class="box-followsocial">
+                        <div class="item-social-telegram">
+                            <a href="#">
+                                <span class="icon-tel">
+                                    <i aria-hidden="true" class="fab fa-telegram"></i>
+                                </span>
+                                <span class="title-tel">
+                                    کانال ما در تلگرام
+                                </span>
+                            </a>
+                        </div>
+                        <div class="item-social-instagram">
+                            <a href="#">
+                                <span class="icon-tel">
+                                    <i aria-hidden="true" class="fab fa-instagram"></i>
+                                </span>
+                                <span class="title-tel">
+                                    صفحه ما در اینستاگرام
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="shortlink">
+                    <div class="box-shortlink">
+                        <span>لینک کوتاه :</span>
+                        <input type="text" value="http://song-plus.ir/?p=51">
+                    </div>
+                </div>
+                <div class="related-post">
+                    <div class="related-head">
+                        <h2>آهنگ های مرتبط</h2>
+                    </div>
+                    <div class="related-slider">
+                        <div id="related_slider" class="owl-carousel owl-theme">
+                            {% for related_track in related_tracks %}
+                                <div class="item item-related">
+                                    <a href="#">
+                                        <div class="single-pic">
+                                            <img src="{{related_track.thumbnail.url}}">
+                                        </div></a>
+                                    <div class="content-single-track">
+                                        <div class="title-single-track">
+                                            <a href="#"><h4>{{related_track.title}}</h4></a>
+                                            <h6>{{related_track.title}}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-box">
+                    <div class="head-comment">
+                        <h2>نظرات شما</h2>
+                    </div>
+                    <div class="content-cm">
+                        <ul class="comment-section">
+
+                            <li class="comment user-comment">
+
+                                <div class="info">
+                                    <a href="#">زهرا سلطانی</a>
+                                    <span>۴ ساعت پیش</span>
+                                </div>
+
+                                <a class="avatar" href="#">
+                                    <img src="img/avatar_user_1.jpg" width="35" alt="Profile Avatar" title="Anie Silverston" />
+                                </a>
+
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
+
+                            </li>
+
+                            <li class="comment author-comment">
+
+                                <div class="info">
+                                    <a href="#">علی خدابنده</a>
+                                    <span>۳ ساعت پیش</span>
+                                </div>
+
+                                <a class="avatar" href="#">
+                                    <img src="img/avatar_author.jpg" width="35" alt="Profile Avatar" title="Jack Smith" />
+                                </a>
+
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
+
+                            </li>
+
+                            <li class="comment user-comment">
+
+                                <div class="info">
+                                    <a href="#">پیمان رزمجویی</a>
+                                    <span>۱ ساعت پیش</span>
+                                </div>
+
+                                <a class="avatar" href="#">
+                                    <img src="img/avatar_user_2.jpg" width="35" alt="Profile Avatar" title="Bradley Jones" />
+                                </a>
+
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
+
+                            </li>
+
+                            <li class="comment author-comment">
+
+                                <div class="info">
+                                    <a href="#">علی خدابنده</a>
+                                    <span>۱ ساعت پیش</span>
+                                </div>
+
+                                <a class="avatar" href="#">
+                                    <img src="img/avatar_author.jpg" width="35" alt="Profile Avatar" title="Jack Smith" />
+                                </a>
+
+                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز</p>
+
+                            </li>
+
+                            <li class="write-new">
+
+                                <form action="#" method="post">
+
+                                    <textarea placeholder="Write your comment here" name="comment"></textarea>
+
+                                    <div>
+                                        <button type="submit">ارسال</button>
+                                    </div>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% slidbar %}
+        </div>
+    </div>
+</div>
+<!-- Sidebar -->
+{% endblock body %}

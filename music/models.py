@@ -5,7 +5,7 @@ from ckeditor.fields import RichTextField
 from django.utils.html import format_html
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+from django.urls import reverse
 now=timezone.now()
 
 class TrackManager(models.Manager):
@@ -105,7 +105,10 @@ class Artist(AbstractCommonField):
  
     def __str__(self):
         return self.name
-    
+
+    def get_absolute_url(self):
+        return reverse("music:artist", args=[self.slug])
+
     def picture_tag(self):
         return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
     picture_tag.short_description = " عکس هنرمند"
@@ -126,6 +129,11 @@ class IpAddress(models.Model):
 
 
 class Track(AbstractCommonField):
+    MUSIC_TYPE=(
+        ('remix','ریمیکس')
+        ('podcasat','پادکست')
+        ('ohter','دیگر')
+    )
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان',
@@ -137,6 +145,11 @@ class Track(AbstractCommonField):
         verbose_name='دسته بندی',
         null=True,
         blank=True,
+    )
+    music_type=models.BooleanField(
+        choices=MUSIC_TYPE,
+        verbose_name='نوع موزیک',
+        help_text='اگر نوع موزیک ریمیکس یا پادکست است یکی از این گزینه هارا انتخاب کنید در غیر این صورت گزینه دیگر را انتخاب کنید',
     )
     description=RichTextField(
         verbose_name='توضحیات'
@@ -159,11 +172,6 @@ class Track(AbstractCommonField):
         verbose_name='آهنگ منتخب؟',
         help_text='اگر میخواهید این اهنگ در قسمت بهترین آهنگ ها قرار گیرد تیک این قسمت را بزنید.'
     )
-    podcast=models.BooleanField(
-        default=False,
-        verbose_name='پادکست',
-        help_text='اگر این موزیک پادکست است تیک این قسمت را بزنید.'
-    )
     hits=models.ManyToManyField(
         IpAddress,
         blank=True,
@@ -181,6 +189,9 @@ class Track(AbstractCommonField):
         auto_now=True,
         verbose_name='زمان اپدیت',
     )
+
+    def get_absolute_url(self):
+        return reverse("music:track_detail", args=[self.slug])
 
     def jpublish(self):
         return jalali_converter(self.published)
