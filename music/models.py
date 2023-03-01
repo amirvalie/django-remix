@@ -187,17 +187,17 @@ class Track(AbstractCommonField):
     jpublish.short_description = "زمان انتشار"
 
     def listen_online(self):
-        return (
-            self.track_files.filter(track_quality='320').first() or
-            self.track_files.filter(track_quality='128').first() or 
-            None
-        )
+        track_320=self.track_files.filter(track_quality='320').first()
+        track_128=self.track_files.filter(track_quality='128').first()
+        track_file=track_320 if track_320 else track_128
+        return track_file
 
     def preview_url(self):
         return format_html(
             "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
              kwargs={'slug': self.slug}))
         )
+
     preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()
 
@@ -209,19 +209,32 @@ class Track(AbstractCommonField):
         verbose_name_plural='موزیک ها'
 
 class TrackFile(models.Model):
+    TRACK_QUALITY=(
+        ('320','320'),
+        ('128','128'),
+    )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
         related_name='track_files',
     )
-    track_quality=models.CharField(
+    caption=models.CharField(
         max_length=250,
+        verbose_name='عنوان',
+        default='مثال:دانلود آهنگ/پادکست با کیفیت 320',
+    )
+    track_quality=models.CharField(
+        max_length=3,
+        choices=TRACK_QUALITY,
         verbose_name='کیفیت آهنگ',
+        blank=True,
+        null=True,
     )
     track_file=models.FileField(
         upload_to='music/track_file',
         verbose_name='اپلود فایل'
     )
+
     def __str__(self):
         return self.track.title + 'کیفیت' + self.track_quality
         
