@@ -17,13 +17,13 @@ class TrackManager(models.Manager):
     def remix(self):
         return self.filter(
             status=True,
-            podcast=False,
+            music_type='remix',
             published__lte=now,
         )
     def podcast(self):
         return self.filter(
             status=True,
-            podcast=True,
+            music_type='podcasat',
             published__lte=now,
         )
     def best_songs(self):
@@ -130,9 +130,9 @@ class IpAddress(models.Model):
 
 class Track(AbstractCommonField):
     MUSIC_TYPE=(
-        ('remix','ریمیکس')
-        ('podcasat','پادکست')
-        ('ohter','دیگر')
+        ('remix','ریمیکس'),
+        ('podcasat','پادکست'),
+        ('other','دیگر'),
     )
     title=models.CharField(
         max_length=250,
@@ -146,9 +146,11 @@ class Track(AbstractCommonField):
         null=True,
         blank=True,
     )
-    music_type=models.BooleanField(
+    music_type=models.CharField(
         choices=MUSIC_TYPE,
         verbose_name='نوع موزیک',
+        max_length=15,
+        default='other',
         help_text='اگر نوع موزیک ریمیکس یا پادکست است یکی از این گزینه هارا انتخاب کنید در غیر این صورت گزینه دیگر را انتخاب کنید',
     )
     description=RichTextField(
