@@ -5,7 +5,7 @@ from ckeditor.fields import RichTextField
 from django.utils.html import format_html
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+from django.urls import reverse
 now=timezone.now()
 
 class TrackManager(models.Manager):
@@ -105,7 +105,10 @@ class Artist(AbstractCommonField):
  
     def __str__(self):
         return self.name
-    
+
+    def get_absolute_url(self):
+        return reverse("music:artist", args=[self.slug])
+
     def picture_tag(self):
         return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
     picture_tag.short_description = " عکس هنرمند"
@@ -126,6 +129,11 @@ class IpAddress(models.Model):
 
 
 class Track(AbstractCommonField):
+    MUSIC_TYPE=(
+        ('remix','ریمیکس')
+        ('podcasat','پادکست')
+        ('ohter','دیگر')
+    )
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان',
@@ -137,6 +145,11 @@ class Track(AbstractCommonField):
         verbose_name='دسته بندی',
         null=True,
         blank=True,
+    )
+    music_type=models.BooleanField(
+        choices=MUSIC_TYPE,
+        verbose_name='نوع موزیک',
+        help_text='اگر نوع موزیک ریمیکس یا پادکست است یکی از این گزینه هارا انتخاب کنید در غیر این صورت گزینه دیگر را انتخاب کنید',
     )
     description=RichTextField(
         verbose_name='توضحیات'
@@ -159,11 +172,6 @@ class Track(AbstractCommonField):
         verbose_name='آهنگ منتخب؟',
         help_text='اگر میخواهید این اهنگ در قسمت بهترین آهنگ ها قرار گیرد تیک این قسمت را بزنید.'
     )
-    podcast=models.BooleanField(
-        default=False,
-        verbose_name='پادکست',
-        help_text='اگر این موزیک پادکست است تیک این قسمت را بزنید.'
-    )
     hits=models.ManyToManyField(
         IpAddress,
         blank=True,
@@ -182,22 +190,25 @@ class Track(AbstractCommonField):
         verbose_name='زمان اپدیت',
     )
 
+    def get_absolute_url(self):
+        return reverse("music:track_detail", args=[self.slug])
+
     def jpublish(self):
         return jalali_converter(self.published)
     jpublish.short_description = "زمان انتشار"
 
     def listen_online(self):
-        return (
-            self.track_files.filter(track_quality='320').first() or
-            self.track_files.filter(track_quality='128').first() or 
-            None
-        )
+        track_320=self.track_files.filter(track_quality='320').first()
+        track_128=self.track_files.filter(track_quality='128').first()
+        track_file=track_320 if track_320 else track_128
+        return track_file
 
     def preview_url(self):
         return format_html(
             "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
              kwargs={'slug': self.slug}))
         )
+
     preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()
 
@@ -209,19 +220,32 @@ class Track(AbstractCommonField):
         verbose_name_plural='موزیک ها'
 
 class TrackFile(models.Model):
+    TRACK_QUALITY=(
+        ('320','320'),
+        ('128','128'),
+    )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
         related_name='track_files',
     )
-    track_quality=models.CharField(
+    caption=models.CharField(
         max_length=250,
+        verbose_name='عنوان',
+        default='مثال:دانلود آهنگ/پادکست با کیفیت 320',
+    )
+    track_quality=models.CharField(
+        max_length=3,
+        choices=TRACK_QUALITY,
         verbose_name='کیفیت آهنگ',
+        blank=True,
+        null=True,
     )
     track_file=models.FileField(
         upload_to='music/track_file',
         verbose_name='اپلود فایل'
     )
+
     def __str__(self):
         return self.track.title + 'کیفیت' + self.track_quality
         
