@@ -9,10 +9,10 @@
             <div class="item item-header">
                 <img src="{{banner.picture.url}}">
                 <div class="content-header-slider">
-                    <h3><a href="single-track.html">
+                    <h3><a href="{{banner.track.get_absolute_url}}">
                         <i class="fa fa-microphone"></i>
                         {{banner.caption}}</a></h3>
-                    <a class="header-more" href="single-track.html">
+                    <a class="header-more" href="{{banner.track.get_absolute_url}}">
                         <i class="fa fa-music"></i>
                         ادامه مطلب</a>
                 </div>
@@ -91,7 +91,7 @@
                 </div></a>
                 <div class="content-single-track">
                     <div class="title-single-track">
-                        <a href="{{podcast.get_absolute_url}}"><h4>{{track.title}}</h4></a>
+                        <a href="{{track.get_absolute_url}}"><h4>{{track.title}}</h4></a>
                         <h6>{{track.title}}</h6>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
         <div class="box-bio">
             {% for artist in artists %}
             <div class="bio-item">
-                <a href="single-bio.html">
+                <a href="{{artist.get_absolute_url}}">
                     <div class="bio-pic">
                         <img src="{{artist.picture.url}}">
                     </div></a>

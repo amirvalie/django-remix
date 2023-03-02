@@ -58,7 +58,7 @@
                     </div>
                     {% if track.listen_online %}
                         <p>آنلاین گوش بده</p>
-                        <audio controls autoplay muted>
+                        <audio controls muted>
                             <source src="{{track.listen_online.track_file.url}}" type="audio/mpeg">
                         </audio>
                     {% endif %}
@@ -201,9 +201,9 @@
                     </div>
                 </div>
             </div>
-            {% slidbar %}
+            <!-- Sidebar -->
+            {% sidbar %}
         </div>
     </div>
 </div>
-<!-- Sidebar -->
 {% endblock body %}
