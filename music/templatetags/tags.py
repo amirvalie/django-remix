@@ -1,5 +1,5 @@
 from django import template
-from ..models import Track,Category
+from ..models import Track
 from django.http import request
 
 register = template.Library()
@@ -13,7 +13,7 @@ def footer():
 @register.inclusion_tag("remix/navbar/navbar.html",takes_context=True)
 def navbar(context):
     return{
-        'categories':Category.objects.active(),
+        # 'categories':Category.objects.active(),
     }
 
 @register.inclusion_tag("remix/slidbar.html",takes_context=True)

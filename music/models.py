@@ -42,7 +42,7 @@ class CategoryManager(models.Manager):
 
 class AbstractCommonField(models.Model):
     status=models.BooleanField(
-        default=False,
+        default=True,
         verbose_name='منتشر شود؟',
     )
     slug=models.SlugField(
@@ -54,7 +54,7 @@ class AbstractCommonField(models.Model):
     class Meta:
         abstract=True
     
-class Category(AbstractCommonField):
+class CategoryABC(AbstractCommonField):
     parent=models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -67,14 +67,6 @@ class Category(AbstractCommonField):
         max_length=250,
         verbose_name='عنوان',
     )
-
-    def save(self, *args, **kwargs):
-        if not self.status:
-            for track in self.tracks.active():
-                track.status = False
-                track.save()
-        super(Category, self).save(*args, **kwargs)
-
     objects=CategoryManager()
 
     def clean(self):
@@ -86,14 +78,39 @@ class Category(AbstractCommonField):
     def __str__(self):
         return self.title
     class Meta:
+        abstract=True
         verbose_name='دسته بندی'
         verbose_name_plural='دسته بندی ها'
+class TrackCategory(CategoryABC):
+    class Meta:
+        verbose_name='دسته بندی موزیک'
+        verbose_name_plural='دسته بندی موزیک ها'
+    def save(self, *args, **kwargs):
+        if not self.status:
+            for track in self.tracks.active():
+                track.status = False
+                track.save()
+        super(Category, self).save(*args, **kwargs)
+
+class ArtistCategory(CategoryABC):
+    class Meta:
+        verbose_name='دسته بندی هنرمند'
+        verbose_name_plural='دسته بندی هنرمند ها'
 
 class Artist(AbstractCommonField):
     name=models.CharField(
         max_length=50,
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
+    )
+    category=models.ForeignKey(
+        ArtistCategory,
+        on_delete=models.PROTECT,
+        related_name='artists',
+        verbose_name='دسته بندی',
+        null=True,
+        blank=True,
+        #null and blank should be false laster
     )
     decription=RichTextField(
         verbose_name='توضیحات',
@@ -139,12 +156,13 @@ class Track(AbstractCommonField):
         verbose_name='عنوان',
     )
     category=models.ForeignKey(
-        Category,
+        TrackCategory,
         on_delete=models.SET_NULL,
         related_name='tracks',
         verbose_name='دسته بندی',
         null=True,
         blank=True,
+        #null and blank should be false laster
     )
     music_type=models.CharField(
         choices=MUSIC_TYPE,
@@ -270,7 +288,7 @@ class Banner(models.Model):
         blank=True
     )
     status=models.BooleanField(
-        default=False,
+        default=True,
         verbose_name='منتشر شود؟',
     )
     picture=models.ImageField(
@@ -345,7 +363,7 @@ class ComingSoon(models.Model):
         verbose_name='بندانگشتی',
     )
     status=models.BooleanField(
-        default=False,
+        default=True,
         verbose_name='منتشر شود؟',
     )
     relase_date=models.DateField(
