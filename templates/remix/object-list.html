@@ -1,0 +1,44 @@
+{% extends 'remix/base.html'%}
+{% load tags %}
+{% block body %}
+<!-- Main Archive Track -->
+<div class="title-archive-page">
+   <h1>{% block title_content %}{% endblock title_content%}</h1>
+</div>
+<div class="archive">
+    <div class="container">
+        <div class="box-single">
+            <div class="main-single">
+                {% for object in object_list %}
+                <div class="post-single">
+                    <div class="head-single">
+                        <h1>{{object.title}}</h1>
+                        <a href="{{object.get_absolute_url}}">ادامه مطلب</a>
+                    </div>
+                    <header>
+                        <div class="post-meta">
+                            <i class="fas fa-clock"></i>
+                            <span>{{object.jpublish}}</span>
+                        </div>
+                        <div class="post-meta">
+                            <i class="fas fa-folder-open"></i>
+                            <span>دسته بندی ها :</span>
+                            <a href="#"><span>{{object.category}}</span></a>
+                        </div>
+                    </header>
+                    <div class="post-thumbnail">
+                        <figure>
+                            <img src="{{object.thumbnail.url}}">
+                        </figure>
+                    </div>
+                    <div class="content-single">
+                        {{object.description|safe}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% sidbar %}
+        </div>
+    </div>
+</div>
+{% endblock body %}
