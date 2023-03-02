@@ -1,128 +1,6 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>وبسایت سانگ پلاس</title>
-    <link rel="stylesheet" href="css/all.css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="contact-us">
-    <div class="contact-us-box">
-        <form action="#">
-            <div class="contact-head">
-                <h4>تماس با ما</h4>
-                <span id="close_contact">بستن</span>
-            </div>
-            <div class="content-contact">
-                <div class="box-input">
-                    <label for="username">
-                        نام شما
-                    </label>
-                    <input type="text" id="username" class="username" placeholder="نام خود را وارد کنید">
-                </div>
-                <div class="box-input">
-                    <label for="email">
-                        ایمیل شما
-                    </label>
-                    <input type="email" id="email" class="username" placeholder="ایمیل خود را وارد کنید">
-                </div>
-                <div class="box-input">
-                    <label for="email">
-                        پیام شما
-                    </label>
-                    <textarea class="con" rows="8"></textarea>
-                </div>
-            </div>
-            <div class="btn-contact">
-                <button type="submit">ارسال</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Top Menu -->
-<div class="top-menu">
-    <div class="container">
-        <div class="top-menu-box">
-            <div class="top-menu-right">
-                <form action="#">
-                    <button type="submit">
-                        <i class="fa fa-search"></i>
-                    </button>
-                    <input type="search" class="search-top-menu" placeholder="آهنگ یا اسم خواننده مورد نظرت رو جستجو کن...">
-                </form>
-            </div>
-            <div class="top-menu-left">
-                <a href="#"><i class="fab fa-facebook"></i> </a>
-                <a href="#"><i class="fab fa-twitter"></i> </a>
-                <a href="#"><i class="fab fa-telegram"></i> </a>
-                <a href="#"><i class="fab fa-linkedin"></i> </a>
-                <a href="#"><i class="fab fa-youtube"></i> </a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Menu -->
-<header class="menu">
-    <div class="container">
-        <div class="box-menu">
-            <div class="menu-right">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="img/logo.png">
-                    </a>
-                </div>
-            </div>
-            <div id="hamberger">
-                <i class="fas fa-bars"></i>
-            </div>
-            <nav class="navigation">
-                <div class="close-nav">
-                    <i class="fas fa-window-close"></i>
-                </div>
-                <ul>
-                    <li><a href="#">صفحه اصلی</a></li>
-                    <li><a href="#">تک آهنگ ها</a></li>
-                    <li><a href="#">آلبوم ها</a></li>
-                    <li><a href="#">موزیک ویدیو ها</a></li>
-                    <li><a href="#">هنرمندان</a>
-                        <ul class="sub-menu">
-                            <li><a href="#">خوانندگان پاپ</a> </li>
-                            <li><a href="#">خوانندگان رپ</a> </li>
-                            <li><a href="#">خوانندگان سنتی</a> </li>
-                        </ul>
-                    </li>
-                    <li><a href="#">سانگ پلاس</a>
-                        <ul class="sub-menu">
-                            <li><a href="#">درباره ما</a> </li>
-                            <li><a href="#">تماس با ما</a> </li>
-                        </ul>
-                    </li>
-                </ul>
-            </nav>
-            <div class="menu-left">
-                <ul>
-                    <li><a href="index.html">صفحه اصلی</a></li>
-                    <li><a href="archive-track.html">تک آهنگ ها</a></li>
-                    <li><a href="archive-album.html">آلبوم ها</a></li>
-                    <li><a href="archive-video.html">موزیک ویدیو ها</a></li>
-                    <li><a href="archive-bio.html">هنرمندان</a>
-                        <ul class="sub-menu">
-                            <li><a href="archive-bio.html">خوانندگان پاپ</a> </li>
-                            <li><a href="archive-bio.html">خوانندگان رپ</a> </li>
-                            <li><a href="archive-bio.html">خوانندگان سنتی</a> </li>
-                        </ul>
-                    </li>
-                    <li><a href="#" id="open_contact_box">تماس با ما</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</header>
+{% extends 'remix/base.html'%}
+{% block title %}بیوگرافی {{artist.name}} {% endblock title%}
+{% block body %}
 <!-- Main Single bio-->
 <div class="single-bio">
     <div class="container">
@@ -132,53 +10,22 @@
                     <div class="post-single-bio-right">
                         <div class="post-bio-thumbnail">
                             <figure>
-                                <img src="img/b1.jpg">
+                                <img src="{{artist.picture.url}}">
                             </figure>
+                        </div>
+                        <div class="social-bio">
+                            <a href="#"><i class="fab fa-facebook"></i> </a>
+                            <a href="#"><i class="fab fa-twitter"></i> </a>
+                            <a href="#"><i class="fab fa-telegram"></i> </a>
                         </div>
                     </div>
                     <div class="post-single-bio-left">
                         <div class="post-title-bio">
-                            <h1>یاس</h1>
+                            <h1>{{artist.name}}</h1>
                         </div>
                         <div class="content-post-bio">
-                                <p>                            یاسر بختیاری (زادهٔ ۳۰ خرداد ۱۳۶۱) که با نام هنری یاس شناخته می‌شود، خواننده و ترانه‌سرای ایرانی در سبک رپ فارسی است.[۱] او از قدیمی‌ترین خواننده‌های رپ فارسی است که فعالیت حرفه‌ای خود را از سال ۱۳۸۰ آغاز کرد. او همچنین اولین خوانندهٔ این سبک در ایران است که توانست برای انتشار ترانه‌اش مجوز بگیرد و این ترانه «یادت نره» نام داشت که آن را به همراه مجید غفوری، خوانندهٔ پاپ اجرا کرده بود.
-                                </p>
-                                <p>مضمون بیشتر ترانه‌های یاس انتقاد و اعتراض به مشکلات و بحران‌های اجتماعی نظیر فقر، کودکان کار، اعتیاد، بیکاری، جنگ، روسپی‌گری، خودکشی و طلاق است.
-                                </p>
-                                <h3>۱۳۶۱–۱۳۸۰: اوایل زندگی</h3>
-                                <p>
-                                    یاسر بختیاری در ۳۰ خرداد ۱۳۶۱ در تالش، گیلان به دنیا آمد.[۴] دوران کودکی وی در محله‌های ناصر خسرو، اکباتان و شمشیری در تهران سپری شد. در دوران نوجوانی در ورزش کشتی آزاد زیر نظر مربی خود هاشم کلاهی فعالیت می‌کرد و پس از مدتی فعالیتش در کشتی را کنار گذاشت.[۵] ۱۴ ساله بود که با شنیدن آهنگ‌های توپاک و ترانه‌های هیپ‌هاپی که پدرش برای او از آلمان می‌آورد، با این نوع موسیقی آشنا شد و به آن علاقه پیدا کرد و در این دوران انتخاب نخست او برای موسیقی گوش دادن رپ بود. وی ۱۸ ساله بود که پدرش از دنیا رفت و پس از آن به همراه خانواده‌اش زندگی سختی را در نبود پدرشان سپری کرد. یاس که فرزند بزرگ خانواده بود تحصیل خود در رشتهٔ عمران دانشگاه را نیمه‌کاره رها کرد و به سمت کار برای تأمین مخارج خانواده گام نهاد و در کنار فعالیت موسیقی به کار در شرکت بازرگانی عمویش و مسافرکشی با اتومبیل پیکان پرداخت.
-                                </p>
-                                <h3>۱۳۸۰–۱۳۸۵: آغاز فعالیت، تلاش برای مجوز</h3>
-                                <p>
-                                    یاسر بختیاری در سال ۱۳۸۰ به صورت جدی فعالیت خود در موسیقی رپ را آغاز کرد. وی نام هنری یاس را برای خود برگزید.
-                                </p>
-                                <p>
-                                    «اسم خودم یاسره ولی از بچگی به من می‌گفتند یاس. از طرفی گل یاس مظهر صلحه و همین باعث شد که در کارهام از نام یاس استفاده کنم. چون به ترویج فرهنگ صلح خیلی اعتقاد دارم.» یاسر بختیاری[۶]
-                                </p>
-                                <p>
-                                    نخستین کاری که نوشت و آن را خواند آهنگ بچه‌های خیابون نام داشت. نخستین آهنگ مشهور وی آهنگی با نام بم بود که پس از زمین‌لرزه بم در سال ۱۳۸۲ با آهنگ‌سازی میتا ملکی منتشر شد. این ترانه مخاطبان زیادی پیدا کرد و نام یاس را بر سر زبان‌ها انداخت.[۷] در همین سال یاس در فیلم برنا کازرانی به نام رعد، یک داستان زنانه به ایفای نقش پرداخت و خوانندگی رپ تیتراژ پایانی فیلم را نیز بر عهده داشت.
-                                </p>
-                                <p>
-                                    یاس در سال ۱۳۸۵ ترانهٔ «سی‌دی رو بشکن» را با خوانندگی مشترک آمین منتشر نمود. این دو خواننده این ترانه را به دنبال انتشار و توزیع فیلم مربوط به زهرا امیرابراهیمی، بازیگر ایرانی که قربانی انتشار فیلم خصوصی شده‌بود خواندند. یاس و آمین در این آهنگ افرادی که در پخش کردن این فیلم دخیل بودند را مورد انتقاد قرار دادند و ضمن انتقاد از «سقوط اخلاقی» جامعهٔ ایران، از شنوندگان خود خواستند که سی‌دی مربوط به این فیلم را از بین ببرند.[۱۱] این ترانه مخاطبان بسیار زیادی پیدا کرد[۱۲] و در همان روزهای نخست که در اینترنت قرار گرفت نزدیک به یک میلیون بار دانلود شد و باعث شهرت بیش از پیش یاس شد.[۷]
-                                </p>
-                                <p>
-                                    [این آهنگ] خیلی اثرات خوبی داشت. در واقع کاری که من با این آهنگ انجام دادم، نیروی‌انتظامی نتوانست انجام دهد. پلیس دنبال این بود که این سی‌دی از اجتماع جمع شود و من با خواندن آن آهنگ تلاش کردم در این مسیر گام بردارم که فکر می‌کنم موفق عمل کردم. یاس در مصاحبه با مجلهٔ نسل امروز[۵]
-                                </p>
-                                <p>
-                                    یاس در سال ۱۳۸۵ آهنگ یادت نره را با همکاری مجید غفوری، خوانندهٔ رپ منتشر کرد. این اثر یکی از قطعات آلبوم نگو دیره از غفوری بود که با مجوز وزارت ارشاد اسلامی منتشر شد و بدین ترتیب این اثر نخستین آهنگ با صدای یاس شد که با مجوز رسمی نهادهای دولتی ایران منتشر شد.
-                                </p>
-                                <p>
-                                    در اواخر سال ۱۳۸۵ فیلم ۳۰۰ در آمریکای شمالی بر روی پرده رفت و پخش آن اعتراض زیادی را از سوی ایرانیان به دنبال داشت. برخی از ایرانیان معتقد بودند که این فیلم توهینی به ایرانیان و تاریخ این کشور بوده‌است.[۱۴] یاس در واکنش به اکران این فیلم، ترانه‌ای با نام هویت من منتشر کرد و به «تحریف تاریخ» در این فیلم اعتراض کرد و نظر مثبت مخاطبان زیادی را به خود جلب کرد.
-                                </p>
-                                <h3>مجوز فعالیت</h3>
-                                <p>
-                                    وی در این دوران برای دریافت مجوز برای فعالیت هنری در ایران تلاش کرد اما موفق به کسب مجوز نشد.[۱۷] یاس بعدها در مصاحبه‌ای در این باره گفت:
-                                </p>
-                                <p>
-                                    «داستان مجوز گرفتن من برمی‌گردد به چیزی حدود ۹ سال پیش که دوست داشتم مجاز شوم و اقداماتی برای گرفتن مجوز هم انجام دادم. حتی مقطعی آقای فرشید رحیمیان به من گفت آهنگ‌هایت را به ثبت رساندم، اما وقتی دوباره پیگیر شدم متأسفانه فقط جواب منفی شنیدم و همه دست رد به سینهٔ من زدند.. صادقانه می‌گویم من خیلی دنبال مجوز بودم و برایش دوندگی‌های زیادی انجام دادم اما آن موقع کسی از من حمایت نکرد و امروز دیگر به‌دنبال مجوز نیستم. نمی‌دانم چرا، اما انگار همیشه باید انسان خودش را از راه‌های مختلف نشان دهد تا بعد بگویند تو لیاقت مجاز شدن را داری! من باوجود این‌که یک خوانندهٔ زیرزمینی محسوب می‌شوم، اما چارچوب‌های خودم را در کارم لحاظ می‌کنم.»
-                                </p>
-                            </div>
+                            {{artist.decription|safe}}
+                        </div>
                     </div>
                 </div>
                 <div class="followsocial">
@@ -216,71 +63,17 @@
     </div>
 </div>
 
+{% endblock body %}
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="divider">
-            <div class="footer-right-head">
-                <h2>سانگ +</h2>
-                <span class="line"></span>
-            </div>
-            <div class="footer-left-head">
-                <a href="#"><i class="fab fa-facebook"></i> </a>
-                <a href="#"><i class="fab fa-twitter"></i> </a>
-                <a href="#"><i class="fab fa-telegram"></i> </a>
-                <a href="#"><i class="fab fa-linkedin"></i> </a>
-                <a href="#"><i class="fab fa-youtube"></i> </a>
-            </div>
-        </div>
-        <div class="box-footer">
-            <div class="footer-right">
-                <h3>درباره سانگ پلاس</h3>
-                <p>
-                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
-                </p>
-            </div>
-            <div class="footer-center">
-                <h3>آخرین آهنگ ها</h3>
-                <ul>
-                    <li>
-                        <img src="img/saman.jpg">
-                        <a href="#">سامان جلیلی - جنون</a>
-                    </li>
-                    <li>
-                        <img src="img/b2.jpg">
-                        <a href="#">رضا پیشرو - چاقال نامه</a>
-                    </li>
-                    <li>
-                        <img src="img/b1.jpg">
-                        <a href="#">یاس - بیم</a>
-                    </li>
-                    <li>
-                        <img src="img/mehdi.jpg">
-                        <a href="#">مهدی احمدوند - ساحل</a>
-                    </li>
-                    <li>
-                        <img src="img/shayea.jpg">
-                        <a href="#">شایع - عصبانی</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="footer-left">
-                <h3>دسترسی سریع</h3>
-                <ul>
-                    <li><a href="#">خانه</a></li>
-                    <li><a href="#">درباره ما</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="copy-right">
-            <p>تمام حقوق این سایت متعلق به پیمان رزمجویی طراح این سایت می باشد</p>
-        </div>
+<div class="post-single-bio-right">
+    <div class="post-bio-thumbnail">
+        <figure>
+            <img width="300" height="300" src="https://songplusdemo.ir/wp-content/uploads/2022/10/hay.jpg" class="attachment-bios size-bios wp-post-image" alt="" decoding="async">                            
+        </figure>
     </div>
-</footer>
-
-<script src="js/jquery-3.5.1.min.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/main.js"></script>
-</body>
-</html>
+        <div class="social-bio">
+        <a href="#"><i class="fab fa-facebook"></i> </a>
+        <a href="#"><i class="fab fa-twitter"></i> </a>
+        <a href="#"><i class="fab fa-telegram"></i> </a>
+    </div>
+</div>
