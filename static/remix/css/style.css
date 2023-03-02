@@ -2026,6 +2026,10 @@ li.list-track a {
 .post-single-bio-right{
     width: 30%;
     float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .post-single-bio-right .post-bio-thumbnail {
     width: 100%;
@@ -2408,5 +2412,17 @@ textarea.con{
         flex-direction: column;
         border-bottom: 1px solid rgba(0,0,0,.2);
     }
+}
+
+.social-bio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.social-bio a {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #fff;
 }
 /**********final respansive***********/
