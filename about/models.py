@@ -3,7 +3,7 @@ from ckeditor.fields import RichTextField
 
 # Create your models here.
 
-class About(models.Model):
+class AboutUs(models.Model):
     description=RichTextField(
         verbose_name='توضحیات'
     )

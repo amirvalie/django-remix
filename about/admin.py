@@ -1,15 +1,15 @@
 from django.contrib import admin
 from .models import (
-    About,
+    AboutUs,
     Contact,
 )
 # Register your models here.
 
-class AboutAdmin(admin.ModelAdmin):
+class AboutUsAdmin(admin.ModelAdmin):
     pass
 
 class ContactAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(About,AboutAdmin)
+admin.site.register(AboutUs,AboutUsAdmin)
 admin.site.register(Contact,ContactAdmin)

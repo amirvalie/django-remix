@@ -5,14 +5,14 @@ from django.views.generic import (
     FormView,
 )
 from .models import(
-    About,
+    AboutUs,
     Contact,
 )
 from .forms import ContactForm
 class About(DetailView):
     template_name='about/about.html'
     context_object_name='owner'
-    queryset=About.objects.last()
+    queryset=AboutUs.objects.last()
 
 class Contact(FormView):
     template_name='about/contanct.html'
