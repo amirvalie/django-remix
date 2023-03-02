@@ -44,7 +44,7 @@ class DetailTrack(DetailView):
 
 class CategoryList(ListView):
 	paginate_by = 5
-	template_name = 'remix/category_list.html'
+	template_name = 'remix/category-list.html'
 
 	def get_queryset(self):
 		global category
