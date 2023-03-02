@@ -7,8 +7,7 @@ from django.views.generic import (
 from .models import (
     Artist,
     Track,
-    ArtistCategory,
-    TrackCategory,
+    Category,
     Banner,
     ComingSoon,
 )
@@ -47,11 +46,11 @@ class CategoryList(ListView):
 	paginate_by = 5
 	template_name = 'remix/category-list.html'
 
-	# def get_queryset(self):
-	# 	global category
-	# 	slug = self.kwargs.get('slug')
-	# 	category = get_object_or_404(Category.objects.active(), slug=slug)
-	# 	return category.tracks.active()
+	def get_queryset(self):
+		global category
+		slug = self.kwargs.get('slug')
+		category = get_object_or_404(Category.objects.active(), slug=slug)
+		return category.tracks.active()
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

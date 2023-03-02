@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import (
-    ArtistCategory,
-    TrackCategory,
+    Category,
     Artist,
     IpAddress,
     Track,
@@ -22,10 +21,7 @@ class TrackAdmin(admin.ModelAdmin):
     list_display=['title','category','best_song','status','jpublish',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
     
-class ArtistCategoryAdmin(admin.ModelAdmin):
-    list_display=['title','parent','status',]
-    search_fields=['title']
-class TrackCategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display=['title','parent','status',]
     search_fields=['title']
 
@@ -40,9 +36,8 @@ class SocialNetworkAdmin(admin.ModelAdmin):
 class ComingSoonAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(ArtistCategory,ArtistCategoryAdmin)
-admin.site.register(TrackCategory,TrackCategoryAdmin)
 admin.site.register(Track,TrackAdmin)
+admin.site.register(Category,CategoryAdmin)
 admin.site.register(Artist,ArtistAdmin)
 admin.site.register(Banner,BannerAdmin)
 admin.site.register(SocialNetwork,SocialNetworkAdmin)
