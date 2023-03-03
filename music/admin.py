@@ -19,7 +19,7 @@ class OriginalLinkTrackAdmin(admin.TabularInline):
     model=OriginalLinkTrack
     extra=1
 class TrackAdmin(admin.ModelAdmin):
-    list_display=['title','category','best_song','status','jpublish',]
+    list_display=['title','best_song','status','jpublish',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
     
 class ArtistCategoryAdmin(admin.ModelAdmin):

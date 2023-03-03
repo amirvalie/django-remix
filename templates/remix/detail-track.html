@@ -11,15 +11,6 @@
                 <div class="post-single">
                     <div class="head-single">
                         <h1>{{track.title}}</h1>
-                        {% if track.podcast == True %}
-                            <a href="{% url 'music:tracks_of_category' track.category.slug%}">
-                                پادکست ها
-                            </a>
-                        {% else %}
-                            <a href="{% url 'music:tracks_of_category' track.category.slug%}">
-                                    ریمیکس ها    
-                            </a>
-                        {% endif %}
                     </div>
                     <header>
                         <div class="post-meta">
@@ -33,6 +24,17 @@
                         <div class="post-meta">
                             <i class="fas fa-eye"></i>
                             <span>{{track.number_of_hits}}بازدید</span>
+                        </div>
+                        <div class="post-meta">
+                            <i class="fas fa-folder-open"></i>
+                            <span>دسته بندی ها :</span>
+                            {% for category in object.category.active %}
+                                <a href="{% url 'music:tracks_of_category' category.slug %}">
+                                    <span>
+                                        {{category.title}}
+                                    </span>
+                                </a>
+                            {% endfor %}
                         </div>
                     </header>
                     <div class="post-thumbnail">

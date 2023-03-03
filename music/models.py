@@ -90,7 +90,7 @@ class TrackCategory(CategoryABC):
             for track in self.tracks.active():
                 track.status = False
                 track.save()
-        super(Category, self).save(*args, **kwargs)
+        super(TrackCategory, self).save(*args, **kwargs)
 
 class ArtistCategory(CategoryABC):
     class Meta:
@@ -103,13 +103,10 @@ class Artist(AbstractCommonField):
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
-    category=models.ForeignKey(
+    category=models.ManyToManyField(
         ArtistCategory,
-        on_delete=models.PROTECT,
         related_name='artists',
         verbose_name='دسته بندی',
-        null=True,
-        blank=True,
         #null and blank should be false laster
     )
     decription=RichTextField(
@@ -155,13 +152,10 @@ class Track(AbstractCommonField):
         max_length=250,
         verbose_name='عنوان',
     )
-    category=models.ForeignKey(
+    category=models.ManyToManyField(
         TrackCategory,
-        on_delete=models.SET_NULL,
         related_name='tracks',
         verbose_name='دسته بندی',
-        null=True,
-        blank=True,
         #null and blank should be false laster
     )
     music_type=models.CharField(

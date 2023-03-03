@@ -23,7 +23,11 @@
                         <div class="post-meta">
                             <i class="fas fa-folder-open"></i>
                             <span>دسته بندی ها :</span>
-                            <a href="#"><span>{{object.category}}</span></a>
+                            <a href="#"><span>
+                                {% for category in object.category.active %}
+                                    {{category.title}}
+                                {% endfor %}
+                            </span></a>
                         </div>
                     </header>
                     <div class="post-thumbnail">

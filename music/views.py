@@ -19,6 +19,7 @@ class Index(ListView):
     context_object_name='tracks'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+        print(context['tracks'])
         context['podcasts']=Track.objects.podcast()
         context['best_songs']=Track.objects.best_songs()
         context['artists']=Artist.objects.filter(status=True)
@@ -37,32 +38,43 @@ class DetailTrack(DetailView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
+        track_categories=context['track'].category.active().values_list('id',flat=True)
         context['related_tracks']=Track.objects.filter(
-            Q(category=self.get_object().category) | 
+            Q(category__in=track_categories) | 
             Q(description__contains=self.get_object().description)
-        )
+        ).exclude(id=context['track'].id).distinct()
         return context
 
-class CategoryList(ListView):
-	paginate_by = 5
-	template_name = 'remix/category-list.html'
+class ListOfTrack(ListView):
+    paginate_by = 5
+    template_name = 'remix/category-list.html'
 
-	# def get_queryset(self):
-	# 	global category
-	# 	slug = self.kwargs.get('slug')
-	# 	category = get_object_or_404(Category.objects.active(), slug=slug)
-	# 	return category.tracks.active()
+    def get_queryset(self):
+        global category
+        slug = self.kwargs.get('slug')
+        category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
+        return category.tracks.active()
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['category'] = category
-		return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = category
+        return context
 
 
 class ListOfArtist(ListView):
-    queryset=Artist.objects.filter(status=True)
     template_name='remix/archive-bio.html'
     context_object_name='artists'
+
+    def get_queryset(self):
+        global category
+        slug = self.kwargs.get('slug')
+        category = get_object_or_404(ArtistCategory.objects.active(), slug=slug)
+        return category.artists.all()
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = category
+        return context
 
 class DetailArtist(DetailView):
     queryset=Artist.objects.filter(status=True)
