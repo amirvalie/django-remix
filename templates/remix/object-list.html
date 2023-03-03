@@ -23,11 +23,13 @@
                         <div class="post-meta">
                             <i class="fas fa-folder-open"></i>
                             <span>دسته بندی ها :</span>
-                            <a href="#"><span>
-                                {% for category in object.category.active %}
-                                    {{category.title}}
-                                {% endfor %}
-                            </span></a>
+                            {% for category in object.category.active %}
+                                <a href="{% url 'music:tracks_of_category' category.slug %}">
+                                    <span>
+                                        {{category.title}}
+                                    </span>
+                                </a>
+                            {% endfor %}
                         </div>
                     </header>
                     <div class="post-thumbnail">
