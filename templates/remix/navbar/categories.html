@@ -1,12 +1,12 @@
 {% for category in track_categories %}
-    {% if not category.child.exists and category.parent == None %}
+    {% if not category.child.active.exists and category.parent == None %}
         <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{category.title}}</a></li>
-    {% elif category.child.active and category.parent == None %}
-        <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{category.title}}</a>
-            <ul class="sub-menu">
-                {% for child_category in category.child.active %}
+    {% elif category.child.active.exists %}
+    <li><a href="{% url 'music:tracks_of_category' category.slug %}">{{category.title}}</a>
+        <ul class="sub-menu">
+            {% for child_category in category.child.active %}
                     <li><a href="{% url 'music:tracks_of_category' child_category.slug %}">{{child_category.title}}</a></li>
-                {% endfor %}
+            {% endfor %}
             </ul>
         </li>
     {% endif %}
@@ -14,7 +14,7 @@
 {% for category in artist_categories %}
     {% if not category.child.exists and category.parent == None %}
         <li><a href="{% url 'music:artists_of_category' category.slug %}">{{category.title}}</a></li>
-    {% elif category.child.active and category.parent == None %}
+    {% elif category.child.active  %}
         <li><a href="{% url 'music:artists_of_category' category.slug %}">{{category.title}}</a>
             <ul class="sub-menu">
                 {% for child_category in category.child.active %}

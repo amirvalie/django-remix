@@ -31,6 +31,8 @@
                         {{object.description|safe}}
                     </div>
                 </div>
+                {% empty %}
+                    {% include 'remix/not-found.html' %}
                 {% endfor %}
             </div>
             {% sidbar %}
@@ -50,6 +52,4 @@
     {% endfor %}
 </div>
 
-<div class="post-single">
-    <p class="not-found"> مطلبی که به دنبالش هستید یافت نشد! </p>
-</div>
+

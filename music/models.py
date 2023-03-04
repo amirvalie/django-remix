@@ -73,7 +73,9 @@ class Category(AbstractCommonField):
         if self.parent:
             obj=self.parent
             if obj.parent:
-                raise ValidationError({'parent':_('غیر مجاز! والد خود دارای والد دیگری میباشد.')})
+                raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای والد دیگری میباشد.')})
+        if self.child.exists() and self.parent:
+            raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای فرزند میباشد.')})
 
     def __str__(self):
         return self.title
