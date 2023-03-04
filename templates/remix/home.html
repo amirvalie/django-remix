@@ -78,7 +78,7 @@
     <div class="container">
         <div class="head-single-track">
             <h3>جدیدترین ریمیکس ها</h3>
-            <a href="archive-track.html"> ریمیکس ها
+            <a href="{% url 'music:tracks_of_category' 'all_remix' %} "> ریمیکس ها
             <i class="fas fa-angle-double-left"></i>
             </a>
         </div>
@@ -117,7 +117,7 @@
     <div class="container">
         <div class="head-album">
             <h3>جدید ترین پادکست ها</h3>
-            <a href="archive-album.html"> پادکست ها
+            <a href="{% url 'music:tracks_of_category' 'all_podcast' %}"> پادکست ها
                 <i class="fas fa-angle-double-left"></i>
             </a>
         </div>
@@ -156,7 +156,7 @@
     <div class="container">
         <div class="head-bio">
             <h3>بیوگرافی از خوانندگان</h3>
-            <a href="archive-bio.html">  موارد بیشتر
+            <a href="{% url 'music:artists_of_category' 'all_artists' %}">  موارد بیشتر
                 <i class="fas fa-angle-double-left"></i>
             </a>
         </div>

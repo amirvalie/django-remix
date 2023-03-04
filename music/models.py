@@ -54,7 +54,7 @@ class AbstractCommonField(models.Model):
     class Meta:
         abstract=True
     
-class CategoryABC(AbstractCommonField):
+class Category(AbstractCommonField):
     parent=models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -81,7 +81,8 @@ class CategoryABC(AbstractCommonField):
         abstract=True
         verbose_name='دسته بندی'
         verbose_name_plural='دسته بندی ها'
-class TrackCategory(CategoryABC):
+
+class TrackCategory(Category):
     class Meta:
         verbose_name='دسته بندی موزیک'
         verbose_name_plural='دسته بندی موزیک ها'
@@ -92,10 +93,16 @@ class TrackCategory(CategoryABC):
                 track.save()
         super(TrackCategory, self).save(*args, **kwargs)
 
-class ArtistCategory(CategoryABC):
+class ArtistCategory(Category):
     class Meta:
         verbose_name='دسته بندی هنرمند'
         verbose_name_plural='دسته بندی هنرمند ها'
+    def save(self, *args, **kwargs):
+        if not self.status:
+            for artist in self.artsts.active():
+                artist.status = False
+                artist.save()
+        super(ArtistCategory, self).save(*args, **kwargs)
 
 class Artist(AbstractCommonField):
     name=models.CharField(
@@ -103,8 +110,11 @@ class Artist(AbstractCommonField):
         verbose_name='نام',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
-    category=models.ManyToManyField(
+    category=models.ForeignKey(
         ArtistCategory,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name='artists',
         verbose_name='دسته بندی',
         #null and blank should be false laster
@@ -152,8 +162,11 @@ class Track(AbstractCommonField):
         max_length=250,
         verbose_name='عنوان',
     )
-    category=models.ManyToManyField(
+    category=models.ForeignKey(
         TrackCategory,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name='tracks',
         verbose_name='دسته بندی',
         #null and blank should be false laster
@@ -222,6 +235,8 @@ class Track(AbstractCommonField):
             "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
              kwargs={'slug': self.slug}))
         )
+        
+
 
     preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()

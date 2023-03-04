@@ -13,6 +13,15 @@ from .models import (
     ComingSoon,
 )
 
+def find_ids(category_obj):
+    ids=[]
+    if category_obj.__class__ in  [TrackCategory,ArtistCategory]:
+        if category_obj.child.exists():
+            for cat_child in category_obj.child.active(): 
+                ids.append(cat_child.id)
+    ids.append(category_obj.id)
+    return ids
+
 class Index(ListView):
     queryset=Track.objects.remix()
     template_name='remix/home.html'
@@ -38,11 +47,10 @@ class DetailTrack(DetailView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        track_categories=context['track'].category.active().values_list('id',flat=True)
         context['related_tracks']=Track.objects.filter(
-            Q(category__in=track_categories) | 
+            Q(category=self.get_object().category) | 
             Q(description__contains=self.get_object().description)
-        ).exclude(id=context['track'].id).distinct()
+        ).exclude(id=context['track'].id)
         return context
 
 class ListOfTrack(ListView):
@@ -52,8 +60,16 @@ class ListOfTrack(ListView):
     def get_queryset(self):
         global category
         slug = self.kwargs.get('slug')
+        if slug == 'all_remix':
+            category = 'ریمیکس ها'
+            return Track.objects.remix()
+        elif slug == 'all_podcast':
+            category='پادکست ها'
+            return Track.objects.podcast()
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
-        return category.tracks.active()
+        ids=find_ids(category)
+        print(ids)
+        return Track.objects.active().filter(category__id__in=ids) 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,8 +84,13 @@ class ListOfArtist(ListView):
     def get_queryset(self):
         global category
         slug = self.kwargs.get('slug')
+        if slug == 'all_artists':
+            category='هنرمندان'
+            category_id=ArtistCategory.objects.active().values_list('id',flat=True)
+            return Artist.objects.filter(status=True).filter(category__id__in=category_id) 
         category = get_object_or_404(ArtistCategory.objects.active(), slug=slug)
-        return category.artists.all()
+        ids=find_ids(category)
+        return Artist.objects.filter(status=True).filter(category__id__in=ids) 
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

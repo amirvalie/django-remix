@@ -11,6 +11,7 @@
                 <div class="post-single">
                     <div class="head-single">
                         <h1>{{track.title}}</h1>
+                        <a href="archive-track.html">تک آهنگ ها</a>
                     </div>
                     <header>
                         <div class="post-meta">
@@ -25,17 +26,7 @@
                             <i class="fas fa-eye"></i>
                             <span>{{track.number_of_hits}}بازدید</span>
                         </div>
-                        <div class="post-meta">
-                            <i class="fas fa-folder-open"></i>
-                            <span>دسته بندی ها :</span>
-                            {% for category in object.category.active %}
-                                <a href="{% url 'music:tracks_of_category' category.slug %}">
-                                    <span>
-                                        {{category.title}}
-                                    </span>
-                                </a>
-                            {% endfor %}
-                        </div>
+
                     </header>
                     <div class="post-thumbnail">
                         <figure>
@@ -208,3 +199,14 @@
     </div>
 </div>
 {% endblock body %}
+<div class="post-meta">
+    <i class="fas fa-folder-open"></i>
+    <span>دسته بندی ها :</span>
+    {% for category in object.category.active %}
+        <a href="{% url 'music:tracks_of_category' category.slug %}">
+            <span>
+                {{category.title}}
+            </span>
+        </a>
+    {% endfor %}
+</div>
