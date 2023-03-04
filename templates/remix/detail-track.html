@@ -48,6 +48,12 @@
                                 <span>{{track_file.caption}}</span>
                             </a>
                         {% endfor %}
+                        {% for track_org_link in track.original_link_tracks.all %}
+                            <a target="_blank" class="{{track_org_link.music_platform_name}}" href="{{track_org_link.music_link}}">
+                                <i class="fa fa-music"></i>
+                                <span>{{track_org_link.get_music_platform_name_display}}</span>                        
+                            </a>
+                        {% endfor %}
                     </div>
                     {% if track.listen_online %}
                         <p>آنلاین گوش بده</p>

@@ -2425,4 +2425,18 @@ textarea.con{
     margin-bottom: 20px;
     color: #fff;
 }
+
+.dlbox a.link_spotify {
+    background: linear-gradient(90deg,rgba(59,83,103,1) 0%, rgb(35, 127, 58) 100%)!important;
+}
+.dlbox a.link_soundclud {
+    background: linear-gradient(90deg,rgba(59,83,103,1) 0%, rgb(224, 113, 41) 100%)!important;
+}
+.dlbox a.link_youtube {
+    background: linear-gradient(90deg,rgba(59,83,103,1) 0%, rgb(222, 37, 37) 100%)!important;
+}
+p.not-found {
+    padding: 15px;
+    text-align: center;
+}
 /**********final respansive***********/

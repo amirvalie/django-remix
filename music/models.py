@@ -313,13 +313,14 @@ class Banner(models.Model):
 
 class OriginalLinkTrack(models.Model):
     MUSIC_PLATFORM=(
-        ('youTube.','YouTube'),
-        ('spotify.','Spotify'),
-        ('soundcloud','SoundCloud'),
+        ('link_youtube','YouTube'),
+        ('link_spotify','Spotify'),
+        ('link_soundclud','SoundCloud'),
     )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
+        related_name='original_link_tracks',
     )
     music_platform_name=models.CharField(
         choices=MUSIC_PLATFORM,
