@@ -16,7 +16,6 @@
                     </ul>
                 </div>
             </div>
-
             <div class="tabby-tab">
                 <input type="radio" id="tab-2" name="tabby-tabs">
                 <label for="tab-2">جدید ترین پادکست ها</label>
@@ -37,4 +36,22 @@
         <h4>صفحه یوتوب ما</h4>
         <a href="#"><img class="youtube" src="{% static 'remix/img/youtube.png' %}"></a>
     </div>
+    {% if dynamic_sidbars %}
+        {% for sidbar in dynamic_sidbars %}
+            <div class="single-widget">
+                <h4>{{sidbar.category}}</h4>
+                <ul>
+                    {% for track in sidbar.category.tracks.number_of_hits|slice:":5" %}
+                    <li>
+                        <img width="480" height="480" src="{{track.thumbnail.url}}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" decoding="async" loading="lazy">                        
+                        <div class="custom_widget">
+                            <a href="{% url 'music:track_detail' track.slug %}">{{track.artist.first}} - {{track.title}}</a>
+                            <p>تعداد بازدید:{{track.visits}}</p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {%endfor %}
+    {% endif %}
 </div>
