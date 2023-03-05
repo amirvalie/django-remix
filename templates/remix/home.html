@@ -92,7 +92,9 @@
                 <div class="content-single-track">
                     <div class="title-single-track">
                         <a href="{{track.get_absolute_url}}"><h4>{{track.title}}</h4></a>
-                        <h6>{{track.title}}</h6>
+                        {% if track.finglish_title %}
+                            <h6>{{track.finglish_title}}</h6>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -131,7 +133,9 @@
                 <div class="content-album-track">
                     <div class="title-album-track">
                         <a href="{{podcast.get_absolute_url}}"><h4>{{podcast.title}}</h4></a>
-                        <h6>Shayea - New Album Asabani</h6>
+                        {% if podcast.finglish_title %}
+                            <h6>{{podcast.finglish_title}}</h6>
+                        {% endif %}
                     </div>
                 </div>
             </div>
