@@ -433,7 +433,10 @@ class Sidebar(models.Model):
         verbose_name='دسته بندی',
         help_text='تمام آیتم های مربوط به دسته بندی انتخاب شده بر اساس تعداد بازدید ها در سایت قرار میگیرد.'
     )
-    
+    status=models.BooleanField(
+        default=True,
+        verbose_name='وضعیت',
+    )
     class Meta:
         verbose_name='نوار کناری'
         verbose_name_plural='نوارهای کناری'
