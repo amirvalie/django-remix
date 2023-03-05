@@ -28,7 +28,6 @@ class Index(ListView):
     context_object_name='tracks'
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        print(context['tracks'])
         context['podcasts']=Track.objects.podcast()
         context['best_songs']=Track.objects.best_songs()
         context['artists']=Artist.objects.filter(status=True)
@@ -68,7 +67,6 @@ class ListOfTrack(ListView):
             return Track.objects.podcast()
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
         ids=find_ids(category)
-        print(ids)
         return Track.objects.active().filter(category__id__in=ids) 
 
     def get_context_data(self, **kwargs):
