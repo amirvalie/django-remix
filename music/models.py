@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from django.utils import timezone
 from extentions.utils import jalali_converter
 from ckeditor.fields import RichTextField 
@@ -266,6 +267,9 @@ class Track(AbstractCommonField,Finglish):
             self.banners.update(status=False)
         super(Track, self).save(*args, **kwargs)
     
+    def visits(self):
+        return self.hits.all().count()
+        
     preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()
 
