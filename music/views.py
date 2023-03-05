@@ -21,7 +21,7 @@ def find_ids(category_obj):
                 ids.append(cat_child.id)
     ids.append(category_obj.id)
     return ids
-
+    
 class Index(ListView):
     queryset=Track.objects.remix()
     template_name='remix/home.html'
