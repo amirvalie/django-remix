@@ -11,6 +11,18 @@ from .models import (
     SocialNetwork,
     ComingSoon,
 )
+def active_objects(modeladmin,request,queryset):
+    queryset.update(
+        status=True,
+    )
+active_objects.short_description='منتشر کردن'
+
+def deactive_objects(modeladmin,request,queryset):
+    print(queryset)
+    queryset.update(
+        status=False,
+    )
+deactive_objects.short_description='غیرفعال کردن'
 
 class TrackFileAdmin(admin.TabularInline):
     model=TrackFile
@@ -21,24 +33,28 @@ class OriginalLinkTrackAdmin(admin.TabularInline):
 class TrackAdmin(admin.ModelAdmin):
     list_display=['title','best_song','status','jpublish',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
-    
+    actions=[active_objects,deactive_objects,]
 class ArtistCategoryAdmin(admin.ModelAdmin):
     list_display=['title','parent','status',]
     search_fields=['title']
+    actions=[active_objects,deactive_objects,]
 class TrackCategoryAdmin(admin.ModelAdmin):
     list_display=['title','parent','status',]
     search_fields=['title']
-
+    actions=[active_objects,deactive_objects,]
 class ArtistAdmin(admin.ModelAdmin):
     list_display=['picture_tag','name']
+    actions=[active_objects,deactive_objects,]
 class BannerAdmin(admin.ModelAdmin):
-    pass
+    actions=[active_objects,deactive_objects,]
+
 
 class SocialNetworkAdmin(admin.ModelAdmin):
     pass
 
 class ComingSoonAdmin(admin.ModelAdmin):
-    pass
+    actions=['active_objects','deactive_objects',]
+
 
 admin.site.register(ArtistCategory,ArtistCategoryAdmin)
 admin.site.register(TrackCategory,TrackCategoryAdmin)
