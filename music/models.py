@@ -416,3 +416,23 @@ class ComingSoon(models.Model):
         return self.caption
 
 
+class Sidebar(models.Model):
+    title=models.CharField(
+        max_length=250,
+        verbose_name='عنوان'
+        
+    )
+    category=models.ForeignKey(
+        TrackCategory,
+        on_delete=models.CASCADE,
+        related_name='sidbars',
+        verbose_name='دسته بندی',
+        help_text='تمام آیتم های مربوط به دسته بندی انتخاب شده بر اساس تعداد بازدید ها در سایت قرار میگیرد.'
+    )
+    
+    class Meta:
+        verbose_name='نوار کناری'
+        verbose_name_plural='نوارهای کناری'
+
+    def __str__(self):
+        return self.title
