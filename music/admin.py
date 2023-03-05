@@ -10,6 +10,7 @@ from .models import (
     OriginalLinkTrack,
     SocialNetwork,
     ComingSoon,
+    Sidebar,
 )
 def active_objects(modeladmin,request,queryset):
     queryset.update(
@@ -47,7 +48,8 @@ class ArtistAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
 class BannerAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
-
+class SidbarAdmin(admin.ModelAdmin):
+    actions=[active_objects,deactive_objects,]
 
 class SocialNetworkAdmin(admin.ModelAdmin):
     pass
@@ -63,3 +65,4 @@ admin.site.register(Artist,ArtistAdmin)
 admin.site.register(Banner,BannerAdmin)
 admin.site.register(SocialNetwork,SocialNetworkAdmin)
 admin.site.register(ComingSoon,ComingSoonAdmin)
+admin.site.register(Sidebar,SidbarAdmin)
