@@ -36,6 +36,7 @@ class TrackManager(models.Manager):
         return self.active().annotate(
                 count=Count('hits')
             )
+
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
@@ -89,11 +90,17 @@ class TrackCategory(Category):
         verbose_name='دسته بندی موزیک'
         verbose_name_plural='دسته بندی موزیک ها'
     def save(self, *args, **kwargs):
+        ##use update manager instead of for loop
         if not self.status:
             for track in self.tracks.active():
                 track.status = False
                 track.save()
+            if self.child.exists():
+                for child_category in self.child.active():
+                    child_category.status=False
+                    child_category.save()
         super(TrackCategory, self).save(*args, **kwargs)
+
 
 class ArtistCategory(Category):
     class Meta:
@@ -104,7 +111,22 @@ class ArtistCategory(Category):
             for artist in self.artsts.active():
                 artist.status = False
                 artist.save()
+            if self.child.exists():
+                for child_category in self.child.active():
+                    child_category.status=False
+                    child_category.save()
         super(ArtistCategory, self).save(*args, **kwargs)
+
+class Finglish(models.Model):
+    finglish_title=models.CharField(
+        max_length=250,
+        verbose_name='عنوان فینگلیشی',
+        null=True,
+        blank=True,
+        #null and blank should be false laster
+    )
+    class Meta:
+        abstract=True
 
 class Artist(AbstractCommonField):
     name=models.CharField(
@@ -154,7 +176,7 @@ class IpAddress(models.Model):
 		ordering = ['pub_date']
 
 
-class Track(AbstractCommonField):
+class Track(AbstractCommonField,Finglish):
     MUSIC_TYPE=(
         ('remix','ریمیکس'),
         ('podcasat','پادکست'),
@@ -238,8 +260,12 @@ class Track(AbstractCommonField):
              kwargs={'slug': self.slug}))
         )
         
-
-
+    def save(self, *args, **kwargs):
+        ##use update manager instead of for loop
+        if not self.status:
+            self.banners.update(status=False)
+        super(Track, self).save(*args, **kwargs)
+    
     preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()
 
@@ -290,6 +316,7 @@ class Banner(models.Model):
         on_delete=models.CASCADE,
         verbose_name='آهنگ',
         help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
+        related_name='banners',
     )
     caption=models.CharField(
         max_length=50,
