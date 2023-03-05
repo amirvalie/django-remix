@@ -91,6 +91,10 @@ class ListOfArtist(ListView):
         return Artist.objects.filter(status=True).filter(category__id__in=ids) 
         
     def get_context_data(self, **kwargs):
+        ip_address = self.request.user.ip_address
+        if ip_address not in self.object.hits.all():
+            self.object.hits.add(ip_address)
+
         context = super().get_context_data(**kwargs)
         context['category'] = category
         return context
