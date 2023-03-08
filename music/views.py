@@ -13,15 +13,6 @@ from .models import (
     ComingSoon,
 )
 
-def find_ids(category_obj):
-    ids=[]
-    if category_obj.__class__ in  [TrackCategory,ArtistCategory]:
-        if category_obj.child.exists():
-            for cat_child in category_obj.child.active(): 
-                ids.append(cat_child.id)
-    ids.append(category_obj.id)
-    return ids
-    
 class Index(ListView):
     queryset=Track.objects.remix()
     template_name='remix/home.html'
@@ -30,7 +21,7 @@ class Index(ListView):
         context=super().get_context_data(**kwargs)
         context['podcasts']=Track.objects.podcast()
         context['best_songs']=Track.objects.best_songs()
-        context['artists']=Artist.objects.filter(status=True)
+        context['artists']=Artist.objects.active()
         context['banners']=Banner.objects.filter(status=True)
         context['coming_soon']=ComingSoon.objects.filter(status=True)
         return context        
@@ -69,8 +60,7 @@ class ListOfTrack(ListView):
             category='پادکست ها'
             return Track.objects.podcast()
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
-        ids=find_ids(category)
-        return Track.objects.active().filter(category__id__in=ids) 
+        return category.tracks_of_category_and_sub_category()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,8 +80,7 @@ class ListOfArtist(ListView):
             category_id=ArtistCategory.objects.active().values_list('id',flat=True)
             return Artist.objects.filter(status=True).filter(category__id__in=category_id) 
         category = get_object_or_404(ArtistCategory.objects.active(), slug=slug)
-        ids=find_ids(category)
-        return Artist.objects.filter(status=True).filter(category__id__in=ids) 
+        return category.artists_of_category_and_sub_category()
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,7 +88,7 @@ class ListOfArtist(ListView):
         return context
 
 class DetailArtist(DetailView):
-    queryset=Artist.objects.filter(status=True)
+    queryset=Artist.objects.active()
     template_name='remix/single-bio.html'
     context_object_name='artist'
 
@@ -107,7 +96,7 @@ class SearchTrackOrArtist(ListView):
     template_name='remix/search_result.html'
     def get_queryset(self):
         query=self.request.GET.get('q',None)
-        result=Track.objects.filter(
+        result=Track.objects.active(
             Q(title__icontains=query) | 
             Q(artists__name__icontains=query)
         )
