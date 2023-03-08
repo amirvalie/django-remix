@@ -41,7 +41,7 @@
             <div class="single-widget">
                 <h4>{{sidbar.category}}</h4>
                 <ul>
-                    {% for track in sidbar.category.tracks.number_of_hits|slice:":5" %}
+                    {% for track in sidbar.category.most_visited_songs|slice:":5" %}
                     <li>
                         <img width="480" height="480" src="{{track.thumbnail.url}}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" decoding="async" loading="lazy">                        
                         <div class="custom_widget">

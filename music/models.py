@@ -102,6 +102,11 @@ class TrackCategory(Category):
                 category__id__in=sub_categories_id,
             )
         return self.tracks.active()
+        
+    def most_visited_songs(self):
+        return self.tracks_of_category_and_sub_category().annotate(
+            count=Count('hits')
+        )
 
     def save(self, *args, **kwargs):
         ##use update manager instead of for loop
