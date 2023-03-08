@@ -42,6 +42,10 @@ class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)
 
+class ArtistManager(models.Manager):
+    def active(self):
+        return self.filter(status=True)
+
 class AbstractCommonField(models.Model):
     status=models.BooleanField(
         default=True,
@@ -90,6 +94,15 @@ class TrackCategory(Category):
     class Meta:
         verbose_name='دسته بندی موزیک'
         verbose_name_plural='دسته بندی موزیک ها'
+
+    def tracks_of_category_and_sub_category(self):
+        sub_categories_id=self.child.active().values_list('id',flat=True)
+        if sub_categories_id:
+            return Track.objects.active().filter(
+                category__id__in=sub_categories_id,
+            )
+        return self.tracks.active()
+
     def save(self, *args, **kwargs):
         ##use update manager instead of for loop
         if not self.status:
@@ -103,10 +116,20 @@ class TrackCategory(Category):
         super(TrackCategory, self).save(*args, **kwargs)
 
 
+
 class ArtistCategory(Category):
     class Meta:
         verbose_name='دسته بندی هنرمند'
         verbose_name_plural='دسته بندی هنرمند ها'
+    def artists_of_category_and_sub_category(self):
+        sub_categories_id=self.child.active().values_list('id',flat=True)
+        if sub_categories_id:
+            return Artist.objects.active().filter(
+                category__id__in=sub_categories_id,
+            )
+        else:
+            return self.artists.active()
+            
     def save(self, *args, **kwargs):
         if not self.status:
             for artist in self.artsts.active():
@@ -151,7 +174,8 @@ class Artist(AbstractCommonField):
         upload_to='image/artist',
         verbose_name='عکس هنرمند',
     )
- 
+    objects=ArtistManager()
+
     def __str__(self):
         return self.name
 
