@@ -418,7 +418,7 @@ class SocialNetwork(models.Model):
     )
     url=models.URLField(
         max_length=500,
-        verbose_name='لینک شبکه اجتماعی هنرمند را وار',
+        verbose_name='لینک شبکه اجتماعی را وار',
     )
     class Meta:
         verbose_name='شبکه اجتماعی'
