@@ -12,18 +12,28 @@ from .models import (
     Banner,
     ComingSoon,
 )
+from django.utils import timezone
+now=timezone.now()
 
-class Index(ListView):
+class Home(ListView):
     queryset=Track.objects.remix()
     template_name='remix/home.html'
-    context_object_name='tracks'
+    context_object_name='remixes'
+    
+    @staticmethod
+    def return_songs_url(tracks:list):
+        tracks_url=[]
+        for track in tracks:
+            tracks_url.append(track.track_files.first().track_file.url)
+        return tracks_url
+
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['podcasts']=Track.objects.podcast()
-        context['best_songs']=Track.objects.best_songs()
-        context['artists']=Artist.objects.active()
+        context['podcasts']=Track.objects.podcast()[:20]
+        context['best_tracks']=Track.objects.best_tracks()[:20]
+        context['best_tracks_urls']=Home.return_songs_url(context['best_tracks'])
+        context['artists']=Artist.objects.active()[:6]
         context['banners']=Banner.objects.filter(status=True)
-        context['coming_soon']=ComingSoon.objects.filter(status=True)
         return context        
 
 class DetailTrack(DetailView):
@@ -42,7 +52,7 @@ class DetailTrack(DetailView):
         context=super().get_context_data(**kwargs)
         context['related_tracks']=Track.objects.filter(
             Q(category=self.get_object().category) | 
-            Q(description__contains=self.get_object().description)
+            Q(description__icontains=self.get_object().description)
         ).exclude(id=context['track'].id)
         return context
 

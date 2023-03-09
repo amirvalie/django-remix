@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Count
+from django.db.models import Count,Q
 from django.utils import timezone
 from extentions.utils import jalali_converter
 from ckeditor.fields import RichTextField 
@@ -27,16 +27,19 @@ class TrackManager(models.Manager):
             music_type='podcasat',
             published__lte=now,
         )
-    def best_songs(self):
-        return self.filter(
-            status=True,
-            best_song=True,
-            published__lte=now,
-        )
+        
     def number_of_hits(self):
         return self.active().annotate(
                 count=Count('hits')
             )
+
+    def best_tracks(self):
+        songs=[]
+        number_of_hits=self.number_of_hits()
+        for song in number_of_hits:
+            if song.track_files.exists():
+                songs.append(song)
+        return songs
 
 class CategoryManager(models.Manager):
     def active(self):

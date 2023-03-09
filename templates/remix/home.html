@@ -44,11 +44,9 @@
                 </div>
                 <div id="player-content">
                     <div id="album-art">
-                        <img src="img/saman.jpg" class="active" id="_1">
-                        <img src="img/mehdi.jpg" id="_2">
-                        <img src="img/shayea.jpg" id="_3">
-                        <img src="img/sorena.jpg" id="_4">
-                        <img src="img/tataloo.jpg" id="_5">
+                        {% for best_track in best_tracks %}
+                            <img src="{{best_track.thumbnail.url}}" class="{% if forloop.counter == 1 %}active{% endif %}" id="_{{forloop.counter}}">
+                        {% endfor %}
                         <div id="buffer-box">Buffering ...</div>
                     </div>
                     <div id="player-controls">
@@ -83,17 +81,17 @@
             </a>
         </div>
         <div class="box-single-track">
-            {% for track in tracks %}
+            {% for remix in remixes %}
             <div class="single-track">
-                <a href="{{track.get_absolute_url}}">
+                <a href="{{remix.get_absolute_url}}">
                 <div class="single-pic">
-                    <img src="{{track.thumbnail.url}}">
+                    <img src="{{remix.thumbnail.url}}">
                 </div></a>
                 <div class="content-single-track">
                     <div class="title-single-track">
-                        <a href="{{track.get_absolute_url}}"><h4>{{track.title}}</h4></a>
-                        {% if track.finglish_title %}
-                            <h6>{{track.finglish_title}}</h6>
+                        <a href="{{remix.get_absolute_url}}"><h4>{{remix.title}}</h4></a>
+                        {% if remix.finglish_title %}
+                            <h6>{{remix.finglish_title}}</h6>
                         {% endif %}
                     </div>
                 </div>
@@ -180,12 +178,6 @@
     </div>
 </section>
 <script>
-        trackUrl = [
-            "https://irsv.upmusics.com/99/Saman%20Jalili%20%7C%20Jonoun%20(320).mp3",
-            "https://dls.music-fa.com/tagdl/1401/Mehdi%20Ahmadvand%20-%20Sahel%20(320).mp3",
-            "https://serverdl.mediahits.ir/shayea_mooham_dare_sefid_mishe.mp3",
-            "https://dl.parsmusics.ir/1400/5/Sorena%20-%20Laghzesh.mp3",
-            "https://dl.naslemusic.com/music/1400/10/Amir%20Tataloo%20-%20Man%20Bahat%20Ghahram%20(320-Naslemusic).mp3",
-        ]
+        const trackUrl = {{best_tracks_urls|safe}};   
 </script>
 {% endblock body%}
