@@ -13,11 +13,13 @@
                                 <img src="{{artist.picture.url}}">
                             </figure>
                         </div>
+                        {% if artist.social_networks.exists %}
                         <div class="social-bio">
-                            <a href="#"><i class="fab fa-facebook"></i> </a>
-                            <a href="#"><i class="fab fa-twitter"></i> </a>
-                            <a href="#"><i class="fab fa-telegram"></i> </a>
+                        {% for social_network in artist.social_networks.all %}
+                            <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
+                        {% endfor %}
                         </div>
+                    {% endif %}
                     </div>
                     <div class="post-single-bio-left">
                         <div class="post-title-bio">
@@ -64,16 +66,3 @@
 </div>
 
 {% endblock body %}
-
-<div class="post-single-bio-right">
-    <div class="post-bio-thumbnail">
-        <figure>
-            <img width="300" height="300" src="https://songplusdemo.ir/wp-content/uploads/2022/10/hay.jpg" class="attachment-bios size-bios wp-post-image" alt="" decoding="async">                            
-        </figure>
-    </div>
-        <div class="social-bio">
-        <a href="#"><i class="fab fa-facebook"></i> </a>
-        <a href="#"><i class="fab fa-twitter"></i> </a>
-        <a href="#"><i class="fab fa-telegram"></i> </a>
-    </div>
-</div>

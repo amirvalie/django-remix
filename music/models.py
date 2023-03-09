@@ -7,6 +7,9 @@ from django.utils.html import format_html
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 now=timezone.now()
 
 class TrackManager(models.Manager):
@@ -148,9 +151,6 @@ class Finglish(models.Model):
     finglish_title=models.CharField(
         max_length=250,
         verbose_name='عنوان فینگلیشی',
-        null=True,
-        blank=True,
-        #null and blank should be false laster
     )
     class Meta:
         abstract=True
@@ -164,11 +164,8 @@ class Artist(AbstractCommonField):
     category=models.ForeignKey(
         ArtistCategory,
         on_delete=models.PROTECT,
-        null=True,
-        blank=True,
         related_name='artists',
         verbose_name='دسته بندی',
-        #null and blank should be false laster
     )
     decription=RichTextField(
         verbose_name='توضیحات',
@@ -177,6 +174,7 @@ class Artist(AbstractCommonField):
         upload_to='image/artist',
         verbose_name='عکس هنرمند',
     )
+    social_networks = GenericRelation('SocialNetwork')
     objects=ArtistManager()
 
     def __str__(self):
@@ -217,11 +215,8 @@ class Track(AbstractCommonField,Finglish):
     category=models.ForeignKey(
         TrackCategory,
         on_delete=models.PROTECT,
-        null=True,
-        blank=True,
         related_name='tracks',
         verbose_name='دسته بندی',
-        #null and blank should be false laster
     )
     music_type=models.CharField(
         choices=MUSIC_TYPE,
@@ -253,8 +248,7 @@ class Track(AbstractCommonField,Finglish):
     )
     hits=models.ManyToManyField(
         IpAddress,
-        blank=True,
-        # editable=False,
+        editable=False,
     )
     published=models.DateTimeField(
         default=timezone.now,
@@ -396,11 +390,11 @@ class OriginalLinkTrack(models.Model):
     
 class SocialNetwork(models.Model):
     SOCIAL_MEDIA=(
-        ('instagram.','Instagram'),
-        ('youTube.','YouTube'),
-        ('facebook.','Facebook'),
-        ('twitter.','Twitter'),
-        ('telegram.','Telegram'),
+        ('instagram','Instagram'),
+        ('youtube','YouTube'),
+        ('facebook','Facebook'),
+        ('twitter','Twitter'),
+        ('telegram','Telegram'),
     )
     social_network_name=models.CharField(
         choices=SOCIAL_MEDIA,
@@ -412,6 +406,9 @@ class SocialNetwork(models.Model):
         max_length=500,
         verbose_name='لینک شبکه اجتماعی را وار',
     )
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
     class Meta:
         verbose_name='شبکه اجتماعی'
         verbose_name_plural='شبکه های اجتماعی'
@@ -445,7 +442,6 @@ class Sidebar(models.Model):
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان'
-        
     )
     category=models.ForeignKey(
         TrackCategory,
