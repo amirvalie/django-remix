@@ -1,4 +1,31 @@
-{% extends 'remix/object-list.html'%}
-{% block title %}نتیجه جستجو{% endblock title%}
-{% block title_content %}نتیجه جستجو{% endblock title_content%}
+{% extends 'remix/base.html'%}
+{% load tags %}
+{% block body %}
+<!-- Main Archive Track -->
+<div class="title-archive-page">
+   <h1>{% block title_content %}{% endblock title_content%}</h1>
+</div>
+<div class="archive">
+    <div class="container">
+        <div class="box-single">
+            <div class="main-single">
+                {% if not tracks and not artists %}
+                    {% include 'remix/not-found.html' %}
+                {% endif %}
+                {% for track in tracks %}
+                    <div class="post-single">
+                        <a href="{{track.get_absolute_url}}" class="search-page">{{track.title}}</a>
+                    </div>
+                {% endfor %}
+                {% for artist in artists %}
+                <div class="post-single">
+                    <a href="{{artist.get_absolute_url}}" class="search-page">{{artist.name}}</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% sidbar %}
+        </div>
+    </div>
+</div>
+{% endblock body %}
 

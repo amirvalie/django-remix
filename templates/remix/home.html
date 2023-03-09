@@ -104,9 +104,9 @@
 <div class="ads tag">
     <div class="container">
         <div class="box-ads">
-        {% for banner in banners %}
+        {% for banner in banners|slice:":2" %}
             <div class="item-ads">
-                <a href="#"><img src="{{banner.picture.url}}"> </a>
+                <a href="{{banner.track.get_absolute_url}}"><img src="{{banner.picture.url}}"> </a>
             </div>
         {% endfor %}
         </div>
@@ -145,9 +145,9 @@
 <div class="ads tag">
     <div class="container">
         <div class="box-ads">
-        {% for banner in banners %}
+        {% for banner in banners|slice:"2:3" %}
             <div class="item-ads">
-                <a href="#"><img src="{{banner.picture.url}}"> </a>
+                <a href="{{banner.track.get_absolute_url}}"><img src="{{banner.picture.url}}"> </a>
             </div>
         {% endfor %}
         </div>
