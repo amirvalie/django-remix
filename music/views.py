@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse,get_object_or_404
 from django.db.models import Q
+from itertools import chain
 from django.views.generic import (
     ListView,
     DetailView,
@@ -103,11 +104,19 @@ class DetailArtist(DetailView):
     context_object_name='artist'
 
 class SearchTrackOrArtist(ListView):
-    template_name='remix/search_result.html'
+    template_name='remix/search-result.html'
+    context_object_name='tracks'
     def get_queryset(self):
         query=self.request.GET.get('q',None)
-        result=Track.objects.active(
+        tracks=Track.objects.active().filter(
             Q(title__icontains=query) | 
             Q(artists__name__icontains=query)
         )
-        return result
+        return tracks
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        query=self.request.GET.get('q',None)
+        context['artists']=Artist.objects.active().filter(
+            name__icontains=query
+        )
+        return context
