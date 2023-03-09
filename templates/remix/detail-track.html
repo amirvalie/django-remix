@@ -43,7 +43,7 @@
                     </div>
                     <div class="dlbox">
                         {% for track_file in track.track_files.all %}
-                            <a href="#">
+                            <a href="{{track_file.track_file.url}}" download>
                                 <i class="fas fa-download"></i>
                                 <span>{{track_file.caption}}</span>
                             </a>
