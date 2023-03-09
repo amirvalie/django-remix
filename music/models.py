@@ -279,10 +279,10 @@ class Track(AbstractCommonField,Finglish):
     jpublish.short_description = "زمان انتشار"
 
     def listen_online(self):
-        track_320=self.track_files.filter(track_quality='320').first()
-        track_128=self.track_files.filter(track_quality='128').first()
-        track_file=track_320 if track_320 else track_128
-        return track_file
+        online=self.track_files.filter(listen_online=True)
+        if online:
+            return online.first()
+        return online
 
     def preview_url(self):
         return format_html(
@@ -310,10 +310,6 @@ class Track(AbstractCommonField,Finglish):
         verbose_name_plural='موزیک ها'
 
 class TrackFile(models.Model):
-    TRACK_QUALITY=(
-        ('320','320'),
-        ('128','128'),
-    )
     track=models.ForeignKey(
         Track,
         on_delete=models.CASCADE,
@@ -324,20 +320,18 @@ class TrackFile(models.Model):
         verbose_name='عنوان',
         default='مثال:دانلود آهنگ/پادکست با کیفیت 320',
     )
-    track_quality=models.CharField(
-        max_length=3,
-        choices=TRACK_QUALITY,
-        verbose_name='کیفیت آهنگ',
-        blank=True,
-        null=True,
-    )
     track_file=models.FileField(
         upload_to='music/track_file',
         verbose_name='اپلود فایل'
     )
+    listen_online=models.BooleanField(
+        default=False,
+        verbose_name='انلاین گوش بده',
+        help_text='اگر میخواهید کاربرها این فایل را به صورت آنلاین گوش دهند این گزینه را انتخاب کنید.'
+    )
 
     def __str__(self):
-        return self.track.title + 'کیفیت' + self.track_quality
+        return self.track.title
         
     class Meta:
         verbose_name='فایل موزیک'
