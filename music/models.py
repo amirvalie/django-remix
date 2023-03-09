@@ -13,19 +13,14 @@ class TrackManager(models.Manager):
     def active(self):
         return self.filter(
             status=True,
-            published__lte=now,
         )
     def remix(self):
-        return self.filter(
-            status=True,
+        return self.active().filter(
             music_type='remix',
-            published__lte=now,
         )
     def podcast(self):
-        return self.filter(
-            status=True,
+        return self.active().filter(
             music_type='podcasat',
-            published__lte=now,
         )
         
     def number_of_hits(self):
