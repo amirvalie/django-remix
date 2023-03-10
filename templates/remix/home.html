@@ -45,7 +45,7 @@
                 <div id="player-content">
                     <div id="album-art">
                         {% for best_track in best_tracks %}
-                            <img src="{{best_track.thumbnail.url}}" class="{% if forloop.counter == 1 %}active{% endif %}" id="_{{forloop.counter}}">
+                            <img src="{{best_track.small.url}}" class="{% if forloop.counter == 1 %}active{% endif %}" id="_{{forloop.counter}}">
                         {% endfor %}
                         <div id="buffer-box">Buffering ...</div>
                     </div>
@@ -90,9 +90,7 @@
                 <div class="content-single-track">
                     <div class="title-single-track">
                         <a href="{{remix.get_absolute_url}}"><h4>{{remix.title}}</h4></a>
-                        {% if remix.finglish_title %}
-                            <h6>{{remix.finglish_title}}</h6>
-                        {% endif %}
+                        <h6>{{remix.finglish_title}}</h6>
                     </div>
                 </div>
             </div>
@@ -131,9 +129,7 @@
                 <div class="content-album-track">
                     <div class="title-album-track">
                         <a href="{{podcast.get_absolute_url}}"><h4>{{podcast.title}}</h4></a>
-                        {% if podcast.finglish_title %}
-                            <h6>{{podcast.finglish_title}}</h6>
-                        {% endif %}
+                        <h6>{{podcast.finglish_title}}</h6>
                     </div>
                 </div>
             </div>

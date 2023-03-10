@@ -26,7 +26,7 @@
                 <ul>
                     {% for track in tracks %}
                     <li>
-                        <img src="{{track.thumbnail.url}}">
+                        <img src="{{track.small.url}}">
                         <a href="{{track.get_absolute_url}}">{{track.title}}</a>
                     </li>
                     {% endfor %}

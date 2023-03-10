@@ -65,10 +65,8 @@ class ListOfTrack(ListView):
         global category
         slug = self.kwargs.get('slug')
         if slug == 'all_remix':
-            category = 'ریمیکس ها'
             return Track.objects.remix()
         elif slug == 'all_podcast':
-            category='پادکست ها'
             return Track.objects.podcast()
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
         return category.tracks_of_category_and_sub_category()
@@ -87,7 +85,6 @@ class ListOfArtist(ListView):
         global category
         slug = self.kwargs.get('slug')
         if slug == 'all_artists':
-            category='هنرمندان'
             category_id=ArtistCategory.objects.active().values_list('id',flat=True)
             return Artist.objects.filter(status=True).filter(category__id__in=category_id) 
         category = get_object_or_404(ArtistCategory.objects.active(), slug=slug)

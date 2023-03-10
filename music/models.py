@@ -10,6 +10,9 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
+from PIL import Image
+from django.core.files.base import ContentFile
+from io import BytesIO
 now=timezone.now()
 
 class TrackManager(models.Manager):
@@ -100,7 +103,8 @@ class TrackCategory(Category):
         sub_categories_id=self.child.active().values_list('id',flat=True)
         if sub_categories_id:
             return Track.objects.active().filter(
-                category__id__in=sub_categories_id,
+                Q(category__id__in=sub_categories_id)|
+                Q(category__id=self.id)
             )
         return self.tracks.active()
         
@@ -121,7 +125,8 @@ class TrackCategory(Category):
                     child_category.save()
         super(TrackCategory, self).save(*args, **kwargs)
 
-
+    def get_absolute_url(self):
+        return reverse("music:tracks_of_category", args=[self.slug])
 
 class ArtistCategory(Category):
     class Meta:
@@ -131,7 +136,8 @@ class ArtistCategory(Category):
         sub_categories_id=self.child.active().values_list('id',flat=True)
         if sub_categories_id:
             return Artist.objects.active().filter(
-                category__id__in=sub_categories_id,
+                Q(category__id__in=sub_categories_id)|
+                Q(category__id=self.id)
             )
         else:
             return self.artists.active()
@@ -146,6 +152,9 @@ class ArtistCategory(Category):
                     child_category.status=False
                     child_category.save()
         super(ArtistCategory, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("music:artists_of_category", args=[self.slug])
 
 class Finglish(models.Model):
     finglish_title=models.CharField(
@@ -171,8 +180,19 @@ class Artist(AbstractCommonField):
         verbose_name='توضیحات',
     )
     picture=models.ImageField(
-        upload_to='image/artist',
+        upload_to='images/artists/profile',
         verbose_name='عکس هنرمند',
+    )
+    thumbnail=models.ImageField(
+        upload_to='images/artists/thumbnails',
+        verbose_name='عکس بندانگشتی',
+        null=True,
+        blank=True,
+    )
+    small = models.ImageField(
+        upload_to='images/artists/smalls',
+        null=True,
+        blank=True,
     )
     social_networks = GenericRelation('SocialNetwork')
     objects=ArtistManager()
@@ -184,8 +204,30 @@ class Artist(AbstractCommonField):
         return reverse("music:artist", args=[self.slug])
 
     def picture_tag(self):
-        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.picture.url))
+        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.thumbnail.url))
     picture_tag.short_description = " عکس هنرمند"
+
+    def save(self,**kwargs):
+        if self.picture:
+            img = Image.open(self.picture)
+            # Create thumbnail
+            thumb_size = (272, 272)
+            thumb_img = img.copy()
+            thumb_img.thumbnail(thumb_size)
+            thumb_bytes = BytesIO() 
+            thumb_img.save(thumb_bytes, format='JPEG')
+            thumb_file = ContentFile(thumb_bytes.getvalue())
+            self.thumbnail.save(f'{self.picture.name.split("/")[-1]}_thumb.jpg', thumb_file, save=False)
+            #Create Small
+            small_size = (100, 100)
+            small_img = img.copy()
+            small_img.thumbnail(small_size)
+            small_bytes = BytesIO()
+            small_img.save(small_bytes, format='JPEG')
+            small_file = ContentFile(small_bytes.getvalue())
+            self.small.save(f'{self.picture.name.split("/")[-1]}_small.jpg', small_file, save=False)
+        super(Artist, self).save(**kwargs)
+
     class Meta:
         verbose_name='هنرمند'
         verbose_name_plural='هنرمندان'
@@ -222,19 +264,26 @@ class Track(AbstractCommonField,Finglish):
         choices=MUSIC_TYPE,
         verbose_name='نوع موزیک',
         max_length=15,
-        default='other',
+        default='remix',
         help_text='اگر نوع موزیک ریمیکس یا پادکست است یکی از این گزینه هارا انتخاب کنید در غیر این صورت گزینه دیگر را انتخاب کنید',
     )
     description=RichTextField(
         verbose_name='توضحیات'
     )
-    thumbnail=models.ImageField(
-        upload_to='image/thumbnail',
-        verbose_name='بندانگشتی',
-    )
     cover=models.ImageField(
-        upload_to='image/cover',
+        upload_to='images/tracks/covers',
         verbose_name='کاور آهنگ',
+        help_text='توجه داشته باشید ابعاد عکس باید 480 * 480 باشد',
+    )
+    thumbnail = models.ImageField(
+        upload_to='images/tracks/thumbnails/',
+        null=True,
+        blank=True,
+    )
+    small = models.ImageField(
+        upload_to='images/tracks/smalls/',
+        null=True,
+        blank=True,
     )
     artists=models.ManyToManyField(
         Artist,
@@ -283,9 +332,26 @@ class Track(AbstractCommonField,Finglish):
         )
         
     def save(self, *args, **kwargs):
-        ##use update manager instead of for loop
         if not self.status:
             self.banners.update(status=False)
+        if self.cover:
+            img = Image.open(self.cover)
+            # Create thumbnail
+            thumb_size = (272, 272)
+            thumb_img = img.copy()
+            thumb_img.thumbnail(thumb_size)
+            thumb_bytes = BytesIO() 
+            thumb_img.save(thumb_bytes, format='JPEG')
+            thumb_file = ContentFile(thumb_bytes.getvalue())
+            self.thumbnail.save(f'{self.cover.name.split("/")[-1]}_thumb.jpg', thumb_file, save=False)
+            # Create small version
+            small_size = (100, 100)
+            small_img = img.copy()
+            small_img.thumbnail(small_size)
+            small_bytes = BytesIO()
+            small_img.save(small_bytes, format='JPEG')
+            small_file = ContentFile(small_bytes.getvalue())
+            self.small.save(f'{self.cover.name.split("/")[-1]}_small.jpg', small_file, save=False)
         super(Track, self).save(*args, **kwargs)
     
     def visits(self):
@@ -298,9 +364,9 @@ class Track(AbstractCommonField,Finglish):
         return self.title
 
     class Meta:
+        ordering = ['-id']
         verbose_name='موزیک'
         verbose_name_plural='موزیک ها'
-
 class TrackFile(models.Model):
     track=models.ForeignKey(
         Track,
@@ -310,12 +376,12 @@ class TrackFile(models.Model):
     caption=models.CharField(
         max_length=250,
         verbose_name='عنوان',
-        default='مثال:دانلود آهنگ/پادکست با کیفیت 320',
     )
     track_file=models.FileField(
         upload_to='music/track_file',
         verbose_name='اپلود فایل'
     )
+
     listen_online=models.BooleanField(
         default=False,
         verbose_name='انلاین گوش بده',
@@ -341,8 +407,6 @@ class Banner(models.Model):
         max_length=50,
         verbose_name='عنوان',
         help_text='حداکثر 50 کاراکتر مجاز است',
-        null=True,
-        blank=True
     )
     status=models.BooleanField(
         default=True,
@@ -437,7 +501,6 @@ class ComingSoon(models.Model):
     def __str__(self):
         return self.caption
 
-
 class Sidebar(models.Model):
     title=models.CharField(
         max_length=250,
@@ -460,3 +523,5 @@ class Sidebar(models.Model):
 
     def __str__(self):
         return self.title
+
+

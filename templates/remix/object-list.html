@@ -2,9 +2,6 @@
 {% load tags %}
 {% block body %}
 <!-- Main Archive Track -->
-<div class="title-archive-page">
-   <h1>{% block title_content %}{% endblock title_content%}</h1>
-</div>
 <div class="archive">
     <div class="container">
         <div class="box-single">
@@ -20,11 +17,26 @@
                             <i class="fas fa-clock"></i>
                             <span>{{object.jpublish}}</span>
                         </div>
-
-                    </header>
+                        <div class="post-meta">
+                            <i class="fas fa-folder-open"></i>
+                            <span>دسته بندی ها :</span>
+                            <a href="{{category.get_absolute_url}}">
+                                <span>
+                                    {{category.title}}
+                                </span>
+                            </a>
+                            {% if category.parent %}
+                                <a href="{{category.parent.get_absolute_url}}">
+                                    <span>
+                                        {{category.parent.title}}
+                                    </span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </header>   
                     <div class="post-thumbnail">
                         <figure>
-                            <img src="{{object.thumbnail.url}}">
+                            <img src="{{object.cover.url}}">
                         </figure>
                     </div>
                     <div class="content-single">
@@ -40,16 +52,5 @@
     </div>
 </div>
 {% endblock body %}
-<div class="post-meta">
-    <i class="fas fa-folder-open"></i>
-    <span>دسته بندی ها :</span>
-    {% for category in object.category.active %}
-        <a href="{% url 'music:tracks_of_category' category.slug %}">
-            <span>
-                {{category.title}}
-            </span>
-        </a>
-    {% endfor %}
-</div>
 
 

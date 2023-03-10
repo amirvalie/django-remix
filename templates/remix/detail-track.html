@@ -86,12 +86,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="shortlink">
-                    <div class="box-shortlink">
-                        <span>لینک کوتاه :</span>
-                        <input type="text" value="http://song-plus.ir/?p=51">
-                    </div>
-                </div>
                 <div class="related-post">
                     <div class="related-head">
                         <h2>آهنگ های مرتبط</h2>
@@ -100,7 +94,7 @@
                         <div id="related_slider" class="owl-carousel owl-theme">
                             {% for related_track in related_tracks %}
                                 <div class="item item-related">
-                                    <a href="#">
+                                    <a href="{{related_track.get_absolute_url}}">
                                         <div class="single-pic">
                                             <img src="{{related_track.thumbnail.url}}">
                                         </div></a>
