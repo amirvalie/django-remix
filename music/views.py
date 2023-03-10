@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse,get_object_or_404
 from django.db.models import Q
 from itertools import chain
+import json
 from django.views.generic import (
     ListView,
     DetailView,
@@ -26,7 +27,7 @@ class Home(ListView):
         tracks_url=[]
         for track in tracks:
             tracks_url.append(track.track_files.first().track_file.url)
-        return tracks_url
+        return json.dumps(tracks_url)
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
