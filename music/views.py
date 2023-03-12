@@ -7,13 +7,11 @@ from django.views.generic import (
     DetailView,
 )
 from .models import (
-    Artist,
     Track,
-    ArtistCategory,
-    TrackCategory,
     Banner,
-    ComingSoon,
 )
+from category.models import (TrackCategory,)
+from artist.models import(Artist,)
 from django.utils import timezone
 now=timezone.now()
 
@@ -76,30 +74,6 @@ class ListOfTrack(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = category
         return context
-
-
-class ListOfArtist(ListView):
-    template_name='remix/archive-bio.html'
-    context_object_name='artists'
-
-    def get_queryset(self):
-        global category
-        slug = self.kwargs.get('slug')
-        if slug == 'all_artists':
-            category_id=ArtistCategory.objects.active().values_list('id',flat=True)
-            return Artist.objects.filter(status=True).filter(category__id__in=category_id) 
-        category = get_object_or_404(ArtistCategory.objects.active(), slug=slug)
-        return category.artists_of_category_and_sub_category()
-        
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['category'] = category
-        return context
-
-class DetailArtist(DetailView):
-    queryset=Artist.objects.active()
-    template_name='remix/single-bio.html'
-    context_object_name='artist'
 
 class SearchTrackOrArtist(ListView):
     template_name='remix/search-result.html'

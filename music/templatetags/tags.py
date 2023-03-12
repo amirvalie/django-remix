@@ -1,11 +1,13 @@
 from django import template
+from django.http import request
 from ..models import (
     Track,
+)
+from category.models import (
     ArtistCategory,
     TrackCategory,
     Sidebar,
 )
-from django.http import request
 
 register = template.Library()
 
@@ -29,3 +31,5 @@ def sidbar(context):
         'last_podcasts':Track.objects.podcast().order_by('-published')[:10],
         'dynamic_sidbars':Sidebar.objects.filter(status=True)[:3],
     }
+
+

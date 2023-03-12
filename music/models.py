@@ -1,19 +1,44 @@
+
 from django.db import models
-from django.db.models import Count,Q
-from django.utils import timezone
+from django.db.models import Count,Avg
+from django.utils.translation import gettext_lazy as _
 from extentions.utils import jalali_converter
+from django.utils import timezone
 from ckeditor.fields import RichTextField 
 from django.utils.html import format_html
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericRelation
 from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
+from django.utils.html import format_html
 now=timezone.now()
+
+class AbstractDateFeild(models.Model):
+    created=models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='زمان ساخت'
+    )
+    updated=models.DateTimeField(
+        auto_now=True,
+        verbose_name='زمان اپدیت',
+    )
+    class Meta:
+        abstract=True
+
+class AbstractCommonField(models.Model):
+    status=models.BooleanField(
+        default=True,
+        verbose_name='منتشر شود؟',
+    )
+    slug=models.SlugField(
+        max_length=250,
+        unique=True,
+        verbose_name='لینک',
+        allow_unicode=True,
+    )
+    class Meta:
+        abstract=True
+
 
 class TrackManager(models.Manager):
     def active(self):
@@ -42,209 +67,17 @@ class TrackManager(models.Manager):
                 songs.append(song)
         return songs
 
-class CategoryManager(models.Manager):
-    def active(self):
-        return self.filter(status=True)
-
-class ArtistManager(models.Manager):
-    def active(self):
-        return self.filter(status=True)
-
-class AbstractCommonField(models.Model):
-    status=models.BooleanField(
-        default=True,
-        verbose_name='منتشر شود؟',
-    )
-    slug=models.SlugField(
-        max_length=250,
-        unique=True,
-        verbose_name='لینک',
-        allow_unicode=True,
-    )
-    class Meta:
-        abstract=True
-    
-class Category(AbstractCommonField):
-    parent=models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        verbose_name='والد',
-        blank=True,
-        null=True,
-        related_name='child',
-    )
-    title=models.CharField(
-        max_length=250,
-        verbose_name='عنوان',
-    )
-    objects=CategoryManager()
-
-    def clean(self):
-        if self.parent:
-            obj=self.parent
-            if obj.parent:
-                raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای والد دیگری میباشد.')})
-        if self.child.exists() and self.parent:
-            raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای فرزند میباشد.')})
-
-    def __str__(self):
-        return self.title
-    class Meta:
-        abstract=True
-        verbose_name='دسته بندی'
-        verbose_name_plural='دسته بندی ها'
-
-class TrackCategory(Category):
-    class Meta:
-        verbose_name='دسته بندی موزیک'
-        verbose_name_plural='دسته بندی موزیک ها'
-
-    def tracks_of_category_and_sub_category(self):
-        sub_categories_id=self.child.active().values_list('id',flat=True)
-        if sub_categories_id:
-            return Track.objects.active().filter(
-                Q(category__id__in=sub_categories_id)|
-                Q(category__id=self.id)
-            )
-        return self.tracks.active()
-        
-    def most_visited_songs(self):
-        return self.tracks_of_category_and_sub_category().annotate(
-            count=Count('hits')
-        )
-
-    def save(self, *args, **kwargs):
-        ##use update manager instead of for loop
-        if not self.status:
-            for track in self.tracks.active():
-                track.status = False
-                track.save()
-            if self.child.exists():
-                for child_category in self.child.active():
-                    child_category.status=False
-                    child_category.save()
-        super(TrackCategory, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("music:tracks_of_category", args=[self.slug])
-
-class ArtistCategory(Category):
-    class Meta:
-        verbose_name='دسته بندی هنرمند'
-        verbose_name_plural='دسته بندی هنرمند ها'
-    def artists_of_category_and_sub_category(self):
-        sub_categories_id=self.child.active().values_list('id',flat=True)
-        if sub_categories_id:
-            return Artist.objects.active().filter(
-                Q(category__id__in=sub_categories_id)|
-                Q(category__id=self.id)
-            )
-        else:
-            return self.artists.active()
-            
-    def save(self, *args, **kwargs):
-        if not self.status:
-            for artist in self.artsts.active():
-                artist.status = False
-                artist.save()
-            if self.child.exists():
-                for child_category in self.child.active():
-                    child_category.status=False
-                    child_category.save()
-        super(ArtistCategory, self).save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("music:artists_of_category", args=[self.slug])
-
-class Finglish(models.Model):
-    finglish_title=models.CharField(
-        max_length=250,
-        verbose_name='عنوان فینگلیشی',
-    )
-    class Meta:
-        abstract=True
-
-class Artist(AbstractCommonField):
-    name=models.CharField(
-        max_length=50,
-        verbose_name='نام',
-        help_text='حداکثر 50 کاراکتر مجاز است',
-    )
-    category=models.ForeignKey(
-        ArtistCategory,
-        on_delete=models.PROTECT,
-        related_name='artists',
-        verbose_name='دسته بندی',
-    )
-    decription=RichTextField(
-        verbose_name='توضیحات',
-    )
-    picture=models.ImageField(
-        upload_to='images/artists/profile',
-        verbose_name='عکس هنرمند',
-    )
-    thumbnail=models.ImageField(
-        upload_to='images/artists/thumbnails',
-        verbose_name='عکس بندانگشتی',
-        null=True,
-        blank=True,
-    )
-    small = models.ImageField(
-        upload_to='images/artists/smalls',
-        null=True,
-        blank=True,
-    )
-    social_networks = GenericRelation('SocialNetwork')
-    objects=ArtistManager()
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("music:artist", args=[self.slug])
-
-    def picture_tag(self):
-        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.thumbnail.url))
-    picture_tag.short_description = " عکس هنرمند"
-
-    def save(self,**kwargs):
-        if self.picture:
-            img = Image.open(self.picture)
-            # Create thumbnail
-            thumb_size = (272, 272)
-            thumb_img = img.copy()
-            thumb_img.thumbnail(thumb_size)
-            thumb_bytes = BytesIO() 
-            thumb_img.save(thumb_bytes, format='JPEG')
-            thumb_file = ContentFile(thumb_bytes.getvalue())
-            self.thumbnail.save(f'{self.picture.name.split("/")[-1]}_thumb.jpg', thumb_file, save=False)
-            #Create Small
-            small_size = (100, 100)
-            small_img = img.copy()
-            small_img.thumbnail(small_size)
-            small_bytes = BytesIO()
-            small_img.save(small_bytes, format='JPEG')
-            small_file = ContentFile(small_bytes.getvalue())
-            self.small.save(f'{self.picture.name.split("/")[-1]}_small.jpg', small_file, save=False)
-        super(Artist, self).save(**kwargs)
-
-    class Meta:
-        verbose_name='هنرمند'
-        verbose_name_plural='هنرمندان'
-
-class IpAddress(models.Model):
-	pub_date = models.DateTimeField('زمان اولین بازدید')
+class IpAddress(AbstractDateFeild):
 	ip_address = models.GenericIPAddressField(verbose_name='آدرس')
-
 	def __str__(self):
 		return self.ip_address
 	class Meta:
 		verbose_name = "آی‌پی"
 		verbose_name_plural = "آی‌پی ها"
-		ordering = ['pub_date']
+		# ordering = ['pub_date']
 
 
-class Track(AbstractCommonField,Finglish):
+class Track(AbstractCommonField,AbstractDateFeild):
     MUSIC_TYPE=(
         ('remix','ریمیکس'),
         ('podcasat','پادکست'),
@@ -254,8 +87,12 @@ class Track(AbstractCommonField,Finglish):
         max_length=250,
         verbose_name='عنوان',
     )
+    finglish_title=models.CharField(
+        max_length=250,
+        verbose_name='عنوان فینگلیشی',
+    )
     category=models.ForeignKey(
-        TrackCategory,
+        'category.TrackCategory',
         on_delete=models.PROTECT,
         related_name='tracks',
         verbose_name='دسته بندی',
@@ -286,7 +123,8 @@ class Track(AbstractCommonField,Finglish):
         blank=True,
     )
     artists=models.ManyToManyField(
-        Artist,
+        'artist.Artist',
+        blank=True,
         related_name='tracks',
         verbose_name='هنرمندان',
     )
@@ -302,14 +140,6 @@ class Track(AbstractCommonField,Finglish):
     published=models.DateTimeField(
         default=timezone.now,
         verbose_name='زمان انتشار',
-    )
-    created=models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='زمان ساخت'
-    )
-    updated=models.DateTimeField(
-        auto_now=True,
-        verbose_name='زمان اپدیت',
     )
 
     def get_absolute_url(self):
@@ -367,6 +197,7 @@ class Track(AbstractCommonField,Finglish):
         ordering = ['-id']
         verbose_name='موزیک'
         verbose_name_plural='موزیک ها'
+
 class TrackFile(models.Model):
     track=models.ForeignKey(
         Track,
@@ -394,34 +225,6 @@ class TrackFile(models.Model):
     class Meta:
         verbose_name='فایل موزیک'
         verbose_name_plural='فایل موزیک ها'
-
-class Banner(models.Model):
-    track=models.ForeignKey(
-        Track,
-        on_delete=models.CASCADE,
-        verbose_name='آهنگ',
-        help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
-        related_name='banners',
-    )
-    caption=models.CharField(
-        max_length=50,
-        verbose_name='عنوان',
-        help_text='حداکثر 50 کاراکتر مجاز است',
-    )
-    status=models.BooleanField(
-        default=True,
-        verbose_name='منتشر شود؟',
-    )
-    picture=models.ImageField(
-        upload_to='image/banner',
-        verbose_name='عکس',
-        help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
-    )
-    def __str__(self):
-        return 'بنر' + self.track.title
-    class Meta:
-        verbose_name='بنر'
-        verbose_name_plural='بنرها'
 
 class OriginalLinkTrack(models.Model):
     MUSIC_PLATFORM=(
@@ -451,77 +254,31 @@ class OriginalLinkTrack(models.Model):
     class Meta:
         verbose_name='لینک اصلی آهنگ'
         verbose_name_plural='لینک اصلی آهنگ ها'
-    
-class SocialNetwork(models.Model):
-    SOCIAL_MEDIA=(
-        ('instagram','Instagram'),
-        ('youtube','YouTube'),
-        ('facebook','Facebook'),
-        ('twitter','Twitter'),
-        ('telegram','Telegram'),
+        
+class Banner(AbstractDateFeild):
+    track=models.ForeignKey(
+        Track,
+        on_delete=models.CASCADE,
+        verbose_name='آهنگ',
+        help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
+        related_name='banners',
     )
-    social_network_name=models.CharField(
-        choices=SOCIAL_MEDIA,
-        max_length=50,
-        verbose_name='شبکه اجتماعی',
-        help_text='نام شبکه اجتماعی را وارد کنید',
-    )
-    url=models.URLField(
-        max_length=500,
-        verbose_name='لینک شبکه اجتماعی را وار',
-    )
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
-    class Meta:
-        verbose_name='شبکه اجتماعی'
-        verbose_name_plural='شبکه های اجتماعی'
-
-class ComingSoon(models.Model):
     caption=models.CharField(
         max_length=50,
         verbose_name='عنوان',
         help_text='حداکثر 50 کاراکتر مجاز است',
     )
-    thumbnail=models.ImageField(
-        upload_to='image/comming_soon',
-        verbose_name='بندانگشتی',
-    )
     status=models.BooleanField(
         default=True,
         verbose_name='منتشر شود؟',
     )
-    relase_date=models.DateField(
-        default=timezone.now,
-        verbose_name='تاریخ انتشار',
+    picture=models.ImageField(
+        upload_to='image/banner',
+        verbose_name='عکس',
+        help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
     )
-    class Meta:
-        verbose_name='به زودی اضافه میشود '
-        verbose_name_plural='به زودی اضافه میشوند'
     def __str__(self):
-        return self.caption
-
-class Sidebar(models.Model):
-    title=models.CharField(
-        max_length=250,
-        verbose_name='عنوان'
-    )
-    category=models.ForeignKey(
-        TrackCategory,
-        on_delete=models.CASCADE,
-        related_name='sidbars',
-        verbose_name='دسته بندی',
-        help_text='تمام آیتم های مربوط به دسته بندی انتخاب شده بر اساس تعداد بازدید ها در سایت قرار میگیرد.'
-    )
-    status=models.BooleanField(
-        default=True,
-        verbose_name='وضعیت',
-    )
+        return 'بنر' + self.track.title
     class Meta:
-        verbose_name='نوار کناری'
-        verbose_name_plural='نوارهای کناری'
-
-    def __str__(self):
-        return self.title
-
-
+        verbose_name='بنر'
+        verbose_name_plural='بنرها'

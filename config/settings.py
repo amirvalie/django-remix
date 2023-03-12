@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #apps
     'django_resized',
-    # 'about',
     'ckeditor',
     'music',
+    'comment',
+    'category',
+    'artist',
 ]
 
 MIDDLEWARE = [

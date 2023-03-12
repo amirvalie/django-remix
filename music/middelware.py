@@ -18,7 +18,7 @@ class SaveIpAddressMiddleware:
 		try:
 			ip_address = IpAddress.objects.get(ip_address=ip)
 		except IpAddress.DoesNotExist:             #-----Here My Edit
-			ip_address = IpAddress(ip_address=ip, pub_date=datetime.datetime.now())
+			ip_address = IpAddress(ip_address=ip)
 			ip_address.save()
 		request.user.ip_address = ip_address
 
