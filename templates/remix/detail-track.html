@@ -1,5 +1,6 @@
 
 {% extends 'remix/base.html'%}
+{% load comment_tags %}
 {% load tags %}
 {% block title%}{% endblock title %}
 {% block body %}
@@ -20,7 +21,7 @@
                         </div>
                         <div class="post-meta">
                             <i class="fas fa-comment"></i>
-                            <span>نظر 4</span>
+                            <span>نظر {{track|comments_count}}</span>
                         </div>
                         <div class="post-meta">
                             <i class="fas fa-eye"></i>
@@ -109,48 +110,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="comment-box">
-                    <div class="head-comment">
-                        <h2>نظرات شما</h2>
-                    </div>
-                    <div class="content-cm">
-                        <ul class="comment-section">
-                            <li class="comment user-comment">
-                                <div class="info">
-                                    <a href="#">زهرا سلطانی</a>
-                                    <span>۴ ساعت پیش</span>
-                                </div>
-
-                                <a class="avatar" href="#">
-                                    <img src="img/avatar_user_1.jpg" width="35" alt="Profile Avatar" title="Anie Silverston" />
-                                </a>
-
-                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است</p>
-
-                            </li>
-
-                            <li class="comment author-comment">
-                                <div class="info">
-                                    <a href="#">علی خدابنده</a>
-                                    <span>۳ ساعت پیش</span>
-                                </div>
-                                <a class="avatar" href="#">
-                                    <img src="img/avatar_author.jpg" width="35" alt="Profile Avatar" title="Jack Smith" />
-                                </a>
-                                <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است</p>
-                            </li>
-
-                            <li class="write-new">
-                                <form action="#" method="post">
-                                    <textarea placeholder="Write your comment here" name="comment"></textarea>
-                                    <div>
-                                        <button type="submit">ارسال</button>
-                                    </div>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                {% model_with_comment_exist track as exist%}
+                {% if exist %}
+                    {% comment track %}
+                {% endif %}
             </div>
             {% sidbar %}
         </div>

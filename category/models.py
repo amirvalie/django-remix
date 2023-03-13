@@ -3,7 +3,7 @@ from django.db.models import Count,Q
 from django.core.exceptions import ValidationError
 from django.db import models
 from music.models import AbstractCommonField,AbstractDateFeild
-
+from django.shortcuts import reverse
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)

@@ -7,11 +7,17 @@ from ckeditor.fields import RichTextField
 from music.models import AbstractDateFeild
 now=timezone.now()
 
+class CommentManager(models.Manager):
+    def active(self):
+        return self.filter(
+            status=True,
+        )
 
 class ModelWithComment(models.Model):
-    contet_type=models.ForeignKey(
+    content_type=models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
+        null=True,
         limit_choices_to={
             'app_label__in':['music','artist'],
             'model__in':('artist','track')
@@ -33,7 +39,7 @@ class Comment(AbstractDateFeild):
         blank=True,
         verbose_name='نام کاربری',
     )
-    content = RichTextField(
+    content = models.TextField(
         verbose_name='توضیحات'
     )
     status=models.BooleanField(
@@ -58,6 +64,8 @@ class Comment(AbstractDateFeild):
     )
     content_object = GenericForeignKey()
 
+    objects=CommentManager()
+
     def __str__(self):
         return self.username
     class Meta:
@@ -73,8 +81,9 @@ class Reply(AbstractDateFeild):
     comment=models.ForeignKey(
         Comment,
         on_delete=models.CASCADE,
+        related_name='replies'
     )
-    answer=RichTextField(
+    answer=models.TextField(
         verbose_name='پاسخ',
     )
     class Meta:

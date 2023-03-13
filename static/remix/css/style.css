@@ -2447,4 +2447,8 @@ a.search-page {
     border-radius: 20px;
     overflow: hidden;
 }
+p.posted-successfully{
+    padding: 15px;
+    text-align: center;
+}
 /**********final respansive***********/

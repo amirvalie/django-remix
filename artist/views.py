@@ -15,7 +15,6 @@ class ListOfArtist(ListView):
     context_object_name='artists'
 
     def get_queryset(self):
-        global category
         slug = self.kwargs.get('slug')
         if slug == 'all_artists':
             category_id=ArtistCategory.objects.active().values_list('id',flat=True)
@@ -25,7 +24,6 @@ class ListOfArtist(ListView):
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category'] = category
         return context
 
 class DetailArtist(DetailView):

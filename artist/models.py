@@ -44,6 +44,7 @@ class Artist(AbstractCommonField,AbstractDateFeild):
         blank=True,
     )
     social_networks = GenericRelation('SocialNetwork')
+    comments = GenericRelation('comment.Comment')
     objects=ArtistManager()
 
     def __str__(self):

@@ -2,6 +2,9 @@ from django.shortcuts import render,HttpResponse,get_object_or_404
 from django.db.models import Q
 from itertools import chain
 import json
+from django.utils import timezone
+from category.models import (TrackCategory,)
+from artist.models import(Artist,)
 from django.views.generic import (
     ListView,
     DetailView,
@@ -10,9 +13,6 @@ from .models import (
     Track,
     Banner,
 )
-from category.models import (TrackCategory,)
-from artist.models import(Artist,)
-from django.utils import timezone
 now=timezone.now()
 
 class Home(ListView):
@@ -58,10 +58,9 @@ class DetailTrack(DetailView):
 
 class ListOfTrack(ListView):
     paginate_by = 5
-    template_name = 'remix/category-list.html'
+    template_name = 'remix/track-list.html'
 
     def get_queryset(self):
-        global category
         slug = self.kwargs.get('slug')
         if slug == 'all_remix':
             return Track.objects.remix()
@@ -72,7 +71,6 @@ class ListOfTrack(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category'] = category
         return context
 
 class SearchTrackOrArtist(ListView):

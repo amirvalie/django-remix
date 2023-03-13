@@ -10,7 +10,8 @@ from django.urls import reverse
 from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
-from django.utils.html import format_html
+from django.contrib.contenttypes.fields import GenericRelation
+
 now=timezone.now()
 
 class AbstractDateFeild(models.Model):
@@ -141,7 +142,8 @@ class Track(AbstractCommonField,AbstractDateFeild):
         default=timezone.now,
         verbose_name='زمان انتشار',
     )
-
+    comments=GenericRelation('comment.Comment')
+    
     def get_absolute_url(self):
         return reverse("music:track_detail", args=[self.slug])
 

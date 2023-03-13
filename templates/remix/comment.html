@@ -1,0 +1,47 @@
+{% load static %}
+{% load comment_tags %}
+<div class="comment-box">
+    <div class="head-comment">
+        <h2>نظرات شما</h2>
+    </div>
+    <div class="content-cm">
+        <ul class="comment-section">
+            {% for comment in comments %}
+                <li class="comment user-comment">
+                    <div class="info">
+                        <a href="#">{{comment.username}}</a>
+                        <span>{{comment.created}}</span>
+                    </div>
+                    <a class="avatar" href="#">
+                        <img src="{% static 'remix/img/avatar_user_1.jpg' %}" width="35" alt="Profile Avatar" title="Anie Silverston" />
+                    </a>
+                    <p>{{comment.content|safe}}</p>
+                </li>
+                {% if comment.replies.exists %}
+                    {% for reply in comment.replies.all %}
+                        <li class="comment author-comment">
+                            <div class="info">
+                                <a href="#">{{reply.username}}</a>
+                                <span>{{reply.updated}}</span>
+                            </div>
+                            <a class="avatar" href="#">
+                                <img src="{% static 'remix/img/avatar_author.jpg' %}" width="35" alt="Profile Avatar" title="Jack Smith" />
+                            </a>
+                            <p>{{reply.answer|safe}}</p>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            <li class="write-new">
+                <form action="{% comment_target object %}" method="post">
+                    {{form.username}}
+                    {{form.email}}
+                    {{form.content}}
+                    <div>
+                        <button type="submit">ارسال</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
