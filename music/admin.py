@@ -3,7 +3,6 @@ from .models import (
     IpAddress,
     Track,
     TrackFile,
-    Banner,
     OriginalLinkTrack,
 )
 def active_objects(modeladmin,request,queryset):
@@ -33,9 +32,6 @@ class TrackAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
     
 
-class BannerAdmin(admin.ModelAdmin):
-    actions=[active_objects,deactive_objects,]
 
 
 admin.site.register(Track,TrackAdmin)
-admin.site.register(Banner,BannerAdmin)

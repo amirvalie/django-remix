@@ -6,7 +6,10 @@ from ..models import (
 from category.models import (
     ArtistCategory,
     TrackCategory,
+)
+from site_control.models import (
     Sidebar,
+    HomePage,
 )
 
 register = template.Library()
@@ -27,9 +30,12 @@ def navbar(context):
 @register.inclusion_tag("remix/sidbar.html",takes_context=True)
 def sidbar(context):
     return{
-        'last_remixes':Track.objects.remix().order_by('-published')[:10],
-        'last_podcasts':Track.objects.podcast().order_by('-published')[:10],
-        'dynamic_sidbars':Sidebar.objects.filter(status=True)[:3],
+        'static_sidbars':HomePage.objects.filter(status=True)[:2],
+        'dynamic_sidbars':Sidebar.objects.filter(status=True)[:4],
     }
 
+@register.simple_tag
+def call_method(category_obj,filter):
+    method=getattr(category_obj, 'find_tracks')
+    return method(filter)
 

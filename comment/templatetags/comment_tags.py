@@ -5,8 +5,8 @@ from django.shortcuts import reverse
 from comment.forms import CommentForm
 from ..models import (
     Comment,
-    ModelWithComment,
 )
+from site_control.models import (ModelWithComment,)
 
 register=template.Library()
 

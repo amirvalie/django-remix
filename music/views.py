@@ -11,14 +11,17 @@ from django.views.generic import (
 )
 from .models import (
     Track,
+)
+from site_control.models import (
+    HomePage,
     Banner,
 )
 now=timezone.now()
 
 class Home(ListView):
-    queryset=Track.objects.remix()
+    queryset=HomePage.objects.filter(status=True)[:5]
     template_name='remix/home.html'
-    context_object_name='remixes'
+    context_object_name='contents'
     
     @staticmethod
     def return_songs_url(tracks:list):
@@ -29,10 +32,9 @@ class Home(ListView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['podcasts']=Track.objects.podcast()[:20]
         context['best_tracks']=Track.objects.best_tracks()[:20]
         context['best_tracks_urls']=Home.return_songs_url(context['best_tracks'])
-        context['artists']=Artist.objects.active()[:6]
+        context['artists']=Artist.objects.active()[:12]
         context['banners']=Banner.objects.filter(status=True)
         return context        
 
@@ -62,10 +64,6 @@ class ListOfTrack(ListView):
 
     def get_queryset(self):
         slug = self.kwargs.get('slug')
-        if slug == 'all_remix':
-            return Track.objects.remix()
-        elif slug == 'all_podcast':
-            return Track.objects.podcast()
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
         return category.tracks_of_category_and_sub_category()
 

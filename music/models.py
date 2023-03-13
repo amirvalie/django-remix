@@ -46,20 +46,10 @@ class TrackManager(models.Manager):
         return self.filter(
             status=True,
         )
-    def remix(self):
-        return self.active().filter(
-            music_type='remix',
-        )
-    def podcast(self):
-        return self.active().filter(
-            music_type='podcasat',
-        )
-        
     def number_of_hits(self):
         return self.active().annotate(
                 count=Count('hits')
             )
-
     def best_tracks(self):
         songs=[]
         number_of_hits=self.number_of_hits()
@@ -79,11 +69,6 @@ class IpAddress(AbstractDateFeild):
 
 
 class Track(AbstractCommonField,AbstractDateFeild):
-    MUSIC_TYPE=(
-        ('remix','ریمیکس'),
-        ('podcasat','پادکست'),
-        ('other','دیگر'),
-    )
     title=models.CharField(
         max_length=250,
         verbose_name='عنوان',
@@ -97,13 +82,6 @@ class Track(AbstractCommonField,AbstractDateFeild):
         on_delete=models.PROTECT,
         related_name='tracks',
         verbose_name='دسته بندی',
-    )
-    music_type=models.CharField(
-        choices=MUSIC_TYPE,
-        verbose_name='نوع موزیک',
-        max_length=15,
-        default='remix',
-        help_text='اگر نوع موزیک ریمیکس یا پادکست است یکی از این گزینه هارا انتخاب کنید در غیر این صورت گزینه دیگر را انتخاب کنید',
     )
     description=RichTextField(
         verbose_name='توضحیات'
@@ -257,30 +235,3 @@ class OriginalLinkTrack(models.Model):
         verbose_name='لینک اصلی آهنگ'
         verbose_name_plural='لینک اصلی آهنگ ها'
         
-class Banner(AbstractDateFeild):
-    track=models.ForeignKey(
-        Track,
-        on_delete=models.CASCADE,
-        verbose_name='آهنگ',
-        help_text='لطفا آهنگ مورد نظر خود را برای این بنر مشخص کنید',
-        related_name='banners',
-    )
-    caption=models.CharField(
-        max_length=50,
-        verbose_name='عنوان',
-        help_text='حداکثر 50 کاراکتر مجاز است',
-    )
-    status=models.BooleanField(
-        default=True,
-        verbose_name='منتشر شود؟',
-    )
-    picture=models.ImageField(
-        upload_to='image/banner',
-        verbose_name='عکس',
-        help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
-    )
-    def __str__(self):
-        return 'بنر' + self.track.title
-    class Meta:
-        verbose_name='بنر'
-        verbose_name_plural='بنرها'

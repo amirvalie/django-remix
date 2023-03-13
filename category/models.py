@@ -52,11 +52,17 @@ class TrackCategory(Category):
                 Q(category__id=self.id)
             )
         return self.tracks.active()
-        
-    def most_visited_songs(self):
+
+    def most_visited_tracks(self):
         return self.tracks_of_category_and_sub_category().annotate(
             count=Count('hits')
         )
+
+    def find_tracks(self,filter='time'):
+        if filter == 'visit':
+            return self.most_visited_tracks()
+        else:
+            return self.tracks_of_category_and_sub_category()
 
     def save(self, *args, **kwargs):
         ##use update manager instead of for loop
@@ -101,26 +107,3 @@ class ArtistCategory(Category):
     def get_absolute_url(self):
         return reverse("artist:artists_of_category", args=[self.slug])
 
-
-class Sidebar(models.Model):
-    title=models.CharField(
-        max_length=250,
-        verbose_name='عنوان'
-    )
-    category=models.ForeignKey(
-        TrackCategory,
-        on_delete=models.CASCADE,
-        related_name='sidbars',
-        verbose_name='دسته بندی',
-        help_text='تمام آیتم های مربوط به دسته بندی انتخاب شده بر اساس تعداد بازدید ها در سایت قرار میگیرد.'
-    )
-    status=models.BooleanField(
-        default=True,
-        verbose_name='وضعیت',
-    )
-    class Meta:
-        verbose_name='نوار کناری'
-        verbose_name_plural='نوارهای کناری'
-
-    def __str__(self):
-        return self.title

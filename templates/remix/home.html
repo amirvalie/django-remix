@@ -1,4 +1,5 @@
 {% extends 'remix/base.html'%}
+{% load tags %}
 {% block title %}وبسایت سانگ پلاس{% endblock title%}
 {% block body %}
 <!-- Header Slider -->
@@ -71,33 +72,36 @@
         </div>
     </div>
 </div>
-<!-- Main Single Track -->
-<section class="main-single-track tag">
-    <div class="container">
-        <div class="head-single-track">
-            <h3>جدیدترین ریمیکس ها</h3>
-            <a href="{% url 'music:tracks_of_category' 'all_remix' %} "> ریمیکس ها
-            <i class="fas fa-angle-double-left"></i>
-            </a>
-        </div>
-        <div class="box-single-track">
-            {% for remix in remixes %}
-            <div class="single-track">
-                <a href="{{remix.get_absolute_url}}">
-                <div class="single-pic">
-                    <img src="{{remix.thumbnail.url}}">
-                </div></a>
-                <div class="content-single-track">
-                    <div class="title-single-track">
-                        <a href="{{remix.get_absolute_url}}"><h4>{{remix.title}}</h4></a>
-                        <h6>{{remix.finglish_title}}</h6>
+<!-- Main Single Content -->
+{% for content in contents|slice:":1" %}
+    <section class="main-single-track tag">
+        <div class="container">
+            <div class="head-single-track">
+                <h3>{{content.title}}</h3>
+                <a href="{{content.category.get_absolute_url}} "> بیشتر
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </div>
+            {% call_method content.category content.filter_base as tracks_result %}
+            <div class="box-single-track">
+                {% for track in tracks_result %}
+                <div class="single-track">
+                    <a href="{{track.get_absolute_url}}">
+                    <div class="single-pic">
+                        <img src="{{track.thumbnail.url}}">
+                    </div></a>
+                    <div class="content-single-track">
+                        <div class="title-single-track">
+                            <a href="{{track.get_absolute_url}}"><h4>{{track.title}}</h4></a>
+                            <h6>{{track.finglish_title}}</h6>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-</section>
+    </section>
+{% endfor %}
 <!-- Main Ads -->
 <div class="ads tag">
     <div class="container">
@@ -110,33 +114,36 @@
         </div>
     </div>
 </div>
-<!-- Main Podcast -->
-<section class="main-album tag">
-    <div class="container">
-        <div class="head-album">
-            <h3>جدید ترین پادکست ها</h3>
-            <a href="{% url 'music:tracks_of_category' 'all_podcast' %}"> پادکست ها
-                <i class="fas fa-angle-double-left"></i>
-            </a>
-        </div>
-        <div class="box-album-track">
-            {% for podcast in podcasts %}
-            <div class="album-track">
-                <a href="{{podcast.get_absolute_url}}">
-                    <div class="album-pic">
-                        <img src="{{podcast.thumbnail.url}}">
+<!-- Main Other Content -->
+{% for content in contents|slice:"2:" %}
+    <section class="main-single-track tag">
+        <div class="container">
+            <div class="head-single-track">
+                <h3>{{content.title}}</h3>
+                <a href="{{content.category.get_absolute_url}} "> بیشتر
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </div>
+            <div class="box-single-track">
+                {% call_method content.category content.filter_base as tracks_result %}
+                {% for track in tracks_result %}
+                <div class="single-track">
+                    <a href="{{track.get_absolute_url}}">
+                    <div class="single-pic">
+                        <img src="{{track.thumbnail.url}}">
                     </div></a>
-                <div class="content-album-track">
-                    <div class="title-album-track">
-                        <a href="{{podcast.get_absolute_url}}"><h4>{{podcast.title}}</h4></a>
-                        <h6>{{podcast.finglish_title}}</h6>
+                    <div class="content-single-track">
+                        <div class="title-single-track">
+                            <a href="{{track.get_absolute_url}}"><h4>{{track.title}}</h4></a>
+                            <h6>{{track.finglish_title}}</h6>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
-</section>
+    </section>
+{% endfor %}
 <!-- Main Ads -->
 <div class="ads tag">
     <div class="container">

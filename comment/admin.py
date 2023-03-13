@@ -3,7 +3,6 @@ from django.contrib.contenttypes.models import ContentType
 from .models import (
     Reply,
     Comment,
-    ModelWithComment,
 )
 
 class ReplyInline(admin.StackedInline):
@@ -13,13 +12,7 @@ class ReplyInline(admin.StackedInline):
 class CommentAdmin(admin.ModelAdmin):
     inlines=(ReplyInline,)
 
-class ModelWithCommentAdmin(admin.ModelAdmin):
-    pass
-
 
 admin.site.register(Comment,CommentAdmin)
-admin.site.register(ModelWithComment,ModelWithCommentAdmin)
-
-
 
 

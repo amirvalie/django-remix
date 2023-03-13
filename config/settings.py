@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'comment',
     'category',
     'artist',
+    'site_control',
 ]
 
 MIDDLEWARE = [

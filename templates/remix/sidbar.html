@@ -1,35 +1,25 @@
 {% load static %}
+{% load tags %}
 <div class="sidebar">
     <div class="single-widget">
         <div class="tabs">
-            <div class="tabby-tab">
-                <input type="radio" id="tab-1" name="tabby-tabs" checked>
-                <label for="tab-1">جدید ترین ریمیکس ها</label>
-                <div class="tabby-content">
-                    <ul>
-                        {% for last_remix in last_remixes %}
-                            <li>
-                                <img src="{{last_remix.thumbnail.url}}">
-                                <a href="{{last_remix.get_absolute_url}}">{{last_remix.title}}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+            {% for static_sidbar in static_sidbars %}
+                <div class="tabby-tab">
+                    <input type="radio" id="tab-{{foorloop.counter1}}" name="tabby-tabs" checked>
+                    <label for="tab-{{foorloop.counter1}}">{{static_sidbar.title}}</label>
+                    <div class="tabby-content">
+                        <ul>
+                            {% call_method static_sidbar.category static_sidbar.filter_base as tracks_result %}
+                            {% for track in tracks_result %}
+                                <li>
+                                    <img src="{{track.thumbnail.url}}">
+                                    <a href="{{track.get_absolute_url}}">{{track.title}}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="tabby-tab">
-                <input type="radio" id="tab-2" name="tabby-tabs">
-                <label for="tab-2">جدید ترین پادکست ها</label>
-                <div class="tabby-content">
-                    <ul>
-                        {% for last_podcast in last_podcasts %}
-                            <li>
-                                <img src="{{last_podcast.thumbnail.url}}">
-                                <a href="{{last_podcast.get_absolute_url}}">{{last_podcast.title}}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
     <div class="single-widget">
@@ -41,7 +31,8 @@
             <div class="single-widget">
                 <h4>{{sidbar.category}}</h4>
                 <ul>
-                    {% for track in sidbar.category.most_visited_songs|slice:":5" %}
+                    {% call_method sidbar.category sidbar.filter_base as tracks_result %}
+                    {% for track in tracks_result %}
                     <li>
                         <img width="480" height="480" src="{{track.thumbnail.url}}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" decoding="async" loading="lazy">                        
                         <div class="custom_widget">

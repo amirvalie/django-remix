@@ -2,8 +2,6 @@ from django.contrib import admin
 from .models import (
     ArtistCategory,
     TrackCategory,
-    Sidebar,
-
 )
 from music.admin import active_objects,deactive_objects
 
@@ -20,10 +18,6 @@ class TrackCategoryAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
 
 
-class SidbarAdmin(admin.ModelAdmin):
-    actions=[active_objects,deactive_objects,]
-
-
 admin.site.register(ArtistCategory,ArtistCategoryAdmin)
 admin.site.register(TrackCategory,TrackCategoryAdmin)
-admin.site.register(Sidebar,SidbarAdmin)
+

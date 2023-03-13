@@ -13,21 +13,6 @@ class CommentManager(models.Manager):
             status=True,
         )
 
-class ModelWithComment(models.Model):
-    content_type=models.ForeignKey(
-        ContentType,
-        on_delete=models.CASCADE,
-        null=True,
-        limit_choices_to={
-            'app_label__in':['music','artist'],
-            'model__in':('artist','track')
-        },
-        verbose_name='مدل ها'
-    )
-    class Meta:
-        verbose_name='مدل کامنت دار'
-        verbose_name_plural='مدل های کامنت دار'
-
 class Comment(AbstractDateFeild):
     email=models.EmailField(
         blank=True,
