@@ -31,4 +31,7 @@ def model_with_comment_exist(obj):
 
 @register.simple_tag
 def comment_target(obj):
-    return reverse('comment:post_comment',args=(ContentType.objects.get_for_model(obj).id,obj.id))
+    return reverse('comment:post_comment',args=(
+        ContentType.objects.get_for_model(obj).id,
+        obj.id,
+    ))

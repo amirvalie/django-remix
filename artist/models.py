@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
@@ -7,6 +8,7 @@ from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
 from music.models import AbstractCommonField,AbstractDateFeild
+from django.utils.html import format_html
 
 
 class ArtistManager(models.Manager):
@@ -89,6 +91,8 @@ class SocialNetwork(models.Model):
         ('facebook','Facebook'),
         ('twitter','Twitter'),
         ('telegram','Telegram'),
+        ('youtube','Aparat'),
+        ('soundcloud','SoundCloud'),
     )
     social_network_name=models.CharField(
         choices=SOCIAL_MEDIA,

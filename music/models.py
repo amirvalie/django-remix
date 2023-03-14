@@ -46,10 +46,12 @@ class TrackManager(models.Manager):
         return self.filter(
             status=True,
         )
+        
     def number_of_hits(self):
         return self.active().annotate(
                 count=Count('hits')
             )
+
     def best_tracks(self):
         songs=[]
         number_of_hits=self.number_of_hits()

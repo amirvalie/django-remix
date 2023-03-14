@@ -1,18 +1,19 @@
 from django.shortcuts import render,HttpResponse
 from django.core.mail import send_mail,BadHeaderError
+from django.shortcuts import render
+from django.views import View
 from django.views.generic import (
-    DetailView,
     FormView,
 )
 from .models import(
-    AboutUs,
+    AboutMe,
     Contact,
 )
 from .forms import ContactForm
-class About(DetailView):
-    template_name='about/about.html'
-    context_object_name='owner'
-    queryset=AboutUs.objects.last()
+class About(View):
+    def get(self,request,*args,**kwargs):
+        queryset=AboutMe.objects.last()
+        return render(request,'remix/about.html',{'owner':AboutMe.objects.last()})
 
 class Contact(FormView):
     template_name='about/contanct.html'

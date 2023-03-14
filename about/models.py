@@ -1,9 +1,9 @@
 from django.db import models
 from ckeditor.fields import RichTextField 
-
+from django.contrib.contenttypes.fields import GenericRelation
 # Create your models here.
 
-class AboutUs(models.Model):
+class AboutMe(models.Model):
     description=RichTextField(
         verbose_name='توضحیات'
     )
@@ -11,6 +11,8 @@ class AboutUs(models.Model):
         upload_to='image/profile',
         verbose_name='عکس پروفایل'
     )
+    social_networks = GenericRelation('artist.SocialNetwork')
+
     def __str__(self):
         return 'درباره'
     

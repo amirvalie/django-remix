@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{% static '/remix/css/style.css' %}">
 </head>
 <body>
-<div class="contact-us">remix/js/
+<div class="contact-us">
     <div class="contact-us-box">
         <form action="#" method="post">
             <div class="contact-head">
@@ -49,28 +49,7 @@
         </form>
     </div>
 </div>
-<!-- Top Menu -->
-<div class="top-menu">
-    <div class="container">
-        <div class="top-menu-box">
-            <div class="top-menu-right">
-                <form action="{% url 'music:search'%}" method="get">
-                    <button type="submit">
-                        <i class="fa fa-search"></i>
-                    </button>
-                    <input type="search" class="search-top-menu" placeholder="آهنگ یا اسم خواننده مورد نظرت رو جستجو کن..." name="q">
-                </form>
-            </div>
-            <div class="top-menu-left">
-                <a href="#"><i class="fab fa-facebook"></i> </a>
-                <a href="#"><i class="fab fa-twitter"></i> </a>
-                <a href="#"><i class="fab fa-telegram"></i> </a>
-                <a href="#"><i class="fab fa-linkedin"></i> </a>
-                <a href="#"><i class="fab fa-youtube"></i> </a>
-            </div>
-        </div>
-    </div>
-</div>
+{% top_menue %}
 {% navbar %}
 {% block body%}
 {% endblock body%}

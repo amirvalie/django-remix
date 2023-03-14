@@ -1,0 +1,45 @@
+{% extends 'remix/base.html'%}
+{% load comment_tags%}
+{% load about_tags %}
+{% block title %}درباره من{% endblock title%}
+{% block body %}
+<!-- Main Single bio-->
+<div class="single-bio">
+    <div class="container">
+        <div class="box-single-bio">
+            <div class="main-single-bio">
+                <div class="post-single-bio">
+                    <div class="post-single-bio-right">
+                        <div class="post-bio-thumbnail">
+                            <figure>
+                                <img src="{{owner.picture.url}}">
+                            </figure>
+                        </div>
+                        {% if owner.social_networks.exists %}
+                        <div class="social-bio">
+                        {% for social_network in owner.social_networks.all %}
+                            <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
+                        {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="post-single-bio-left">
+                        <div class="post-title-bio">
+                            <h1>{{owner.name}}</h1>
+                        </div>
+                        <div class="content-post-bio">
+                            {{owner.description|safe}}
+                        </div>
+                    </div>
+                </div>
+                {% follow_socials %}
+            </div>
+            {% model_with_comment_exist owner as exist%}
+            {% if exist %}
+                {% comment owner %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

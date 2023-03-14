@@ -5,20 +5,6 @@ from .models import Comment
 class CommentForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     username = forms.CharField(max_length=50, required=True)
-
     class Meta:
         model = Comment
         fields=['email','username','content']
-
-    def __init__(self,*args,**kwargs):
-        # obj=kwargs.pop('obj')
-        super().__init__()
-
-    def save(self, commit=True):
-        comment = super().save(commit=False)
-        comment.content_type = ContentType.objects.get_for_model(self.obj)
-        comment.object_id = obj
-        if commit:
-            comment.save()
-        return comment
-        

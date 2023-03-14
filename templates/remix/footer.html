@@ -7,11 +7,9 @@
                 <span class="line"></span>
             </div>
             <div class="footer-left-head">
-                <a href="#"><i class="fab fa-facebook"></i> </a>
-                <a href="#"><i class="fab fa-twitter"></i> </a>
-                <a href="#"><i class="fab fa-telegram"></i> </a>
-                <a href="#"><i class="fab fa-linkedin"></i> </a>
-                <a href="#"><i class="fab fa-youtube"></i> </a>
+                {% for social_network in socia_networks_link  %}
+                    <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i></a>
+                {% endfor %}
             </div>
         </div>
         <div class="box-footer">

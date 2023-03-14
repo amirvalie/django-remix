@@ -22,7 +22,7 @@
                     {% include 'remix/navbar/categories.html' %}
                     <li><a href="/">سانگ پلاس</a>
                         <ul class="sub-menu">
-                            <li><a href="#">درباره ما</a> </li>
+                            <li><a href="{% url 'about:about-me' %}">درباره ما</a> </li>
                             <li><a href="#">تماس با ما</a> </li>
                         </ul>
                     </li>
@@ -32,6 +32,7 @@
                 <ul>
                     <li><a href="/">صفحه اصلی</a></li>
                     {% include 'remix/navbar/categories.html' %}
+                    <li><a href="{% url 'about:about-me' %}">درباره من</a></li>
                     <li><a href="#" id="open_contact_box">تماس با ما</a></li>
                 </ul>
             </div>

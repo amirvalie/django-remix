@@ -87,4 +87,6 @@ class SearchTrackOrArtist(ListView):
         context['artists']=Artist.objects.active().filter(
             name__icontains=query
         )
+        print(context['artists'])
+        print(context['tracks'])
         return context

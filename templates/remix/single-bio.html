@@ -1,5 +1,6 @@
 {% extends 'remix/base.html'%}
 {% load comment_tags%}
+{% load about_tags %}
 {% block title %}بیوگرافی {{artist.name}} {% endblock title%}
 {% block body %}
 <!-- Main Single bio-->
@@ -31,36 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="followsocial">
-                    <div class="box-followsocial">
-                        <div class="item-social-telegram">
-                            <a href="#">
-                                <span class="icon-tel">
-                                    <i aria-hidden="true" class="fab fa-telegram"></i>
-                                </span>
-                                <span class="title-tel">
-                                    کانال ما در تلگرام
-                                </span>
-                            </a>
-                        </div>
-                        <div class="item-social-instagram">
-                            <a href="#">
-                                <span class="icon-tel">
-                                    <i aria-hidden="true" class="fab fa-instagram"></i>
-                                </span>
-                                <span class="title-tel">
-                                    صفحه ما در اینستاگرام
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="shortlink">
-                    <div class="box-shortlink">
-                        <span>لینک کوتاه صفحه :</span>
-                        <input type="text" value="http://song-plus.ir/?p=51">
-                    </div>
-                </div>
+                {% follow_socials %}
             </div>
             {% model_with_comment_exist artist as exist%}
             {% if exist %}

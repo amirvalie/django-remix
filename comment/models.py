@@ -37,8 +37,8 @@ class Comment(AbstractDateFeild):
         null=True,
         on_delete=models.CASCADE,
         limit_choices_to={
-            'app_label__in':['music','artist'],
-            'model__in':('artist','track')
+            'app_label__in':['music','artist','about'],
+            'model__in':('artist','track','aboutme')
         },
         verbose_name='مدل را انتخاب کنید'
     )

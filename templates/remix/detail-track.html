@@ -2,6 +2,7 @@
 {% extends 'remix/base.html'%}
 {% load comment_tags %}
 {% load tags %}
+{% load about_tags %}
 {% block title%}{% endblock title %}
 {% block body %}
 <!-- Main Single -->
@@ -63,30 +64,7 @@
                         </audio>
                     {% endif %}
                 </div>
-                <div class="followsocial">
-                    <div class="box-followsocial">
-                        <div class="item-social-telegram">
-                            <a href="#">
-                                <span class="icon-tel">
-                                    <i aria-hidden="true" class="fab fa-telegram"></i>
-                                </span>
-                                <span class="title-tel">
-                                    کانال ما در تلگرام
-                                </span>
-                            </a>
-                        </div>
-                        <div class="item-social-instagram">
-                            <a href="#">
-                                <span class="icon-tel">
-                                    <i aria-hidden="true" class="fab fa-instagram"></i>
-                                </span>
-                                <span class="title-tel">
-                                    صفحه ما در اینستاگرام
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+                {% follow_socials%}
                 <div class="related-post">
                     <div class="related-head">
                         <h2>آهنگ های مرتبط</h2>
