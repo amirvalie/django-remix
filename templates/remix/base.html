@@ -1,5 +1,6 @@
 {% load static %}
 {% load tags %}
+{% load about_tags %}
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -18,7 +19,8 @@
 <body>
 <div class="contact-us">
     <div class="contact-us-box">
-        <form action="#" method="post">
+        <form action="{% url 'about:contact_me' %}" method="post">
+            {% csrf_token %}
             <div class="contact-head">
                 <h4>تماس با ما</h4>
                 <span id="close_contact">بستن</span>
@@ -28,19 +30,19 @@
                     <label for="username">
                         نام شما
                     </label>
-                    <input type="text" id="username" class="username" placeholder="نام خود را وارد کنید">
+                    <input type="text" name="username" maxlength="20" required="" id="id_username" class="username">
                 </div>
                 <div class="box-input">
                     <label for="email">
                         ایمیل شما
                     </label>
-                    <input type="email" id="email" class="username" placeholder="ایمیل خود را وارد کنید">
+                    <input type="email" name="email" maxlength="254" required="" id="id_email" class="username">
                 </div>
                 <div class="box-input">
                     <label for="email">
                         پیام شما
                     </label>
-                    <textarea class="con" rows="8"></textarea>
+                    <textarea name="content" cols="40" rows="10" required="" id="id_content" class="con"></textarea>
                 </div>
             </div>
             <div class="btn-contact">

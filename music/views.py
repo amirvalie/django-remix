@@ -32,7 +32,7 @@ class Home(ListView):
 
     def get_context_data(self,**kwargs):
         context=super().get_context_data(**kwargs)
-        context['best_tracks']=Track.objects.best_tracks()[:20]
+        context['best_tracks']=Track.objects.best_tracks()
         context['best_tracks_urls']=Home.return_songs_url(context['best_tracks'])
         context['artists']=Artist.objects.active()[:12]
         context['banners']=Banner.objects.filter(status=True)
@@ -59,7 +59,7 @@ class DetailTrack(DetailView):
         return context
 
 class ListOfTrack(ListView):
-    paginate_by = 5
+    paginate_by = 15
     template_name = 'remix/track-list.html'
 
     def get_queryset(self):

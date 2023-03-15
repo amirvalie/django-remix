@@ -15,7 +15,7 @@ def comment(obj):
     return{
         'object':obj,
         'comments':obj.comments.active(),
-        'form':CommentForm
+        'form':CommentForm()
     }
 
 @register.filter

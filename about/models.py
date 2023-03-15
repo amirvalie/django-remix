@@ -8,7 +8,7 @@ class AboutMe(models.Model):
         verbose_name='توضحیات'
     )
     picture=models.ImageField(
-        upload_to='image/profile',
+        upload_to='images/about/profiles/',
         verbose_name='عکس پروفایل'
     )
     social_networks = GenericRelation('artist.SocialNetwork')
@@ -21,22 +21,18 @@ class AboutMe(models.Model):
         verbose_name_plural='درباره'
         
 class Contact(models.Model):
-    name=models.CharField(
+    username=models.CharField(
         max_length=20,
         verbose_name='نام'
     )
     email=models.EmailField(
         verbose_name='ایمیل'
     )
-    title=models.CharField(
-        max_length=250,
-        verbose_name='عنوان'
-    )
-    description=RichTextField(
+    content=models.TextField(
         verbose_name='توضیحات',
     )
     def __str__(self):
-        return self.title
+        return self.username
     class Meta:
         verbose_name='ارتباط '
         verbose_name_plural='ارتباط ها'

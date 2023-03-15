@@ -11,7 +11,8 @@ from PIL import Image
 from django.core.files.base import ContentFile
 from io import BytesIO
 from django.contrib.contenttypes.fields import GenericRelation
-
+from site_control.resize_img import ResizeImage
+from django.core.exceptions import ValidationError
 now=timezone.now()
 
 class AbstractDateFeild(models.Model):
@@ -46,19 +47,11 @@ class TrackManager(models.Manager):
         return self.filter(
             status=True,
         )
-        
-    def number_of_hits(self):
-        return self.active().annotate(
-                count=Count('hits')
-            )
 
     def best_tracks(self):
-        songs=[]
-        number_of_hits=self.number_of_hits()
-        for song in number_of_hits:
-            if song.track_files.exists():
-                songs.append(song)
-        return songs
+        return self.active().filter(track_files__isnull=False).annotate(
+            avg_score=(Count('hits') + Count('comments')) / 2
+        ).order_by('-avg_score')
 
 class IpAddress(AbstractDateFeild):
 	ip_address = models.GenericIPAddressField(verbose_name='آدرس')
@@ -97,11 +90,14 @@ class Track(AbstractCommonField,AbstractDateFeild):
         upload_to='images/tracks/thumbnails/',
         null=True,
         blank=True,
+        # editable=False,
+
     )
     small = models.ImageField(
         upload_to='images/tracks/smalls/',
         null=True,
         blank=True,
+        # editable=False,
     )
     artists=models.ManyToManyField(
         'artist.Artist',
@@ -124,6 +120,12 @@ class Track(AbstractCommonField,AbstractDateFeild):
     )
     comments=GenericRelation('comment.Comment')
     
+    def clean(self):
+        if self.cover:
+            img=Image.open(self.cover)
+            if img.format == 'GIF':
+                raise ValidationError({'cover':'فایل گیف مجاز نیست'})
+
     def get_absolute_url(self):
         return reverse("music:track_detail", args=[self.slug])
 
@@ -142,28 +144,16 @@ class Track(AbstractCommonField,AbstractDateFeild):
             "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
              kwargs={'slug': self.slug}))
         )
-        
+
     def save(self, *args, **kwargs):
         if not self.status:
             self.banners.update(status=False)
         if self.cover:
-            img = Image.open(self.cover)
-            # Create thumbnail
-            thumb_size = (272, 272)
-            thumb_img = img.copy()
-            thumb_img.thumbnail(thumb_size)
-            thumb_bytes = BytesIO() 
-            thumb_img.save(thumb_bytes, format='JPEG')
-            thumb_file = ContentFile(thumb_bytes.getvalue())
-            self.thumbnail.save(f'{self.cover.name.split("/")[-1]}_thumb.jpg', thumb_file, save=False)
-            # Create small version
-            small_size = (100, 100)
-            small_img = img.copy()
-            small_img.thumbnail(small_size)
-            small_bytes = BytesIO()
-            small_img.save(small_bytes, format='JPEG')
-            small_file = ContentFile(small_bytes.getvalue())
-            self.small.save(f'{self.cover.name.split("/")[-1]}_small.jpg', small_file, save=False)
+            resize_img=ResizeImage(self.cover)
+            resize_img.reformat_img_field()
+            resize_img.save_thumbnail(self.thumbnail,(272, 272))
+            resize_img.save_small(self.small,(120, 120))
+            
         super(Track, self).save(*args, **kwargs)
     
     def visits(self):

@@ -13,7 +13,7 @@ from category.models import (
 class ListOfArtist(ListView):
     template_name='remix/archive-bio.html'
     context_object_name='artists'
-
+    paginate_by=15
     def get_queryset(self):
         slug = self.kwargs.get('slug')
         if slug == 'all_artists':

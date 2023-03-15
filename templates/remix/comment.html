@@ -6,6 +6,9 @@
     </div>
     <div class="content-cm">
         <ul class="comment-section">
+            {% if not comments%}
+            <p>هیچ پیامی وجود ندارد</p>
+            {% endif %}
             {% for comment in comments %}
                 <li class="comment user-comment">
                     <div class="info">

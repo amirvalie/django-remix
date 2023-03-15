@@ -9,7 +9,7 @@ from django.core.files.base import ContentFile
 from io import BytesIO
 from music.models import AbstractCommonField,AbstractDateFeild
 from django.utils.html import format_html
-
+from site_control.resize_img import ResizeImage
 
 class ArtistManager(models.Manager):
     def active(self):
@@ -30,9 +30,10 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     decription=RichTextField(
         verbose_name='توضیحات',
     )
-    picture=models.ImageField(
-        upload_to='images/artists/profile',
+    cover=models.ImageField(
+        upload_to='images/artists/cover',
         verbose_name='عکس هنرمند',
+        null=True #shoud be false later
     )
     thumbnail=models.ImageField(
         upload_to='images/artists/thumbnails',
@@ -51,6 +52,12 @@ class Artist(AbstractCommonField,AbstractDateFeild):
 
     def __str__(self):
         return self.name
+        
+    def clean(self):
+        if self.cover:
+            img=Image.open(self.cover)
+            if img.format == 'GIF':
+                raise ValidationError({'cover':'فایل گیف مجاز نیست'})
 
     def get_absolute_url(self):
         return reverse("artist:single-bio", args=[self.slug])
@@ -60,24 +67,11 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     picture_tag.short_description = " عکس هنرمند"
 
     def save(self,**kwargs):
-        if self.picture:
-            img = Image.open(self.picture)
-            # Create thumbnail
-            thumb_size = (272, 272)
-            thumb_img = img.copy()
-            thumb_img.thumbnail(thumb_size)
-            thumb_bytes = BytesIO() 
-            thumb_img.save(thumb_bytes, format='JPEG')
-            thumb_file = ContentFile(thumb_bytes.getvalue())
-            self.thumbnail.save(f'{self.picture.name.split("/")[-1]}_thumb.jpg', thumb_file, save=False)
-            #Create Small
-            small_size = (100, 100)
-            small_img = img.copy()
-            small_img.thumbnail(small_size)
-            small_bytes = BytesIO()
-            small_img.save(small_bytes, format='JPEG')
-            small_file = ContentFile(small_bytes.getvalue())
-            self.small.save(f'{self.picture.name.split("/")[-1]}_small.jpg', small_file, save=False)
+        if self.cover:
+            resize_img=ResizeImage(self.cover)
+            resize_img.reformat_img_field()
+            resize_img.save_thumbnail(self.thumbnail,(272, 272))
+            resize_img.save_small(self.small,(120, 120))
         super(Artist, self).save(**kwargs)
 
     class Meta:

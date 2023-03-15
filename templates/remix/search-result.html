@@ -19,6 +19,7 @@
                     <a href="{{artist.get_absolute_url}}" class="search-page">{{artist.name}}</a>
                 </div>
                 {% endfor %}
+                {% include 'remix/pagination.html' %}
             </div>
             {% sidbar %}
         </div>

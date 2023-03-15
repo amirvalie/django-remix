@@ -1,5 +1,6 @@
 from django import template 
 from ..models import AboutMe
+from ..forms import ContactForm
 
 register=template.Library()
 
@@ -15,3 +16,6 @@ def follow_socials():
         'links':links
     }
 
+@register.inclusion_tag('remix/contact-me.html')
+def contact_me():
+    return None
