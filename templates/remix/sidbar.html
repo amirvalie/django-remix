@@ -22,14 +22,10 @@
             {% endfor %}
         </div>
     </div>
-    <div class="single-widget">
-        <h4>صفحه یوتوب ما</h4>
-        <a href="#"><img class="youtube" src="{% static 'remix/img/youtube.png' %}"></a>
-    </div>
     {% if dynamic_sidbars %}
         {% for sidbar in dynamic_sidbars %}
             <div class="single-widget">
-                <h4>{{sidbar.category}}</h4>
+                <h4>{{sidbar.title}}</h4>
                 <ul>
                     {% call_method sidbar.category sidbar.filter_base as tracks_result %}
                     {% for track in tracks_result %}

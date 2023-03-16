@@ -6,7 +6,7 @@
             <div class="menu-right">
                 <div class="logo">
                     <a href="/">
-                        <img src="{% static 'remix/img/logo.png' %}">
+                        <img src="{{website.logo.url}}">
                     </a>
                 </div>
             </div>
@@ -32,7 +32,9 @@
                 <ul>
                     <li><a href="/">صفحه اصلی</a></li>
                     {% include 'remix/navbar/categories.html' %}
-                    <li><a href="{% url 'about:about-me' %}">درباره من</a></li>
+                    {% if about_me %}
+                        <li><a href="{% url 'about:about-me' %}">درباره من</a></li>
+                    {% endif %}
                     <li><a href="#" id="open_contact_box">تماس با ما</a></li>
                 </ul>
             </div>

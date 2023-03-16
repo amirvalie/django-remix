@@ -19,19 +19,6 @@ class ResizeImage:
             format_file_name='webp'
         return format_file_name 
 
-    def reformat_img_field(self):
-        try:
-            img=Image.open(self.img_file)
-            thumb_bytes=BytesIO()
-            img.save(thumb_bytes,format=self.format)
-            thumb_file=ContentFile(thumb_bytes.getvalue())
-            self.img_file.save(
-                f'{self.target_file_name}.{self.set_format_file_name()}',
-                thumb_file,save=False
-            )
-        except:
-            return self.img_file
-
     def resize_and_reformat(self,size):
         try:
             img=Image.open(self.img_file)
@@ -43,6 +30,13 @@ class ResizeImage:
         except:
             return self.img_file
             
+    def save_cover(self,target_field,size:tuple):
+        thumb_file=self.resize_and_reformat(size)
+        target_field.save(
+            f'{self.target_file_name}_cover.{self.set_format_file_name()}',
+            thumb_file,save=False
+        )
+
     def save_thumbnail(self,target_field,size:tuple):
         thumb_file=self.resize_and_reformat(size)
         target_field.save(

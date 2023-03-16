@@ -4,6 +4,7 @@ from artist.models import (SocialNetwork,)
 from .models import (
     AboutMe,
     Contact,
+    AboutWebsite,
 )
 # Register your models here.
 
@@ -17,6 +18,9 @@ class AboutMeAdmin(admin.ModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     pass
 
+class AboutWebsiteAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(AboutMe,AboutMeAdmin)
 admin.site.register(Contact,ContactAdmin)
+admin.site.register(AboutWebsite,AboutWebsiteAdmin)

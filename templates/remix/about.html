@@ -3,6 +3,7 @@
 {% load about_tags %}
 {% block title %}درباره من{% endblock title%}
 {% block body %}
+{% if owner %}
 <!-- Main Single bio-->
 <div class="single-bio">
     <div class="container">
@@ -41,5 +42,5 @@
         </div>
     </div>
 </div>
-
+{% endif %}
 {% endblock body %}

@@ -23,13 +23,13 @@
                             <span>دسته بندی ها :</span>
                             <a href="{{category.get_absolute_url}}">
                                 <span>
-                                    {{category.title}}
+                                    {{object.category.title}}
                                 </span>
                             </a>
                             {% if category.parent %}
                                 <a href="{{category.parent.get_absolute_url}}">
                                     <span>
-                                        {{category.parent.title}}
+                                        {{object.category.parent.title}}
                                     </span>
                                 </a>
                             {% endif %}

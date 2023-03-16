@@ -11,7 +11,10 @@ from site_control.models import (
     Sidebar,
     HomePage,
 )
-from about.models import (AboutMe,)
+from about.models import (
+    AboutMe,
+    AboutWebsite
+)
 
 
 register = template.Library()
@@ -28,6 +31,7 @@ def footer():
     return{
         'tracks':Track.objects.active().order_by('-published')[:5],
         'socia_networks_link':social_network,
+        'website':AboutWebsite.objects.last(),
     }
 
 @register.inclusion_tag("remix/top-menue.html")
@@ -41,6 +45,8 @@ def navbar(context):
     return{
         'track_categories':TrackCategory.objects.active(),
         'artist_categories':ArtistCategory.objects.active(),
+        'website':AboutWebsite.objects.last(),
+        'about_me':AboutMe.objects.last()
     }
 
 @register.inclusion_tag("remix/sidbar.html",takes_context=True)
@@ -52,6 +58,9 @@ def sidbar(context):
 
 @register.simple_tag
 def call_method(category_obj,filter):
-    method=getattr(category_obj, 'find_tracks')
-    return method(filter)
+    try:
+        method=getattr(category_obj, 'find_tracks')
+        return method(filter)
+    except AttributeError:
+        return None
 

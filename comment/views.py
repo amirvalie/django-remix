@@ -9,7 +9,6 @@ from django.views.generic.edit import (
 
 class PostComment(View):
     def post(self,request,*args,**kwargs):
-        print(kwargs)
         form=CommentForm(request.POST)
         if form.is_valid:
             content_type=get_object_or_404(

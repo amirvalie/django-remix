@@ -5,6 +5,8 @@ from .models import (
     TrackFile,
     OriginalLinkTrack,
 )
+
+
 def active_objects(modeladmin,request,queryset):
     queryset.update(
         status=True,
@@ -18,20 +20,35 @@ def deactive_objects(modeladmin,request,queryset):
     )
 deactive_objects.short_description='غیرفعال کردن'
 
+
 class TrackFileAdmin(admin.TabularInline):
     model=TrackFile
     extra=1
+
 class OriginalLinkTrackAdmin(admin.TabularInline):
     model=OriginalLinkTrack
     extra=1
 
-
 class TrackAdmin(admin.ModelAdmin):
-    list_display=['title','best_song','status','jpublish',]
+    list_display=['title','status','jpublish',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
     actions=[active_objects,deactive_objects,]
-    
-
-
+    search_fields=['title','description','artists__name']
+    readonly_fields=('preview_url',)
+    fieldsets=(
+        (None,{
+            'fields': (
+                'title',
+                'finglish_title',
+                'slug',
+                'category',
+                'description',
+                'cover',
+                'artists',
+                'published',
+                'preview_url',
+            )
+        }),
+    )
 
 admin.site.register(Track,TrackAdmin)

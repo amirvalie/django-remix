@@ -1,6 +1,6 @@
 {% extends 'remix/base.html'%}
 {% load tags %}
-{% block title %}وبسایت سانگ پلاس{% endblock title%}
+{% block title %}وب سایت DJ snake{% endblock title%}
 {% block body %}
 <!-- Header Slider -->
 <section class="header">
@@ -22,6 +22,7 @@
         </div>
     </div>
 </section>
+{% if best_tracks %}
 <!-- Music Player -->
 <div class="music-play">
     <div class="container">
@@ -72,6 +73,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <!-- Main Single Content -->
 {% for content in contents|slice:":1" %}
     <section class="main-single-track tag">
@@ -115,7 +117,7 @@
     </div>
 </div>
 <!-- Main Other Content -->
-{% for content in contents|slice:"2:" %}
+{% for content in contents|slice:"1:" %}
     <section class="main-single-track tag">
         <div class="container">
             <div class="head-single-track">
@@ -148,7 +150,7 @@
 <div class="ads tag">
     <div class="container">
         <div class="box-ads">
-        {% for banner in banners|slice:"2:3" %}
+        {% for banner in banners|slice:"1:3" %}
             <div class="item-ads">
                 <a href="{{banner.track.get_absolute_url}}"><img src="{{banner.picture.url}}"> </a>
             </div>
@@ -156,6 +158,7 @@
         </div>
     </div>
 </div>
+{% if artists %}
 <!-- Main Bio -->
 <section class="bio tag">
     <div class="container">
@@ -170,7 +173,7 @@
             <div class="bio-item">
                 <a href="{{artist.get_absolute_url}}">
                     <div class="bio-pic">
-                        <img src="{{artist.picture.url}}">
+                        <img src="{{artist.cover.url}}">
                     </div></a>
                 <div class="title-artist-bio">
                     <span>{{artist.name}}</span>
@@ -180,6 +183,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 <script>
         const trackUrl = JSON.parse('{{best_tracks_urls|safe}}');
 </script>

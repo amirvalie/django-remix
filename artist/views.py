@@ -11,7 +11,7 @@ from category.models import (
 )
 
 class ListOfArtist(ListView):
-    template_name='remix/archive-bio.html'
+    template_name='remix/artist-list.html'
     context_object_name='artists'
     paginate_by=15
     def get_queryset(self):
@@ -28,5 +28,5 @@ class ListOfArtist(ListView):
 
 class DetailArtist(DetailView):
     queryset=Artist.objects.active()
-    template_name='remix/single-bio.html'
+    template_name='remix/artist-detail.html'
     context_object_name='artist'

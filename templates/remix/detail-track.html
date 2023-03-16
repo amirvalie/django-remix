@@ -13,7 +13,7 @@
                 <div class="post-single">
                     <div class="head-single">
                         <h1>{{track.title}}</h1>
-                        <a href="archive-track.html">تک آهنگ ها</a>
+                        <a href="{{track.category.get_absolute_url}}">{{track.category}}</a>
                     </div>
                     <header>
                         <div class="post-meta">
@@ -65,6 +65,7 @@
                     {% endif %}
                 </div>
                 {% follow_socials%}
+                {% if related_tracks %}
                 <div class="related-post">
                     <div class="related-head">
                         <h2>آهنگ های مرتبط</h2>
@@ -88,6 +89,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% model_with_comment_exist track as exist%}
                 {% if exist %}
                     {% comment track %}
@@ -98,14 +100,3 @@
     </div>
 </div>
 {% endblock body %}
-<div class="post-meta">
-    <i class="fas fa-folder-open"></i>
-    <span>دسته بندی ها :</span>
-    {% for category in object.category.active %}
-        <a href="{% url 'music:tracks_of_category' category.slug %}">
-            <span>
-                {{category.title}}
-            </span>
-        </a>
-    {% endfor %}
-</div>

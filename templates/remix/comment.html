@@ -12,11 +12,11 @@
             {% for comment in comments %}
                 <li class="comment user-comment">
                     <div class="info">
-                        <a href="#">{{comment.username}}</a>
-                        <span>{{comment.created}}</span>
+                        <a>{{comment.username}}</a>
+                        <span>{{comment.created|date:"d M Y"}}</span>
                     </div>
                     <a class="avatar" href="#">
-                        <img src="{% static 'remix/img/avatar_user_1.jpg' %}" width="35" alt="Profile Avatar" title="Anie Silverston" />
+                        <img src="{% static 'remix/img/avatar_user_1.jpg' %}" width="35" alt="Profile Avatar" title="{{comment.username}}" />
                     </a>
                     <p>{{comment.content}}</p>
                 </li>
@@ -24,11 +24,11 @@
                     {% for reply in comment.replies.all %}
                     <li class="comment author-comment">
                         <div class="info">
-                            <a href="#">Admin</a>
-                            <span>{{reply.updated}}</span>
+                            <a>{{reply.username}}</a>
+                            <span>{{reply.created|date:"d M Y"}}</span>
                         </div>
                         <a class="avatar" href="#">
-                            <img src="{% static 'remix/img/avatar_author.jpg' %}" width="35" alt="Profile Avatar" title="Jack Smith" />
+                            <img src="{% static 'remix/img/avatar_author.jpg' %}" width="35" alt="Profile Avatar" title="{{reply.username}}" />
                         </a>
                         <p>{{reply.answer}}</p>
                     </li>
@@ -54,7 +54,7 @@
                         <label for="id_content">
                             پیام شما
                         </label>
-                        <textarea name="content" cols="40" rows="10" required="" id="id_content" class="con"></textarea>
+                        <textarea name="content" cols="20" rows="5" required="" id="id_content" class="con"></textarea>
                     </div>
                     <div>
                         <button type="submit">ارسال</button>

@@ -3,6 +3,27 @@ from ckeditor.fields import RichTextField
 from django.contrib.contenttypes.fields import GenericRelation
 # Create your models here.
 
+
+class AboutWebsite(models.Model):
+    logo=models.ImageField(
+        upload_to='images/about/logo/',
+        verbose_name='لوگو',
+    )
+    name=models.CharField(
+        max_length=100,
+        verbose_name='نام وب سایت'
+    )
+    description=RichTextField(
+        verbose_name='توضیحات',
+    )
+
+    def __str__(self):
+        return 'logo'
+        
+    class Meta:
+        verbose_name='درباره وب سایت'
+        verbose_name_plural='درباره وب سایت'
+
 class AboutMe(models.Model):
     description=RichTextField(
         verbose_name='توضحیات'
@@ -14,11 +35,11 @@ class AboutMe(models.Model):
     social_networks = GenericRelation('artist.SocialNetwork')
 
     def __str__(self):
-        return 'درباره'
+        return 'درباره من'
     
     class Meta:
-        verbose_name='درباره'
-        verbose_name_plural='درباره'
+        verbose_name='درباره من'
+        verbose_name_plural='درباره من'
         
 class Contact(models.Model):
     username=models.CharField(
@@ -31,8 +52,10 @@ class Contact(models.Model):
     content=models.TextField(
         verbose_name='توضیحات',
     )
+    
     def __str__(self):
         return self.username
+
     class Meta:
         verbose_name='ارتباط '
-        verbose_name_plural='ارتباط ها'
+        verbose_name_plural='ارتباطاط'

@@ -3,7 +3,7 @@
     <div class="container">
         <div class="divider">
             <div class="footer-right-head">
-                <h2>سانگ +</h2>
+                <h2>{{website.name}}</h2>
                 <span class="line"></span>
             </div>
             <div class="footer-left-head">
@@ -14,9 +14,9 @@
         </div>
         <div class="box-footer">
             <div class="footer-right">
-                <h3>درباره سانگ پلاس</h3>
+                <h3>درباره {{website.name}}</h3>
                 <p>
-                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد
+                    {{website.description|safe}}
                 </p>
             </div>
             <div class="footer-center">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="copy-right">
-            <p>تمام حقوق این سایت متعلق به پیمان رزمجویی طراح این سایت می باشد</p>
+            <p>تمام حقوق این سایت متعلق به <a href=""> امیرحسین ولیئی</a> طراح این سایت می باشد</p>
         </div>
     </div>
 </footer>

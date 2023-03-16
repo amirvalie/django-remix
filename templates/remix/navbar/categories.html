@@ -5,7 +5,7 @@
     <li><a href="{{category.get_absolute_url}}">{{category.title}}</a>
         <ul class="sub-menu">
             {% for child_category in category.child.active %}
-                    <li><a href="{{category.get_absolute_url}}">{{child_category.title}}</a></li>
+                    <li><a href="{{child_category.get_absolute_url}}">{{child_category.title}}</a></li>
             {% endfor %}
             </ul>
         </li>
@@ -18,7 +18,7 @@
         <li><a href="{{category.get_absolute_url}}">{{category.title}}</a>
             <ul class="sub-menu">
                 {% for child_category in category.child.active %}
-                    <li><a href="{{category.get_absolute_url}}">{{child_category.title}}</a></li>
+                    <li><a href="{{child_category.get_absolute_url}}">{{child_category.title}}</a></li>
                 {% endfor %}
             </ul>
         </li>

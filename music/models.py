@@ -13,6 +13,8 @@ from io import BytesIO
 from django.contrib.contenttypes.fields import GenericRelation
 from site_control.resize_img import ResizeImage
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
+
 now=timezone.now()
 
 class AbstractDateFeild(models.Model):
@@ -29,13 +31,15 @@ class AbstractDateFeild(models.Model):
 
 class AbstractCommonField(models.Model):
     status=models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='منتشر شود؟',
     )
     slug=models.SlugField(
         max_length=250,
         unique=True,
         verbose_name='لینک',
+        null=True,
+        blank=True,
         allow_unicode=True,
     )
     class Meta:
@@ -43,6 +47,7 @@ class AbstractCommonField(models.Model):
 
 
 class TrackManager(models.Manager):
+
     def active(self):
         return self.filter(
             status=True,
@@ -60,7 +65,6 @@ class IpAddress(AbstractDateFeild):
 	class Meta:
 		verbose_name = "آی‌پی"
 		verbose_name_plural = "آی‌پی ها"
-		# ordering = ['pub_date']
 
 
 class Track(AbstractCommonField,AbstractDateFeild):
@@ -90,25 +94,17 @@ class Track(AbstractCommonField,AbstractDateFeild):
         upload_to='images/tracks/thumbnails/',
         null=True,
         blank=True,
-        # editable=False,
-
     )
     small = models.ImageField(
         upload_to='images/tracks/smalls/',
         null=True,
         blank=True,
-        # editable=False,
     )
     artists=models.ManyToManyField(
         'artist.Artist',
         blank=True,
         related_name='tracks',
         verbose_name='هنرمندان',
-    )
-    best_song=models.BooleanField(
-        default=True,
-        verbose_name='آهنگ منتخب؟',
-        help_text='اگر میخواهید این اهنگ در قسمت بهترین آهنگ ها قرار گیرد تیک این قسمت را بزنید.'
     )
     hits=models.ManyToManyField(
         IpAddress,
@@ -138,28 +134,32 @@ class Track(AbstractCommonField,AbstractDateFeild):
         if online:
             return online.first()
         return online
-
+    
     def preview_url(self):
         return format_html(
-            "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("track:preview-detail",
+            "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("music:preview_detail",
              kwargs={'slug': self.slug}))
         )
+    preview_url.short_description = "پیش‌نمایش"
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug=slugify(self.title,allow_unicode=True)
+            
         if not self.status:
             self.banners.update(status=False)
+            
         if self.cover:
             resize_img=ResizeImage(self.cover)
-            resize_img.reformat_img_field()
+            resize_img.save_cover(self.cover,(480, 480))
             resize_img.save_thumbnail(self.thumbnail,(272, 272))
             resize_img.save_small(self.small,(120, 120))
-            
+                
         super(Track, self).save(*args, **kwargs)
     
     def visits(self):
         return self.hits.all().count()
         
-    preview_url.short_description = "پیش‌نمایش"
     objects=TrackManager()
 
     def __str__(self):

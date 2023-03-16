@@ -2,9 +2,12 @@ from django.shortcuts import render,HttpResponse,get_object_or_404
 from django.db.models import Q
 from itertools import chain
 import json
+from django.contrib.auth.decorators import permission_required
+from django.utils.decorators import method_decorator
 from django.utils import timezone
 from category.models import (TrackCategory,)
 from artist.models import(Artist,)
+
 from django.views.generic import (
     ListView,
     DetailView,
@@ -90,3 +93,16 @@ class SearchTrackOrArtist(ListView):
         print(context['artists'])
         print(context['tracks'])
         return context
+
+class PreViewDetail(DetailView):
+    template_name='remix/preview-detail-track.html'
+    context_object_name='track'
+
+    @method_decorator(permission_required('is_staff'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_object(self):
+        slug=self.kwargs.get('slug')
+        track=get_object_or_404(Track,slug=slug)
+        return track

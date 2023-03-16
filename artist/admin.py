@@ -15,5 +15,19 @@ class ArtistAdmin(admin.ModelAdmin):
     list_display=['picture_tag','name']
     inlines=[SocialNetworkAdmin,]
     actions=[active_objects,deactive_objects,]
-    
+    fieldsets=(
+        (None,{
+            'fields':(
+                'name',
+                'slug',
+                'category',
+                'decription',
+                'cover',
+                'status',
+            )
+        }
+        ),
+    )
+
+
 admin.site.register(Artist,ArtistAdmin)

@@ -10,6 +10,7 @@ from io import BytesIO
 from music.models import AbstractCommonField,AbstractDateFeild
 from django.utils.html import format_html
 from site_control.resize_img import ResizeImage
+from django.utils.text import slugify
 
 class ArtistManager(models.Manager):
     def active(self):
@@ -33,7 +34,6 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     cover=models.ImageField(
         upload_to='images/artists/cover',
         verbose_name='عکس هنرمند',
-        null=True #shoud be false later
     )
     thumbnail=models.ImageField(
         upload_to='images/artists/thumbnails',
@@ -60,16 +60,18 @@ class Artist(AbstractCommonField,AbstractDateFeild):
                 raise ValidationError({'cover':'فایل گیف مجاز نیست'})
 
     def get_absolute_url(self):
-        return reverse("artist:single-bio", args=[self.slug])
+        return reverse("artist:artist_detail", args=[self.slug])
 
     def picture_tag(self):
-        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.thumbnail.url))
+        return format_html("<img width=100 height=75 style='border-radius: 5px;' src='{}'>".format(self.small.url))
     picture_tag.short_description = " عکس هنرمند"
 
     def save(self,**kwargs):
+        if not self.slug:
+            self.slug=slugify(self.name,allow_unicode=True)
         if self.cover:
             resize_img=ResizeImage(self.cover)
-            resize_img.reformat_img_field()
+            resize_img.save_cover(self.cover, (300,300))
             resize_img.save_thumbnail(self.thumbnail,(272, 272))
             resize_img.save_small(self.small,(120, 120))
         super(Artist, self).save(**kwargs)
@@ -98,7 +100,10 @@ class SocialNetwork(models.Model):
         max_length=500,
         verbose_name='لینک شبکه اجتماعی را وار',
     )
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE
+    )
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
     class Meta:
