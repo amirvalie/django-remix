@@ -1,6 +1,6 @@
 
 from django.db import models
-from django.db.models import Count,Avg
+from django.db.models import Count,Avg,Q
 from django.utils.translation import gettext_lazy as _
 from extentions.utils import jalali_converter
 from django.utils import timezone
@@ -51,6 +51,7 @@ class TrackManager(models.Manager):
     def active(self):
         return self.filter(
             status=True,
+            published__lte=timezone.now()
         )
 
     def best_tracks(self):
@@ -84,6 +85,11 @@ class Track(AbstractCommonField,AbstractDateFeild):
     )
     description=RichTextField(
         verbose_name='توضحیات'
+    )
+    lyrics=RichTextField(
+        verbose_name='متن آهنگ',
+        null=True,
+        blank=True,
     )
     cover=models.ImageField(
         upload_to='images/tracks/covers',
@@ -159,7 +165,7 @@ class Track(AbstractCommonField,AbstractDateFeild):
     
     def visits(self):
         return self.hits.all().count()
-        
+
     objects=TrackManager()
 
     def __str__(self):

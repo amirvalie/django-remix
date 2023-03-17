@@ -25,17 +25,23 @@ class AboutWebsite(models.Model):
         verbose_name_plural='درباره وب سایت'
 
 class AboutMe(models.Model):
+    name=models.CharField(
+        max_length=50,
+        verbose_name='نام',
+        null=True,
+    )
     description=RichTextField(
-        verbose_name='توضحیات'
+        verbose_name='توضحیات',
     )
     picture=models.ImageField(
         upload_to='images/about/profiles/',
-        verbose_name='عکس پروفایل'
+        verbose_name='عکس پروفایل',
     )
     social_networks = GenericRelation('artist.SocialNetwork')
+    comments = GenericRelation('comment.Comment')
 
-    def __str__(self):
-        return 'درباره من'
+    # def __str__(self):
+    #     return self.name
     
     class Meta:
         verbose_name='درباره من'
@@ -44,10 +50,15 @@ class AboutMe(models.Model):
 class Contact(models.Model):
     username=models.CharField(
         max_length=20,
-        verbose_name='نام'
+        verbose_name='نام',
     )
     email=models.EmailField(
-        verbose_name='ایمیل'
+        verbose_name='ایمیل',
+    )
+    title=models.CharField(
+        max_length=250,
+        verbose_name='عنوان',
+        null=True,
     )
     content=models.TextField(
         verbose_name='توضیحات',
@@ -58,4 +69,4 @@ class Contact(models.Model):
 
     class Meta:
         verbose_name='ارتباط '
-        verbose_name_plural='ارتباطاط'
+        verbose_name_plural='ارتباطات'

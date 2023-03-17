@@ -1,6 +1,6 @@
 {% extends 'remix/base.html'%}
 {% load tags %}
-{% block title %}وب سایت DJ snake{% endblock title%}
+{% block title %}دی جی موان|Dj Movan{% endblock title%}
 {% block body %}
 <!-- Header Slider -->
 <section class="header">
@@ -150,7 +150,7 @@
 <div class="ads tag">
     <div class="container">
         <div class="box-ads">
-        {% for banner in banners|slice:"1:3" %}
+        {% for banner in banners|slice:"2:3" %}
             <div class="item-ads">
                 <a href="{{banner.track.get_absolute_url}}"><img src="{{banner.picture.url}}"> </a>
             </div>
@@ -159,12 +159,12 @@
     </div>
 </div>
 {% if artists %}
-<!-- Main Bio -->
+<!-- Main Artists -->
 <section class="bio tag">
     <div class="container">
         <div class="head-bio">
             <h3>بیوگرافی از خوانندگان</h3>
-            <a href="{% url 'artist:artists_of_category' 'all_artists' %}">  موارد بیشتر
+            <a href="{{artist.category.get_absolute_url}}">  موارد بیشتر
                 <i class="fas fa-angle-double-left"></i>
             </a>
         </div>
@@ -184,7 +184,10 @@
     </div>
 </section>
 {% endif %}
-<script>
-        const trackUrl = JSON.parse('{{best_tracks_urls|safe}}');
+<script type="text/javascript">
+    var trackUrl = {{best_tracks_url|safe}};
+    var albums = {{ best_tracks_artist|safe }};
+    var trackNames = {{ best_tracks_name|safe }};
+    var albumArtworks = {{ best_tracks_number|safe }};
 </script>
 {% endblock body%}

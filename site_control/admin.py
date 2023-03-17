@@ -14,6 +14,7 @@ from music.admin import (
 
 
 class BannerAdmin(admin.ModelAdmin):
+    list_display=['caption','status']
     actions=[active_objects,deactive_objects,]
 
 
@@ -21,10 +22,12 @@ class ModelWithCommentAdmin(admin.ModelAdmin):
     pass
 
 class SidbarAdmin(admin.ModelAdmin):
+    list_display=['title','status']
     actions=[active_objects,deactive_objects,]
 
 class HomePageAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
+    list_display=['category','status']
 
     
 admin.site.register(ModelWithComment,ModelWithCommentAdmin)

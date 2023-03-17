@@ -14,9 +14,10 @@ class SocialNetworkAdmin(GenericTabularInline):
 
 class AboutMeAdmin(admin.ModelAdmin):
     inlines=[SocialNetworkAdmin,]
+    list_display=['name']
 
 class ContactAdmin(admin.ModelAdmin):
-    pass
+    list_display=['title','username','email']
 
 class AboutWebsiteAdmin(admin.ModelAdmin):
     pass

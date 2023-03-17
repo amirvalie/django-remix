@@ -39,6 +39,18 @@
                         {{track.description|safe}}
                     </div>
                 </div>
+                {% if track.lyrics %}
+                <div class="lyric">
+                    <div class="head-lyric">
+                        <h2>متن آهنگ</h2>
+                    </div>
+                    <div class="content-lyric">
+                        <p>
+                            {{track.lyrics|safe}}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="post-single-dl">
                     <div class="head-dl">
                         <h2>جعبه دانلود</h2>

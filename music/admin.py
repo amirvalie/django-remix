@@ -14,7 +14,6 @@ def active_objects(modeladmin,request,queryset):
 active_objects.short_description='منتشر کردن'
 
 def deactive_objects(modeladmin,request,queryset):
-    print(queryset)
     queryset.update(
         status=False,
     )
@@ -43,10 +42,12 @@ class TrackAdmin(admin.ModelAdmin):
                 'slug',
                 'category',
                 'description',
+                'lyrics',
                 'cover',
                 'artists',
                 'published',
                 'preview_url',
+                'status'
             )
         }),
     )

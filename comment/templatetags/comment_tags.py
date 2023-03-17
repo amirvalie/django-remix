@@ -3,6 +3,7 @@ from django.http import request
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import reverse
 from comment.forms import CommentForm
+from django.db.models import Count
 from ..models import (
     Comment,
 )
@@ -10,17 +11,23 @@ from site_control.models import (ModelWithComment,)
 
 register=template.Library()
 
-@register.inclusion_tag('remix/comment.html')
-def comment(obj):
+@register.inclusion_tag('remix/comment.html', takes_context=True)
+def comment(context,obj):
+    try:
+        success_massage=context['request'].session.pop('success_massage'),
+    except:
+        success_massage=None
+
     return{
         'object':obj,
         'comments':obj.comments.active(),
-        'form':CommentForm()
+        'form':CommentForm(),
+        'success_massage':success_massage,
     }
 
 @register.filter
 def comments_count(obj):
-    return obj.comments.active().count()
+    return obj.comments.active().count() + obj.comments.aggregate(count=Count('replies'))['count']
 
 @register.simple_tag()
 def model_with_comment_exist(obj):

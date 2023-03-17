@@ -88,28 +88,6 @@ $(function () {
         nTime = 0,
         buffInterval = null,
         tFlag = false,
-        albums = [
-            "Saman Jalili",
-            "Mehdi Ahmadvand",
-            "Shayea",
-            "Ali Sorena",
-            "Amir Tataloo",
-        ],
-        trackNames = [
-            "Jonoun",
-            "Sahel",
-            "Mooham Dare Sefid Mishe",
-            "Laghzesh",
-            "Man Bahat Ghahram",
-        ],
-        albumArtworks = ["_1", "_2", "_3","_4","_5"],
-        // trackUrl = [
-        //     "https://irsv.upmusics.com/99/Saman%20Jalili%20%7C%20Jonoun%20(320).mp3",
-        //     "https://dls.music-fa.com/tagdl/1401/Mehdi%20Ahmadvand%20-%20Sahel%20(320).mp3",
-        //     "https://serverdl.mediahits.ir/shayea_mooham_dare_sefid_mishe.mp3",
-        //     "https://dl.parsmusics.ir/1400/5/Sorena%20-%20Laghzesh.mp3",
-        //     "https://dl.naslemusic.com/music/1400/10/Amir%20Tataloo%20-%20Man%20Bahat%20Ghahram%20(320-Naslemusic).mp3",
-        // ],
         playPreviousTrackButton = $("#play-previous"),
         playNextTrackButton = $("#play-next"),
         currIndex = -1;

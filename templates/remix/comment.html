@@ -60,6 +60,11 @@
                         <button type="submit">ارسال</button>
                     </div>
                 </form>
+                {% if success_massage %}
+                <div>
+                    <p style="text-align: center;color: green;">ارسال موفقیت آمیز بود</p>
+                </div>
+                {% endif %}
             </li>
         </ul>
     </div>

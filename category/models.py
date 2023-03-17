@@ -5,6 +5,8 @@ from django.db import models
 from music.models import AbstractCommonField,AbstractDateFeild
 from django.shortcuts import reverse
 from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+
 class CategoryManager(models.Manager):
     def active(self):
         return self.filter(status=True)

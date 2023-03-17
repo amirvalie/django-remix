@@ -4,6 +4,10 @@ from .models import (
     Reply,
     Comment,
 )
+from music.admin import(
+    deactive_objects,
+    active_objects,
+)
 
 class ReplyInline(admin.StackedInline):
     model=Reply
@@ -11,8 +15,8 @@ class ReplyInline(admin.StackedInline):
 
 class CommentAdmin(admin.ModelAdmin):
     inlines=(ReplyInline,)
-
-
+    actions=(deactive_objects,active_objects,)
+    
 admin.site.register(Comment,CommentAdmin)
 
 
