@@ -338,6 +338,10 @@ $('#open_contact_box').click(function(){
     $('.contact-us').addClass('contact-show');
     $('body').addClass('hidden-scroll');
 });
+$('#open_contact_box_1').click(function(){
+    $('.contact-us').addClass('contact-show');
+    $('body').addClass('hidden-scroll');
+});
 $('#close_contact').click(function(){
     $('.contact-us').removeClass('contact-show');
     $('body').removeClass('hidden-scroll');

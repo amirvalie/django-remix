@@ -15,7 +15,3 @@ def follow_socials():
     return {
         'links':links
     }
-
-@register.inclusion_tag('remix/contact-me.html')
-def contact_me():
-    return None

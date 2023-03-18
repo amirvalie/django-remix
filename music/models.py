@@ -1,6 +1,6 @@
 
 from django.db import models
-from django.db.models import Count,Avg,Q
+from django.db.models import Count,Avg,Q,F
 from django.utils.translation import gettext_lazy as _
 from extentions.utils import jalali_converter
 from django.utils import timezone
@@ -56,8 +56,9 @@ class TrackManager(models.Manager):
 
     def best_tracks(self):
         return self.active().filter(track_files__isnull=False).annotate(
-            avg_score=(Count('hits') + Count('comments')) / 2
-        ).order_by('-avg_score')
+            num_hits=Count('hits',distinct=True)*2 ,num_comment=Count('comments',distinct=True),
+            avg_score=(F('num_hits') + F('num_comment'))
+        ).distinct().order_by('-avg_score')
 
 class IpAddress(AbstractDateFeild):
 	ip_address = models.GenericIPAddressField(verbose_name='آدرس')
@@ -114,7 +115,6 @@ class Track(AbstractCommonField,AbstractDateFeild):
     )
     hits=models.ManyToManyField(
         IpAddress,
-        editable=False,
     )
     published=models.DateTimeField(
         default=timezone.now,

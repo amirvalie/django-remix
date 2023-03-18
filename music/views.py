@@ -65,11 +65,7 @@ class Home(ListView):
         context['best_tracks_name']=Home.best_tracks_name(context['best_tracks'])
         context['best_tracks_number']=Home.best_tracks_number(context['best_tracks'])
         context['artists']=Artist.objects.active()[:12]
-        context['banners']=Banner.objects.filter(status=True,track__status=True)
-        print('best_tracks_url',context['best_tracks_url'])
-        print('best_tracks_artist',context['best_tracks_artist'])
-        print('best_tracks_name',context['best_tracks_name'])
-        print('best_tracks_numberc',context['best_tracks_number'])
+        context['banners']=Banner.objects.filter(status=True,track__status=True).order_by('-id')
         return context        
 
 class DetailTrack(DetailView):

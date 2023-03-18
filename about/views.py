@@ -21,22 +21,22 @@ class Contact(View):
         form=ContactForm(data=request.POST)
         if form.is_valid():
             form.save()
-            body={
-                'username':form.cleaned_data['username'],
-                'email':form.cleaned_data['email'],
-                'content':form.cleaned_data['content'],
-            }
-            massage="\n".join(body.values())
-            email_subject = f'یک پیام جدید از طرف {form.cleaned_data["username"]}'
-            try:
-                send_email(
-                    email_subject, 
-                    massage,
-                    settings.CONTACT_EMAIL
-                    ['admin@gmail.com']
-                )
-            except BadHeaderError:
-                return HttpResponse('عنوان نامعتبر')
+            # body={
+            #     'username':form.cleaned_data['username'],
+            #     'email':form.cleaned_data['email'],
+            #     'content':form.cleaned_data['content'],
+            # }
+            # massage="\n".join(body.values())
+            # email_subject = f'یک پیام جدید از طرف {form.cleaned_data["username"]}'
+            # try:
+            #     send_email(
+            #         email_subject, 
+            #         massage,
+            #         settings.CONTACT_EMAIL
+            #         ['admin@gmail.com']
+            #     )
+            # except BadHeaderError:
+            #     return HttpResponse('عنوان نامعتبر')
             return redirect('about:posted_successfully')
 
 class PostedSuccessfully(View):

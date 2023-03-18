@@ -17,11 +17,11 @@
                             </figure>
                         </div>
                         {% if owner.social_networks.exists %}
-                        <div class="social-bio">
-                        {% for social_network in owner.social_networks.all %}
-                            <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
-                        {% endfor %}
-                        </div>
+                            <div class="social-bio">
+                            {% for social_network in owner.social_networks.all %}
+                                <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
+                            {% endfor %}
+                            </div>
                         {% endif %}
                     </div>
                     <div class="post-single-bio-left">

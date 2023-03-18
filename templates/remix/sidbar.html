@@ -5,8 +5,8 @@
         <div class="tabs">
             {% for static_sidbar in static_sidbars %}
                 <div class="tabby-tab">
-                    <input type="radio" id="tab-{{foorloop.counter1}}" name="tabby-tabs" checked>
-                    <label for="tab-{{foorloop.counter1}}">{{static_sidbar.title}}</label>
+                    <input type="radio" id="tab-{{forloop.counter}}" name="tabby-tabs" checked>
+                    <label for="tab-{{forloop.counter}}">{{static_sidbar.title}}</label>
                     <div class="tabby-content">
                         <ul>
                             {% call_method static_sidbar.category static_sidbar.filter_base as tracks_result %}

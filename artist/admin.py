@@ -24,6 +24,7 @@ class ArtistAdmin(admin.ModelAdmin):
                 'decription',
                 'cover',
                 'status',
+                'thumbnail'
             )
         }
         ),

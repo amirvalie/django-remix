@@ -64,8 +64,8 @@ class TrackCategory(Category):
     def most_visited_tracks(self):
         return self.tracks_of_category_and_sub_category().annotate(
             count=Count('hits')
-        )
-
+        ).order_by('-count')
+        
     def find_tracks(self,filter='time'):
         if filter == 'visit':
             return self.most_visited_tracks()

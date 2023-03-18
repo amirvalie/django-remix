@@ -104,6 +104,7 @@
         </div>
     </section>
 {% endfor %}
+{% if banners.exists %}
 <!-- Main Ads -->
 <div class="ads tag">
     <div class="container">
@@ -116,6 +117,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 <!-- Main Other Content -->
 {% for content in contents|slice:"1:" %}
     <section class="main-single-track tag">
@@ -146,6 +148,7 @@
         </div>
     </section>
 {% endfor %}
+{% if banners.exists %}
 <!-- Main Ads -->
 <div class="ads tag">
     <div class="container">
@@ -158,13 +161,14 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% if artists %}
 <!-- Main Artists -->
 <section class="bio tag">
     <div class="container">
         <div class="head-bio">
             <h3>بیوگرافی از خوانندگان</h3>
-            <a href="{{artist.category.get_absolute_url}}">  موارد بیشتر
+            <a href="{% url 'artist:artists_of_category' 'all_artists' %}">  موارد بیشتر
                 <i class="fas fa-angle-double-left"></i>
             </a>
         </div>
@@ -173,7 +177,7 @@
             <div class="bio-item">
                 <a href="{{artist.get_absolute_url}}">
                     <div class="bio-pic">
-                        <img src="{{artist.cover.url}}">
+                        <img src="{{artist.thumbnail.url}}">
                     </div></a>
                 <div class="title-artist-bio">
                     <span>{{artist.name}}</span>

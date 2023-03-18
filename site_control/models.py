@@ -5,6 +5,9 @@ from music.models import (
     Track,
     AbstractDateFeild
 )
+from .resize_img import ResizeImage
+from PIL import Image
+from django.core.exceptions import ValidationError
 
 class AbstractManageContent(AbstractDateFeild):
     FILTER_BASE=(
@@ -49,8 +52,22 @@ class Banner(AbstractDateFeild):
     picture=models.ImageField(
         upload_to='images/banner',
         verbose_name='عکس',
-        help_text='توجه داشته باشید ابعاد عکس باید 280 * 1200 باشد'
+        help_text='توجه داشته باشید ابعاد تصویر باید 280 * 1200 یا بیشتر باشد'
     )
+    def clean(self):
+        if self.picture:
+            img=Image.open(self.picture)
+            if img.width < 1100 or img.height < 250:
+                raise ValidationError(
+                    {'picture':'ابعاد تصویر کوچک تر از حالت استاندارد هست'}
+                )
+
+    def save(self,**kwargs):
+        if self.picture:
+            resize=ResizeImage(self.picture)
+            resize.save_cover(self.picture, size=(1200,280))
+        return super().save(**kwargs)
+
     def __str__(self):
         return 'بنر' + self.track.title
     class Meta:

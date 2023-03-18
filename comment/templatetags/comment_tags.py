@@ -31,11 +31,12 @@ def comments_count(obj):
 
 @register.simple_tag()
 def model_with_comment_exist(obj):
-    content_type=ContentType.objects.get_for_model(obj.__class__)
-    return(
-        ModelWithComment.objects.filter(content_type=content_type).exists()
-    )
-
+    try:
+        content_type=ContentType.objects.get_for_model(obj)
+        return ModelWithComment.objects.filter(content_type=content_type).exists()
+    except:
+        return False
+    
 @register.simple_tag
 def comment_target(obj):
     return reverse('comment:post_comment',args=(

@@ -47,9 +47,10 @@ class TrackAdmin(admin.ModelAdmin):
                 'artists',
                 'published',
                 'preview_url',
-                'status'
+                'status',
             )
         }),
     )
 
 admin.site.register(Track,TrackAdmin)
+admin.site.register(IpAddress)

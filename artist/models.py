@@ -34,6 +34,7 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     cover=models.ImageField(
         upload_to='images/artists/cover',
         verbose_name='عکس هنرمند',
+        help_text='ابعاد استاندارد عکس باید 300 * 300 باشد'
     )
     thumbnail=models.ImageField(
         upload_to='images/artists/thumbnails',
