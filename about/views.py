@@ -1,8 +1,7 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.core.mail import send_mail,BadHeaderError
 from django.views import View
-from django.http import HttpResponse,HttpResponseNotFound
-from django.views.generic.edit import BaseFormView
+from django.http import HttpResponse
 from .models import(
     AboutMe,
     Contact,
@@ -13,12 +12,12 @@ from .forms import ContactForm
 class About(View):
     def get(self,request,*args,**kwargs):
         if AboutMe.objects.last():
-            return render(request,'remix/about.html',{'owner':AboutMe.objects.last()})
+            return render(request,'remix/about/about.html',{'owner':AboutMe.objects.last()})
         return HttpResponse('<h1>Page not found</h1>')
 
 class Contact(View):
     def post(self,request,*args,**kwargs):
-        form=ContactForm(data=request.POST)
+        form=ContactForm(data=request.POST or None)
         if form.is_valid():
             form.save()
             # body={
@@ -38,7 +37,12 @@ class Contact(View):
             # except BadHeaderError:
             #     return HttpResponse('عنوان نامعتبر')
             return redirect('about:posted_successfully')
+        return redirect('about:posted_failure')
 
 class PostedSuccessfully(View):
     def get(self,request,*args,**kwargs):
-        return render(request,'remix/posted-successfully.html')
+        return render(request,'remix/site_control/posted-successfully.html')
+
+class PostedByFailure(View):
+    def get(self,request,*args,**kwargs):
+        return render(request,'remix/site_control/posted-by-failure.html')

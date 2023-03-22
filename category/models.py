@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from music.models import AbstractCommonField,AbstractDateFeild
 from django.shortcuts import reverse
-from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 class CategoryManager(models.Manager):
@@ -73,10 +72,7 @@ class TrackCategory(Category):
             return self.last_tracks
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug=slugify(self.title,allow_unicode=True)
-            
-        if not self.status:
+        if self.id and not self.status:
             for track in self.tracks.active():
                 track.status = False
                 track.save()
@@ -86,7 +82,7 @@ class TrackCategory(Category):
                     child_category.status=False
                     child_category.save()
                     
-        super(TrackCategory, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("music:tracks_of_category", args=[self.slug])
@@ -108,14 +104,8 @@ class ArtistCategory(Category):
             return self.artists.active()
             
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug=slugify(self.title,allow_unicode=True)
-
-        if not self.status:
-
-            for artist in self.artists.active():
-                artist.status = False
-                artist.save()
+        if self.id and not self.status:
+            self.artists.update(status=self.status)
 
             if self.child.exists():
                 for child_category in self.child.active():
@@ -126,4 +116,6 @@ class ArtistCategory(Category):
 
     def get_absolute_url(self):
         return reverse("artist:artists_of_category", args=[self.slug])
+
+
 

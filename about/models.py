@@ -9,6 +9,13 @@ class AboutWebsite(models.Model):
         upload_to='images/about/logo/',
         verbose_name='لوگو',
     )
+    favicon=models.ImageField(
+        upload_to='images/about/logo',
+        verbose_name='فاویکون',
+        null=True,
+        blank=True,
+        help_text='ابعاد عکس 16 * 16',
+    )
     name=models.CharField(
         max_length=100,
         verbose_name='نام وب سایت'
@@ -18,7 +25,7 @@ class AboutWebsite(models.Model):
     )
 
     def __str__(self):
-        return 'logo'
+        return self.name
         
     class Meta:
         verbose_name='درباره وب سایت'

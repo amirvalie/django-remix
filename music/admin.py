@@ -8,28 +8,32 @@ from .models import (
 
 
 def active_objects(modeladmin,request,queryset):
-    queryset.update(
-        status=True,
-    )
+    # queryset.update(
+    #     status=True,
+    # )
+    for obj in queryset:
+        obj.status=True
+        obj.save()
+    
 active_objects.short_description='منتشر کردن'
 
 def deactive_objects(modeladmin,request,queryset):
-    queryset.update(
-        status=False,
-    )
+    for obj in queryset:
+        obj.status=False
+        obj.save()
 deactive_objects.short_description='غیرفعال کردن'
 
 
 class TrackFileAdmin(admin.TabularInline):
     model=TrackFile
-    extra=1
+    extra=0
 
 class OriginalLinkTrackAdmin(admin.TabularInline):
     model=OriginalLinkTrack
-    extra=1
+    extra=0
 
 class TrackAdmin(admin.ModelAdmin):
-    list_display=['title','status','jpublish',]
+    list_display=['title','status',]
     inlines=[TrackFileAdmin,OriginalLinkTrackAdmin]
     actions=[active_objects,deactive_objects,]
     search_fields=['title','description','artists__name']
@@ -53,4 +57,3 @@ class TrackAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Track,TrackAdmin)
-admin.site.register(IpAddress)

@@ -1,0 +1,30 @@
+{% extends 'remix/base.html'%}
+{% load tags %}
+{% block title%}نتیجه جستجو{% endblock title %}
+{% block body %}
+<!-- Main Archive Track -->
+<div class="archive">
+    <div class="container">
+        <div class="box-single">
+            <div class="main-single">
+                {% for result in results %}
+                    {% return_class_name result as class_name %}
+                    {% if class_name == 'Track' %}
+                    <div class="post-single">
+                        <a href="{{result.get_absolute_url}}" class="search-page">{{result.title}}</a>
+                    </div>
+                    {% elif class_name == 'Artist' %}
+                    <div class="post-single">
+                        <a href="{{result.get_absolute_url}}" class="search-page">هنرمند {{result.name}}</a>
+                    </div>
+                    {% endif %}
+                {% empty %}
+                    {% include 'remix/site_control/not-found.html' %}
+                {% endfor %}
+                {% include 'remix/site_control/pagination.html' %}
+            </div>
+            {% sidbar %}
+        </div>
+    </div>
+</div>
+{% endblock body %}

@@ -2407,6 +2407,7 @@ textarea.con{
     }
     .item-social-telegram{
         margin-bottom: 20px;
+        margin-top: 20px;
     }
     li.list-track{
         flex-direction: column;
@@ -2451,6 +2452,12 @@ p.posted-successfully{
     padding: 15px;
     text-align: center;
 }
+
+p.posted-failure{
+    padding: 15px;
+    text-align: center;
+}
+
 .pagination {
     float: right;
     width: 100%;

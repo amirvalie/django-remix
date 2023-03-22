@@ -22,6 +22,7 @@ class PostComment(View):
             obj.object_id=kwargs.get('object_id')
             obj.save()
             request.session['success_massage']='ارسال پیام موفقیت آمیز بود'
-        return redirect(get_object.get_absolute_url())
-
+            return redirect(get_object.get_absolute_url())
+        else:
+            return redirect('about:posted_failure')
 

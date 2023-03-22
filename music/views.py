@@ -1,4 +1,5 @@
-from django.shortcuts import render,HttpResponse,get_object_or_404
+from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
+from django.http import HttpResponseBadRequest
 from django.db.models import Q
 from itertools import chain
 import json
@@ -7,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from category.models import (TrackCategory,)
 from artist.models import(Artist,)
-
+from itertools import chain
 from django.views.generic import (
     ListView,
     DetailView,
@@ -23,7 +24,7 @@ now=timezone.now()
 
 class Home(ListView):
     queryset=HomePage.objects.filter(status=True)[:5]
-    template_name='remix/home.html'
+    template_name='remix/music/home.html'
     context_object_name='contents'
     
     @staticmethod
@@ -69,7 +70,7 @@ class Home(ListView):
         return context        
 
 class DetailTrack(DetailView):
-    template_name='remix/detail-track.html'
+    template_name='remix/music/detail-track.html'
     context_object_name='track'
     
     def get_object(self):
@@ -90,40 +91,41 @@ class DetailTrack(DetailView):
 
 class ListOfTrack(ListView):
     paginate_by = 10
-    template_name = 'remix/track-list.html'
+    template_name = 'remix/music/track-list.html'
 
     def get_queryset(self):
+        global category
         slug = self.kwargs.get('slug')
         category = get_object_or_404(TrackCategory.objects.active(), slug=slug)
         return category.tracks_of_category_and_sub_category()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['category']=category
         return context
 
 class SearchTrackOrArtist(ListView):
-    template_name='remix/search-result.html'
-    context_object_name='tracks'
+    template_name='remix/music/search-result.html'
+    context_object_name='results'
+    paginate_by=10
+
     def get_queryset(self):
-        query=self.request.GET.get('q',None)
+        query=self.request.GET.get('q','')
         tracks=Track.objects.active().filter(
             Q(title__icontains=query) | 
             Q(finglish_title__icontains=query) | 
             Q(artists__name__icontains=query)
-        ).distinct()
-        return tracks
-    def get_context_data(self,**kwargs):
-        context = super().get_context_data(**kwargs)
-        query=self.request.GET.get('q',None)
-        context['artists']=Artist.objects.active().filter(
+        ).distinct()    
+        artists=Artist.objects.active().filter(
             name__icontains=query
         ).distinct()
-        print(context['artists'])
-        print(context['tracks'])
-        return context
-
+        if tracks.exists() and artists.exists():
+            result=list(chain(tracks,artists))
+            return result
+        return artists or tracks    
+        
 class PreViewDetail(DetailView):
-    template_name='remix/preview-detail-track.html'
+    template_name='remix/music/preview-detail-track.html'
     context_object_name='track'
 
     @method_decorator(permission_required('is_staff'))

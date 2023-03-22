@@ -6,3 +6,7 @@ class CategoryConfig(AppConfig):
     name = 'category'
     verbose_name='دسته بندی'
     
+    def ready(self):
+        import category.signals
+    
+

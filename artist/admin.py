@@ -12,7 +12,7 @@ class SocialNetworkAdmin(GenericTabularInline):
     extra=1
 
 class ArtistAdmin(admin.ModelAdmin):
-    list_display=['picture_tag','name']
+    list_display=['picture_tag','name','status']
     inlines=[SocialNetworkAdmin,]
     actions=[active_objects,deactive_objects,]
     fieldsets=(
@@ -24,7 +24,6 @@ class ArtistAdmin(admin.ModelAdmin):
                 'decription',
                 'cover',
                 'status',
-                'thumbnail'
             )
         }
         ),

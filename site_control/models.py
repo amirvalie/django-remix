@@ -52,7 +52,7 @@ class Banner(AbstractDateFeild):
     picture=models.ImageField(
         upload_to='images/banner',
         verbose_name='عکس',
-        help_text='توجه داشته باشید ابعاد تصویر باید 280 * 1200 یا بیشتر باشد'
+        help_text='توجه داشته باشید ابعاد تصویر باید 280 * 1200 باشد'
     )
     def clean(self):
         if self.picture:
@@ -61,7 +61,9 @@ class Banner(AbstractDateFeild):
                 raise ValidationError(
                     {'picture':'ابعاد تصویر کوچک تر از حالت استاندارد هست'}
                 )
-
+            if img.format == 'GIF':
+                raise ValidationError({'cover':'فایل گیف مجاز نیست'})
+                
     def save(self,**kwargs):
         if self.picture:
             resize=ResizeImage(self.picture)
@@ -85,6 +87,9 @@ class ModelWithComment(models.Model):
         },
         verbose_name='مدل ها'
     )
+    def __str__(self):
+        return self.content_type.name
+
     class Meta:
         verbose_name='مدل کامنت دار'
         verbose_name_plural='مدل های کامنت دار'

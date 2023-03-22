@@ -11,7 +11,7 @@ from site_control.models import (ModelWithComment,)
 
 register=template.Library()
 
-@register.inclusion_tag('remix/comment.html', takes_context=True)
+@register.inclusion_tag('remix/comment/comment.html', takes_context=True)
 def comment(context,obj):
     try:
         success_massage=context['request'].session.pop('success_massage'),

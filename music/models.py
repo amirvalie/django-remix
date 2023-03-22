@@ -14,7 +14,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from site_control.resize_img import ResizeImage
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
-
+from extentions import jalali
 now=timezone.now()
 
 class AbstractDateFeild(models.Model):
@@ -38,7 +38,6 @@ class AbstractCommonField(models.Model):
         max_length=250,
         unique=True,
         verbose_name='لینک',
-        null=True,
         blank=True,
         allow_unicode=True,
     )
@@ -56,9 +55,8 @@ class TrackManager(models.Manager):
 
     def best_tracks(self):
         return self.active().filter(track_files__isnull=False).annotate(
-            num_hits=Count('hits',distinct=True)*2 ,num_comment=Count('comments',distinct=True),
-            avg_score=(F('num_hits') + F('num_comment'))
-        ).distinct().order_by('-avg_score')
+            avg_score=(Count('hits',distinct=True)*2 + Count('comments',distinct=True))
+        ).order_by('-avg_score')
 
 class IpAddress(AbstractDateFeild):
 	ip_address = models.GenericIPAddressField(verbose_name='آدرس')
@@ -130,29 +128,22 @@ class Track(AbstractCommonField,AbstractDateFeild):
 
     def get_absolute_url(self):
         return reverse("music:track_detail", args=[self.slug])
-
-    def jpublish(self):
-        return jalali_converter(self.published)
-    jpublish.short_description = "زمان انتشار"
-
+        
     def listen_online(self):
         online=self.track_files.filter(listen_online=True)
-        if online:
-            return online.first()
         return online
     
     def preview_url(self):
-        return format_html(
-            "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("music:preview_detail",
-             kwargs={'slug': self.slug}))
-        )
+        if self.pk:
+            return format_html(
+                "<a href='{}' target='blank'>پیش‌نمایش</a>".format(reverse("music:preview_detail",
+                kwargs={'slug': self.slug}))
+            )
+        return None
     preview_url.short_description = "پیش‌نمایش"
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug=slugify(self.title,allow_unicode=True)
-            
-        if not self.status:
+    def save(self, *args, **kwargs):            
+        if self.pk and not self.status:
             self.banners.update(status=False)
             
         if self.cover:
@@ -185,6 +176,11 @@ class TrackFile(models.Model):
     caption=models.CharField(
         max_length=250,
         verbose_name='عنوان',
+    )
+    online_catpion=models.CharField(
+        max_length=250,
+        verbose_name='عنوان برای پخش آنلاین',
+        default='آنلاین گوش بده'
     )
     track_file=models.FileField(
         upload_to='music/track_file',

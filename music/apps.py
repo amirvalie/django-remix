@@ -6,3 +6,5 @@ class MusicConfig(AppConfig):
     name = 'music'
     verbose_name='موزیک'
     
+    def ready(self):
+        import category.signals

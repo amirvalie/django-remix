@@ -1,8 +1,6 @@
 from django import template
 from django.http import request
-from ..models import (
-    Track,
-)
+from ..models import (Track,)
 from category.models import (
     ArtistCategory,
     TrackCategory,
@@ -15,7 +13,8 @@ from about.models import (
     AboutMe,
     AboutWebsite
 )
-
+from about.context_processors import about_website
+from extentions.utils import jalali_converter
 
 register = template.Library()
 
@@ -26,13 +25,18 @@ def social_network():
         socia_networks_link=None
     return socia_networks_link
 
-@register.inclusion_tag("remix/footer.html")
-def footer():
+@register.inclusion_tag("remix/footer.html",takes_context=True)
+def footer(context):
+
     return{
         'tracks':Track.objects.active().order_by('-published')[:5],
         'socia_networks_link':social_network,
-        'website':AboutWebsite.objects.last(),
+        'website':context.get('website')
     }
+
+@register.filter
+def convert_to_jalali(time):
+    return jalali_converter(time)
 
 @register.inclusion_tag("remix/top-menue.html")
 def top_menue():
@@ -45,11 +49,11 @@ def navbar(context):
     return{
         'track_categories':TrackCategory.objects.active(),
         'artist_categories':ArtistCategory.objects.active(),
-        'website':AboutWebsite.objects.last(),
-        'about_me':AboutMe.objects.last()
+        'about_me':AboutMe.objects.last(),
+        'website':context.get('website'),
     }
 
-@register.inclusion_tag("remix/sidbar.html",takes_context=True)
+@register.inclusion_tag("remix/site_control/sidbar.html",takes_context=True)
 def sidbar(context):
     return{
         'static_sidbars':HomePage.objects.filter(status=True)[:2],
@@ -64,3 +68,8 @@ def call_method(category_obj,filter):
     except AttributeError:
         return None
 
+
+@register.simple_tag
+def return_class_name(obj):
+    return obj.__class__.__name__
+    

@@ -4,7 +4,7 @@ from ..forms import ContactForm
 
 register=template.Library()
 
-@register.inclusion_tag('remix/follow_social.html')
+@register.inclusion_tag('remix/about/follow_social.html')
 def follow_socials():
     try:
         links=AboutMe.objects.last().social_networks.filter(
