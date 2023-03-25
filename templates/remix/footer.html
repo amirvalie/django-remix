@@ -7,7 +7,7 @@
                 <span class="line"></span>
             </div>
             <div class="footer-left-head">
-                {% for social_network in socia_networks_link  %}
+                {% for social_network in about_me.social_networks.all  %}
                     <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i></a>
                 {% endfor %}
             </div>

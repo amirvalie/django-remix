@@ -13,35 +13,27 @@ from about.models import (
     AboutMe,
     AboutWebsite
 )
-from about.context_processors import about_website
 from extentions.utils import jalali_converter
 
 register = template.Library()
-
-def social_network():
-    try:
-        socia_networks_link=AboutMe.objects.last().social_networks.all()
-    except:
-        socia_networks_link=None
-    return socia_networks_link
 
 @register.inclusion_tag("remix/footer.html",takes_context=True)
 def footer(context):
 
     return{
         'tracks':Track.objects.active().order_by('-published')[:5],
-        'socia_networks_link':social_network,
-        'website':context.get('website')
+        'website':context.get('website'),
+        'about_me':context.get('about_me'),
     }
 
 @register.filter
 def convert_to_jalali(time):
     return jalali_converter(time)
 
-@register.inclusion_tag("remix/top-menue.html")
-def top_menue():
-    return{
-        'socia_networks_link':social_network,
+@register.inclusion_tag("remix/top-menue.html",takes_context=True)
+def top_menue(context):
+    return {
+        'about_me':context.get('about_me')
     }
 
 @register.inclusion_tag("remix/navbar/navbar.html",takes_context=True)
@@ -49,8 +41,8 @@ def navbar(context):
     return{
         'track_categories':TrackCategory.objects.active(),
         'artist_categories':ArtistCategory.objects.active(),
-        'about_me':AboutMe.objects.last(),
         'website':context.get('website'),
+        'about_me':context.get('about_me')
     }
 
 @register.inclusion_tag("remix/site_control/sidbar.html",takes_context=True)

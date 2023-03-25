@@ -12,8 +12,8 @@ from .forms import ContactForm
 class About(View):
     def get(self,request,*args,**kwargs):
         if AboutMe.objects.last():
-            return render(request,'remix/about/about.html',{'owner':AboutMe.objects.last()})
-        return HttpResponse('<h1>Page not found</h1>')
+            return render(request,'remix/about/about.html')
+        return redirect('music:home')
 
 class Contact(View):
     def post(self,request,*args,**kwargs):

@@ -16,7 +16,7 @@
                         <a>{{comment.username}}</a>
                         <span>{{comment.created|convert_to_jalali}}</span>
                     </div>
-                    <a class="avatar" href="#">
+                    <a class="avatar">
                         <img src="{% static 'remix/img/avatar_user_1.jpg' %}" width="35" alt="Profile Avatar" title="{{comment.username}}" />
                     </a>
                     <p>{{comment.content}}</p>
@@ -28,7 +28,7 @@
                             <a>{{reply.username}}</a>
                             <span>{{reply.created|convert_to_jalali}}</span>
                         </div>
-                        <a class="avatar" href="#">
+                        <a class="avatar">
                             <img src="{% static 'remix/img/avatar_author.jpg' %}" width="35" alt="Profile Avatar" title="{{reply.username}}" />
                         </a>
                         <p>{{reply.answer}}</p>

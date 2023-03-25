@@ -10,13 +10,11 @@
                     <input type="search" class="search-top-menu" placeholder="آهنگ یا اسم خواننده مورد نظرت رو جستجو کن..." name="q">
                 </form>
             </div>
-            {% if socia_networks_link %}
             <div class="top-menu-left">
-                {% for social_network in socia_networks_link %}
+                {% for social_network in about_me.social_networks.all %}
                         <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
                 {% endfor %}
             </div>
-            {% endif %}
         </div>
     </div>
 </div>

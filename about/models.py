@@ -34,26 +34,26 @@ class AboutWebsite(models.Model):
 class AboutMe(models.Model):
     name=models.CharField(
         max_length=50,
+        default='DJ Movan',
         verbose_name='نام',
-        null=True,
     )
     description=RichTextField(
         verbose_name='توضحیات',
     )
     picture=models.ImageField(
-        upload_to='images/about/profiles/',
+        upload_to='images/about/profiles',
         verbose_name='عکس پروفایل',
     )
     social_networks = GenericRelation('artist.SocialNetwork')
     comments = GenericRelation('comment.Comment')
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
     
     class Meta:
         verbose_name='درباره من'
         verbose_name_plural='درباره من'
-        
+
 class Contact(models.Model):
     username=models.CharField(
         max_length=20,

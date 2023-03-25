@@ -11,13 +11,7 @@ class ResizeImage:
         self.target_file_name=self.img_file.name.split('/')[-1].split('.')[0]
 
     def set_format_file_name(self):
-        if self.format == 'JPEG':
-            format_file_name='jpg'
-        elif self.format == 'PNG':
-            format_file_name='png'
-        elif self.format == 'WEBP':
-            format_file_name='webp'
-        return format_file_name 
+        return self.format.lower()
 
     def resize_and_reformat(self,size):
         try:
@@ -29,7 +23,7 @@ class ResizeImage:
             return thumb_file
         except:
             return self.img_file
-            
+
     def save_cover(self,target_field,size:tuple):
         thumb_file=self.resize_and_reformat(size)
         target_field.save(

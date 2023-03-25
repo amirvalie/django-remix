@@ -8,9 +8,6 @@ from .models import (
 
 
 def active_objects(modeladmin,request,queryset):
-    # queryset.update(
-    #     status=True,
-    # )
     for obj in queryset:
         obj.status=True
         obj.save()
@@ -21,6 +18,7 @@ def deactive_objects(modeladmin,request,queryset):
     for obj in queryset:
         obj.status=False
         obj.save()
+
 deactive_objects.short_description='غیرفعال کردن'
 
 

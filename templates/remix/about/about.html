@@ -3,7 +3,7 @@
 {% load about_tags %}
 {% block title %}درباره من{% endblock title%}
 {% block body %}
-{% if owner %}
+{% if about_me %}
 <!-- Main Single bio-->
 <div class="single-bio">
     <div class="container">
@@ -13,12 +13,12 @@
                     <div class="post-single-bio-right">
                         <div class="post-bio-thumbnail">
                             <figure>
-                                <img src="{{owner.picture.url}}">
+                                <img src="{{about_me.picture.url}}">
                             </figure>
                         </div>
-                        {% if owner.social_networks.exists %}
+                        {% if about_me.social_networks.exists %}
                             <div class="social-bio">
-                            {% for social_network in owner.social_networks.all %}
+                            {% for social_network in about_me.social_networks.all %}
                                 <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
                             {% endfor %}
                             </div>
@@ -26,18 +26,18 @@
                     </div>
                     <div class="post-single-bio-left">
                         <div class="post-title-bio">
-                            <h1>{{owner.name}}</h1>
+                            <h1>{{about_me.name}}</h1>
                         </div>
                         <div class="content-post-bio">
-                            {{owner.description|safe}}
+                            {{about_me.description|safe}}
                         </div>
                     </div>
                 </div>
                 {% follow_socials %}
             </div>
-            {% model_with_comment_exist owner as exist%}
+            {% model_with_comment_exist about_me as exist%}
             {% if exist %}
-                {% comment owner %}
+                {% comment about_me %}
             {% endif %}
         </div>
     </div>
