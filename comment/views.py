@@ -1,26 +1,18 @@
-from django.shortcuts import render,reverse,get_object_or_404,redirect
-from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import redirect
 from django.views import View
-from django.urls import reverse_lazy
 from .forms import CommentForm
-from django.views.generic.edit import (
-    BaseCreateView
-)
+
 
 class PostComment(View):
     def post(self,request,*args,**kwargs):
-        form=CommentForm(request.POST)
-        try:
-            content_type=ContentType.objects.get(id=kwargs.get('content_type_id'))
-            model_class=content_type.model_class()
-            get_object=model_class.objects.get(id=kwargs.get('object_id'))
-        except:
-            return redirect('about:posted_failure')
+        obj_id=request.session.pop('object_id')
+        content_type_id=request.session.pop('content_type_id')
+        form=CommentForm(data=request.POST,obj_id=obj_id,content_type_id=content_type_id)
         if form.is_valid:
-            obj=form.save(commit=False)
-            obj.content_type=content_type
-            obj.object_id=get_object.id
-            obj.save()
+            comment=form.save()
+            get_object=comment.content_type.get_object_for_this_type(
+                pk=comment.object_id
+            )
             request.session['success_massage']='ارسال پیام موفقیت آمیز بود'
             return redirect(get_object.get_absolute_url())
         else:
