@@ -3,7 +3,6 @@ from django.http import request
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import reverse
 from django.db.models import Count
-from ..forms import CommentForm
 from ..models import (
     Comment,
 )
@@ -17,13 +16,11 @@ def comment(context,obj):
         success_massage=context['request'].session.pop('success_massage')
     except:
         success_massage=None
-    context['request'].session['content_type_id']=ContentType.objects.get_for_model(obj).id
-    context['request'].session['object_id']=obj.id
+
     return{
         'object':obj,
-        'comments':obj.comments.active().order_by('-created'),
+        'comments':obj.comments.active(),
         'success_massage':success_massage,
-        'form':CommentForm()
     }
 
 @register.filter
@@ -38,3 +35,9 @@ def model_with_comment_exist(obj):
     except:
         return False
     
+@register.simple_tag
+def comment_target(obj):
+    return reverse('comment:post_comment',args=(
+        ContentType.objects.get_for_model(obj).id,
+        obj.id,
+    ))
