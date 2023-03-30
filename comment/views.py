@@ -10,16 +10,16 @@ from django.views.generic.edit import (
 class PostComment(View):
     def post(self,request,*args,**kwargs):
         form=CommentForm(request.POST)
-        if form.is_valid:
-            content_type=get_object_or_404(
-                ContentType,
-                id=kwargs.get('content_type_id')
-            )
+        try:
+            content_type=ContentType.objects.get(id=kwargs.get('content_type_id'))
             model_class=content_type.model_class()
-            get_object=get_object_or_404(model_class,id=kwargs.get('object_id'))
+            get_object=model_class.objects.get(id=kwargs.get('object_id'))
+        except:
+            return redirect('about:posted_failure')
+        if form.is_valid:
             obj=form.save(commit=False)
             obj.content_type=content_type
-            obj.object_id=kwargs.get('object_id')
+            obj.object_id=get_object.id
             obj.save()
             request.session['success_massage']='ارسال پیام موفقیت آمیز بود'
             return redirect(get_object.get_absolute_url())

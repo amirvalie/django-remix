@@ -2,7 +2,6 @@ from django import template
 from django.http import request
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import reverse
-from comment.forms import CommentForm
 from django.db.models import Count
 from ..models import (
     Comment,
@@ -14,14 +13,13 @@ register=template.Library()
 @register.inclusion_tag('remix/comment/comment.html', takes_context=True)
 def comment(context,obj):
     try:
-        success_massage=context['request'].session.pop('success_massage'),
+        success_massage=context['request'].session.pop('success_massage')
     except:
         success_massage=None
 
     return{
         'object':obj,
         'comments':obj.comments.active(),
-        'form':CommentForm(),
         'success_massage':success_massage,
     }
 

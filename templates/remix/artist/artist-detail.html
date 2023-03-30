@@ -15,13 +15,11 @@
                                 <img src="{{artist.cover.url}}">
                             </figure>
                         </div>
-                        {% if artist.social_networks.exists %}
                         <div class="social-bio">
                         {% for social_network in artist.social_networks.all %}
                             <a href="{{social_network.url}}"><i class="fab fa-{{social_network.social_network_name}}"></i> </a>
                         {% endfor %}
                         </div>
-                    {% endif %}
                     </div>
                     <div class="post-single-bio-left">
                         <div class="post-title-bio">

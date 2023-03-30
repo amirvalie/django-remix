@@ -20,7 +20,7 @@ class Comment(AbstractDateFeild):
         verbose_name='ایمیل'
     )
     username=models.CharField(
-        max_length=50,
+        max_length=15,
         blank=True,
         verbose_name='نام کاربری',
     )

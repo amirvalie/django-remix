@@ -111,7 +111,6 @@ class ArtistCategory(Category):
                 for child_category in self.child.active():
                     child_category.status=False
                     child_category.save()
-
         super(ArtistCategory, self).save(*args, **kwargs)
 
     def get_absolute_url(self):

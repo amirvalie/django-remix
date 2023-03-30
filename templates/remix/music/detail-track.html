@@ -23,11 +23,11 @@
                         </div>
                         <div class="post-meta">
                             <i class="fas fa-comment"></i>
-                            <span>نظر {{track|comments_count}}</span>
+                            <span>{{track|comments_count}} نظر</span>
                         </div>
                         <div class="post-meta">
                             <i class="fas fa-eye"></i>
-                            <span>{{track.visits}}بازدید</span>
+                            <span>{{track.visits}} بازدید</span> 
                         </div>
                     </header>
                     <div class="post-thumbnail">
@@ -69,14 +69,12 @@
                             </a>
                         {% endfor %}
                     </div>
-                    {% if track.listen_online %}
-                        {% for online_track in track.listen_online %}
-                            <p>{{online_track.online_catpion}}</p>
-                            <audio controls muted preload="metadata">
-                                <source src="{{online_track.track_file.url}}" type="audio/mpeg">
-                            </audio>
-                        {% endfor %}
-                    {% endif %}
+                    {% for online_track in track.listen_online %}
+                        <p>{{online_track.online_catpion}}</p>
+                        <audio controls >
+                            <source src="{{online_track.track_file.url}}" type="audio/mpeg">
+                        </audio>
+                    {% endfor %}
                 </div>
                 {% follow_socials%}
                 {% if related_tracks %}

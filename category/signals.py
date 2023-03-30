@@ -13,7 +13,6 @@ from .models import (
 @receiver(pre_save, sender=TrackCategory)
 @receiver(pre_save, sender=ArtistCategory)
 def generate_slug(sender, instance, **kwargs):
-    print(instance.slug)
     if not instance.slug:
         slug = slugify(instance.title,allow_unicode=True)
         num = 1
