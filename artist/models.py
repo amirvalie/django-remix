@@ -72,9 +72,9 @@ class Artist(AbstractCommonField,AbstractDateFeild):
             self.slug=slugify(self.name,allow_unicode=True)
         if self.cover:
             resize_img=ResizeImage(self.cover)
-            resize_img.save_cover(self.cover, (300,300))
-            resize_img.save_thumbnail(self.thumbnail,(272, 272))
-            resize_img.save_small(self.small,(120, 120))
+            resize_img.save(self.cover, (300,300))
+            resize_img.save(self.thumbnail,(272, 272))
+            resize_img.save(self.small,(120, 120))
         super(Artist, self).save(**kwargs)
 
     class Meta:

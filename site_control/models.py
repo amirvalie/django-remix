@@ -57,21 +57,16 @@ class Banner(AbstractDateFeild):
     def clean(self):
         if self.picture:
             img=Image.open(self.picture)
-            if img.width < 1100 or img.height < 250:
+            if img.width < 1200 or img.height < 280:
                 raise ValidationError(
                     {'picture':'ابعاد تصویر کوچک تر از حالت استاندارد هست'}
                 )
             if img.format == 'GIF':
                 raise ValidationError({'cover':'فایل گیف مجاز نیست'})
-                
-    def save(self,**kwargs):
-        if self.picture:
-            resize=ResizeImage(self.picture)
-            resize.save_cover(self.picture, size=(1200,280))
-        return super().save(**kwargs)
-
+    
     def __str__(self):
         return 'بنر' + self.track.title
+        
     class Meta:
         verbose_name='بنر'
         verbose_name_plural='بنرها'
