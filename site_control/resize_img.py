@@ -8,10 +8,18 @@ class ResizeImage:
         valid_format_img=['JPEG','PNG','WEBP']
         self.img_file=img_file
         self.format=format_img.upper() if format_img.upper() in valid_format_img else 'JPEG'
-        self.target_file_name=self.img_file.name.split('/')[-1].split('.')[0]
 
     def set_format_file_name(self):
         return self.format.lower()
+
+    def target_file_name(self,field):
+        file_name=self.img_file.name.split('/')[-1].split('.')[0]
+        if field == 'thumbnail' or field == 'small':
+            file_name=file_name.replace('_cover','')
+        #Here we are checking if field name exist at the end of the image file name 
+        if not f'_{field}' in file_name:
+            return f'{file_name}_{field}'
+        return file_name
 
     def resize_and_reformat(self,size):
         try:
@@ -24,23 +32,12 @@ class ResizeImage:
         except:
             return self.img_file
 
-    def save_cover(self,target_field,size:tuple):
+    def save(self,target_field,size:tuple):
         thumb_file=self.resize_and_reformat(size)
+        file_name=self.target_file_name(target_field.field.name)
         target_field.save(
-            f'{self.target_file_name}_cover.{self.set_format_file_name()}',
-            thumb_file,save=False
+            f'{file_name}.{self.set_format_file_name()}',
+            thumb_file,
+            save=False,
         )
 
-    def save_thumbnail(self,target_field,size:tuple):
-        thumb_file=self.resize_and_reformat(size)
-        target_field.save(
-            f'{self.target_file_name}_thumb.{self.set_format_file_name()}',
-            thumb_file,save=False
-        )
-
-    def save_small(self,target_field,size:tuple):
-        thumb_file=self.resize_and_reformat(size)
-        target_field.save(
-            f'{self.target_file_name}_small.{self.set_format_file_name()}',
-            thumb_file,save=False
-        )

@@ -148,10 +148,10 @@ class Track(AbstractCommonField,AbstractDateFeild):
             
         if self.cover:
             resize_img=ResizeImage(self.cover)
-            resize_img.save_cover(self.cover,(480, 480))
-            resize_img.save_thumbnail(self.thumbnail,(272, 272))
-            resize_img.save_small(self.small,(120, 120))
-                
+            resize_img.save(self.cover,(480, 480))
+            resize_img.save(self.thumbnail,(272, 272))
+            resize_img.save(self.small,(120, 120))
+            
         super(Track, self).save(*args, **kwargs)
     
     def visits(self):
