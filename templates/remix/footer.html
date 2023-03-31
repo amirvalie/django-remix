@@ -34,7 +34,7 @@
                 <h3>دسترسی سریع</h3>
                 <ul>
                     <li><a href="{% url 'music:home' %}">خانه</a></li>
-                    <li><a href="{% url 'about:about-me' %}">درباره ما</a></li>
+                    <li><a href="{{about_me.get_absolute_url}}">درباره من</a></li>
                 </ul>
             </div>
         </div>

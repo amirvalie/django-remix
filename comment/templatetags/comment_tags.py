@@ -19,7 +19,7 @@ def comment(context,obj):
 
     return{
         'object':obj,
-        'comments':obj.comments.active(),
+        'comments':obj.comments.active().order_by('-created'),
         'success_massage':success_massage,
     }
 

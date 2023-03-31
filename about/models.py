@@ -1,6 +1,8 @@
 from django.db import models
 from ckeditor.fields import RichTextField 
 from django.contrib.contenttypes.fields import GenericRelation
+from django.urls import reverse
+
 # Create your models here.
 
 
@@ -50,6 +52,9 @@ class AboutMe(models.Model):
     def __str__(self):
         return self.name
     
+    def get_absolute_url(self):
+        return reverse('about:about_me')
+
     class Meta:
         verbose_name='درباره من'
         verbose_name_plural='درباره من'
