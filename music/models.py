@@ -54,7 +54,10 @@ class TrackManager(models.Manager):
         )
 
     def best_tracks(self):
-        return self.active().filter(track_files__isnull=False).annotate(
+        return self.active().filter(
+            Q(track_files__isnull=False)&
+            Q(best_track=True)
+        ).annotate(
             avg_score=(Count('hits',distinct=True)*2 + Count('comments',distinct=True))
         ).order_by('-avg_score')
 
@@ -117,6 +120,11 @@ class Track(AbstractCommonField,AbstractDateFeild):
     published=models.DateTimeField(
         default=timezone.now,
         verbose_name='زمان انتشار',
+    )
+    best_track=models.BooleanField(
+        default=False,
+        verbose_name='بهترین آهنگ',
+        help_text='اگر میخواهید این آهنگ جزو بهترین ها باشد این گزینه را فعال کنید.'
     )
     comments=GenericRelation('comment.Comment')
     
