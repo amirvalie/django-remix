@@ -48,11 +48,11 @@ class TrackAdmin(admin.ModelAdmin):
                 'cover',
                 'artists',
                 'published',
-                'preview_url',
                 'status',
                 'best_track',
                 'thumbnail',
                 'small',
+                'preview_url',
             )
         }),
     )
