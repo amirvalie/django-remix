@@ -50,9 +50,9 @@ class TrackAdmin(admin.ModelAdmin):
                 'published',
                 'preview_url',
                 'status',
+                'best_track',
                 'thumbnail',
                 'small',
-            
             )
         }),
     )
