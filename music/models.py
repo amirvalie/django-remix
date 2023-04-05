@@ -124,7 +124,7 @@ class Track(AbstractCommonField,AbstractDateFeild):
     best_track=models.BooleanField(
         default=False,
         verbose_name='بهترین آهنگ',
-        help_text='اگر میخواهید این آهنگ جزو بهترین ها باشد این گزینه را فعال کنید.'
+        help_text='اگر میخواهید این آهنگ جزو برترین موزیک ها باشد این گزینه را فعال کنید.'
     )
     comments=GenericRelation('comment.Comment')
     
