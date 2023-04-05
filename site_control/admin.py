@@ -27,7 +27,7 @@ class SidbarAdmin(admin.ModelAdmin):
 
 class HomePageAdmin(admin.ModelAdmin):
     actions=[active_objects,deactive_objects,]
-    list_display=['category','status']
+    list_display=['title','category','status']
 
     
 admin.site.register(ModelWithComment,ModelWithCommentAdmin)
