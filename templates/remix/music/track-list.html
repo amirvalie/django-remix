@@ -16,23 +16,24 @@
                     <header>
                         <div class="post-meta">
                             <i class="fas fa-clock"></i>
-                            <span>{{object.jpublish}}</span>
+                            <span>{{object.created|convert_to_jalali}}</span>
                         </div>
                         <div class="post-meta">
                             <i class="fas fa-folder-open"></i>
                             <span>دسته بندی ها :</span>
                             <a href="{{category.get_absolute_url}}">
                                 <span>
-                                    {{object.category.title}}
+                                    {{object.category.title}},
                                 </span>
                             </a>
-                            {% if category.parent %}
-                                <a href="{{category.parent.get_absolute_url}}">
+                            {% subcategories object as subcats %}
+                            {% for sub_category in subcats %}
+                                <a href="{{sub_category.get_absolute_url}}">
                                     <span>
-                                        {{object.category.parent.title}}
+                                        {{sub_category.title}},
                                     </span>
                                 </a>
-                            {% endif %}
+                            {% endfor %}
                         </div>
                     </header>   
                     <div class="post-thumbnail">
