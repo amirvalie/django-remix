@@ -23,7 +23,7 @@ from site_control.models import (
 now=timezone.now()
 
 class Home(ListView):
-    queryset=HomePage.objects.filter(status=True)[:5]
+    queryset=HomePage.objects.filter(status=True)
     template_name='remix/music/home.html'
     context_object_name='contents'
     
