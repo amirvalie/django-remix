@@ -1,6 +1,7 @@
 from django import template
 from django.http import request
-from ..models import (Track,)
+from django.db.models import Q
+from ..models import Track
 from category.models import (
     ArtistCategory,
     TrackCategory,
@@ -64,4 +65,11 @@ def call_method(category_obj,filter):
 @register.simple_tag
 def return_class_name(obj):
     return obj.__class__.__name__
-    
+
+@register.simple_tag
+def subcategories(obj):
+    categories=TrackCategory.objects.active().filter(
+        Q(child=obj.category)|
+        Q(parent=obj.category)
+    ).exclude()
+    return categories
