@@ -39,6 +39,18 @@
                         {{track.description|safe}}
                     </div>
                 </div>
+                {% if track.lyrics %}
+                <div class="lyric">
+                    <div class="head-lyric">
+                        <h2>متن آهنگ</h2>
+                    </div>
+                    <div class="content-lyric">
+                        <p>
+                            {{track.lyrics|safe}}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="post-single-dl">
                     <div class="head-dl">
                         <h2>جعبه دانلود</h2>
@@ -57,12 +69,12 @@
                             </a>
                         {% endfor %}
                     </div>
-                    {% if track.listen_online %}
-                        <p>آنلاین گوش بده</p>
-                        <audio controls muted>
-                            <source src="{{track.listen_online.track_file.url}}" type="audio/mpeg">
+                    {% for online_track in track.listen_online %}
+                        <p>{{online_track.online_catpion}}</p>
+                        <audio controls >
+                            <source src="{{online_track.track_file.url}}" type="audio/mpeg">
                         </audio>
-                    {% endif %}
+                    {% endfor %}
                 </div>
                 {% follow_socials%}
             </div>
