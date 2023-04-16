@@ -1,17 +1,17 @@
 {% if page_obj.has_other_pages %}
     <div class="pagination">
     {% if page_obj.has_previous %}
-            <a class="prev page-numbers" href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+            <a class="prev page-numbers" href="?page={{ page_obj.previous_page_number }}{% if search %}&q={{search}}{% endif %}">قبلی</a>
         {% endif %}
         {% for i in paginator.page_range %}
             {% if page_obj.number == i %}
                 <span aria-current="page" class="page-numbers current">{{i}}</span>
             {% else %}
-                <a class="page-numbers" href="?page={{i}}">{{i}}</a>
+                <a class="page-numbers" href="?page={{i}}{% if search %}&q={{search}}{% endif %}">{{i}}</a>
             {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
-            <a class="next page-numbers" href="?page={{ page_obj.next_page_number }}">بعدی</a>   
+            <a class="next page-numbers" href="?page={{ page_obj.next_page_number }}{% if search %}&q={{search}}{% endif %}">بعدی</a>   
         {% endif %}        
     </div>
 {% endif %}

@@ -107,9 +107,10 @@ class ListOfTrack(ListView):
 class SearchTrackOrArtist(ListView):
     template_name='remix/music/search-result.html'
     context_object_name='results'
-    paginate_by=10
+    paginate_by=20
 
     def get_queryset(self):
+        global query
         query=self.request.GET.get('q','')
         tracks=Track.objects.active().filter(
             Q(title__icontains=query) | 
@@ -123,7 +124,12 @@ class SearchTrackOrArtist(ListView):
             result=list(chain(tracks,artists))
             return result
         return artists or tracks    
-        
+
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['search']=query
+        return context
+
 class PreViewDetail(DetailView):
     template_name='remix/music/preview-detail-track.html'
     context_object_name='track'
