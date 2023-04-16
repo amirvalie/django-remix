@@ -90,6 +90,7 @@ class SocialNetwork(models.Model):
         ('telegram','Telegram'),
         ('youtube','Aparat'),
         ('soundcloud','SoundCloud'),
+        ('spotify','Spotify'),
     )
     social_network_name=models.CharField(
         choices=SOCIAL_MEDIA,
