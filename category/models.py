@@ -33,6 +33,8 @@ class Category(AbstractCommonField,AbstractDateFeild):
                 raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای والد دیگری میباشد.')})
         if self.child.exists() and self.parent:
             raise ValidationError({'parent':_('غیر مجاز! این کتگوری خود دارای فرزند میباشد.')})
+        if self.parent == self:
+            raise ValidationError({'parent':_('غیر مجاز! گتگور نمیتواند والد خود باشد.')})
 
     def __str__(self):
         return self.title
