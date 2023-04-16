@@ -68,11 +68,10 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     picture_tag.short_description = " عکس هنرمند"
 
     def save(self,**kwargs):
-        if self.cover:
-            resize_img=ResizeImage(self.cover)
-            resize_img.save(self.cover, (300,300))
-            resize_img.save(self.thumbnail,(272, 272))
-            resize_img.save(self.small,(120, 120))
+        resize_img=ResizeImage(self.cover)
+        resize_img.save(self.cover, (300,300))
+        resize_img.save(self.thumbnail,(272, 272))
+        resize_img.save(self.small,(120, 120))
         super(Artist, self).save(**kwargs)
 
     class Meta:

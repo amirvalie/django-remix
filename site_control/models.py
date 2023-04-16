@@ -5,7 +5,6 @@ from music.models import (
     Track,
     AbstractDateFeild
 )
-from .resize_img import ResizeImage
 from PIL import Image
 from django.core.exceptions import ValidationError
 

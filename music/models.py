@@ -153,13 +153,11 @@ class Track(AbstractCommonField,AbstractDateFeild):
     def save(self, *args, **kwargs):            
         if self.pk and not self.status:
             self.banners.update(status=False)
-            
-        if self.cover:
-            resize_img=ResizeImage(self.cover)
-            resize_img.save(self.cover,(480, 480))
-            resize_img.save(self.thumbnail,(272, 272))
-            resize_img.save(self.small,(120, 120))
-            
+
+        resize_img=ResizeImage(self.cover)
+        resize_img.save(self.cover,(480, 480))
+        resize_img.save(self.thumbnail,(272, 272))
+        resize_img.save(self.small,(120, 120))
         super(Track, self).save(*args, **kwargs)
     
     def visits(self):
