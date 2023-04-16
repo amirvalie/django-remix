@@ -5,3 +5,5 @@ class ArtistConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'artist'
     verbose_name='هنرمندان'
+    def ready(self):
+        import category.signals

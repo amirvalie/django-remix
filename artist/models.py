@@ -68,8 +68,6 @@ class Artist(AbstractCommonField,AbstractDateFeild):
     picture_tag.short_description = " عکس هنرمند"
 
     def save(self,**kwargs):
-        if not self.slug:
-            self.slug=slugify(self.name,allow_unicode=True)
         if self.cover:
             resize_img=ResizeImage(self.cover)
             resize_img.save(self.cover, (300,300))
