@@ -6,7 +6,7 @@
         <div class="tabs">
             {% for static_sidbar in static_sidbars %}
                 <div class="tabby-tab">
-                    <input type="radio" id="tab-{{forloop.counter}}" name="tabby-tabs" checked>
+                    <input type="radio" id="tab-{{forloop.counter}}" name="tabby-tabs" {% if forloop.counter == 1 %} checked {% endif %}>
                     <label for="tab-{{forloop.counter}}">{{static_sidbar.title}}</label>
                     <div class="tabby-content">
                         <ul>
