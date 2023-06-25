@@ -53,7 +53,7 @@ class TrackCategory(Category):
         from music.models import Track
         sub_categories_id=self.child.active().values_list('id',flat=True)
         if sub_categories_id:
-            return Track.objects.active().filter(
+            return Track.objects.active().select_related('category').filter(
                 Q(category__id__in=sub_categories_id)|
                 Q(category__id=self.id)
             ).distinct()
@@ -71,7 +71,7 @@ class TrackCategory(Category):
         if filter == 'visit':
             return self.most_visited_tracks()
         else:
-            return self.last_tracks
+            return self.last_tracks()
 
     def save(self, *args, **kwargs):
         if self.id and not self.status:
