@@ -509,7 +509,7 @@ Music Player
 }
 
 #track-time {
-    height: 12px;
+    height: 30px;
     margin-bottom: 3px;
     overflow: hidden;
 }
@@ -535,6 +535,7 @@ Music Player
 #track-time.active #track-length {
     color: #fff;
     background-color: transparent;
+    margin-top: 10px;
 }
 
 #s-area,
