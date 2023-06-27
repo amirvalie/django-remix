@@ -189,9 +189,12 @@
 </section>
 {% endif %}
 <script type="text/javascript">
-    var trackUrl = {{best_tracks_url|safe}};
-    var albums = {{ best_tracks_artist|safe }};
-    var trackNames = {{ best_tracks_name|safe }};
-    var albumArtworks = {{ best_tracks_number|safe }};
+    var trackUrl = {{trackUrl|safe}};
+    var albums = {{ albums|safe }};
+    var trackNames = {{ trackNames|safe }};
+    var albumArtworks = {{ albumArtworks|safe }};
 </script>
 {% endblock body%}
+
+
+

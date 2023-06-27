@@ -23,50 +23,45 @@ from site_control.models import (
 
 now = timezone.now()
 
+def best_tracks_data(tracks):
+    data=dict()
+    tracks_url = []
+    artists_name = []
+    tracks_name = []
+
+    for track in tracks:
+        tracks_url.append(track.track_files.first().track_file.url)
+
+    for artist in tracks:
+        try:
+            artists_name.append(track.artists.first().name)
+        except:
+            artists_name.append('Unkown')
+
+    for track_name in tracks:
+        tracks_name.append(track_name.finglish_title)
+
+    tracks_number = [f'_{i}' for i in range(1,tracks.count()+1)]
+
+    data['albums']=json.dumps(artists_name)
+    data['trackNames']=json.dumps(tracks_name)
+    data['albumArtworks']=json.dumps(tracks_number)
+    data['trackUrl']=json.dumps(tracks_url)
+    return data
 
 class Home(ListView):
     queryset = HomePage.objects.filter(status=True)
     template_name = 'remix/music/home.html'
     context_object_name = 'contents'
 
-    @staticmethod
-    def best_tracks_url(tracks: list):
-        tracks_url = []
-        for track in tracks:
-            tracks_url.append(track.track_files.first().track_file.url)
-        return json.dumps(tracks_url)
-
-    @staticmethod
-    def best_tracks_artist(tracks: list):
-        artists = []
-        for track in tracks:
-            try:
-                artists.append(track.artists.first().name)
-            except:
-                artists.append('unknown')
-        return json.dumps(artists)
-
-    @staticmethod
-    def best_tracks_name(tracks: list):
-        songs_name = []
-        for track in tracks:
-            songs_name.append(track.finglish_title)
-        return json.dumps(songs_name)
-
-    @staticmethod
-    def best_tracks_number(tracks: list):
-        songs_number = []
-        for i in range(1, tracks.count() + 1):
-            songs_number.append(f'_{i}')
-        return json.dumps(songs_number)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['best_tracks'] = Track.objects.best_tracks()[:20]
-        context['best_tracks_url'] = Home.best_tracks_url(context['best_tracks'])
-        context['best_tracks_artist'] = Home.best_tracks_artist(context['best_tracks'])
-        context['best_tracks_name'] = Home.best_tracks_name(context['best_tracks'])
-        context['best_tracks_number'] = Home.best_tracks_number(context['best_tracks'])
+        best_tracks = best_tracks_data(context['best_tracks'])
+        context['albums'] = best_tracks['albums']
+        context['trackNames'] = best_tracks['trackNames']
+        context['albumArtworks'] = best_tracks['albumArtworks']
+        context['trackUrl'] = best_tracks['trackUrl']
         context['artists'] = Artist.objects.active()[:12]
         context['banners'] = Banner.objects.filter(status=True, track__status=True).order_by('-id')
         return context
@@ -82,7 +77,6 @@ class DetailTrack(DetailView):
         return track
 
     def get_context_data(self, **kwargs):
-        from django.db import reset_queries, connection
         ip_address = self.request.user.ip_address
         if ip_address not in self.object.hits.all():
             self.object.hits.add(ip_address)
