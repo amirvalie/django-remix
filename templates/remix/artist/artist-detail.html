@@ -31,6 +31,31 @@
                     </div>
                 </div>
                 {% follow_socials %}
+                {% if related_tracks %}
+                    <div class="related-post">
+                        <div class="related-head">
+                            <h2>ریمیکس های هنرمند</h2>
+                        </div>
+                        <div class="related-slider">
+                            <div id="related_slider" class="owl-carousel owl-theme">
+                                {% for related_track in related_tracks %}
+                                    <div class="item item-related">
+                                        <a href="{{related_track.get_absolute_url}}">
+                                            <div class="single-pic">
+                                                <img src="{{related_track.thumbnail.url}}">
+                                            </div></a>
+                                        <div class="content-single-track">
+                                            <div class="title-single-track">
+                                                <a href="#"><h4>{{related_track.title}}</h4></a>
+                                                <h6>{{related_track.finglish_title}}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
             {% model_with_comment_exist artist as exist%}
             {% if exist %}
