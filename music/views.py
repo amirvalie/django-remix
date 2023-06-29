@@ -23,8 +23,9 @@ from site_control.models import (
 
 now = timezone.now()
 
+
 def best_tracks_data(tracks):
-    data=dict()
+    data = dict()
     tracks_url = []
     artists_name = []
     tracks_name = []
@@ -32,7 +33,7 @@ def best_tracks_data(tracks):
     for track in tracks:
         tracks_url.append(track.track_files.first().track_file.url)
 
-    for artist in tracks:
+    for track in tracks:
         try:
             artists_name.append(track.artists.first().name)
         except:
@@ -41,13 +42,14 @@ def best_tracks_data(tracks):
     for track_name in tracks:
         tracks_name.append(track_name.finglish_title)
 
-    tracks_number = [f'_{i}' for i in range(1,tracks.count()+1)]
+    tracks_number = [f'_{i}' for i in range(1, tracks.count() + 1)]
 
-    data['albums']=json.dumps(artists_name)
-    data['trackNames']=json.dumps(tracks_name)
-    data['albumArtworks']=json.dumps(tracks_number)
-    data['trackUrl']=json.dumps(tracks_url)
+    data['albums'] = json.dumps(artists_name)
+    data['trackNames'] = json.dumps(tracks_name)
+    data['albumArtworks'] = json.dumps(tracks_number)
+    data['trackUrl'] = json.dumps(tracks_url)
     return data
+
 
 class Home(ListView):
     queryset = HomePage.objects.filter(status=True)
