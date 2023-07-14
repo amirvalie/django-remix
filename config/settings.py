@@ -36,16 +36,14 @@ THIRD_PARTY_APPS = [
     'site_control',
     'ckeditor',
     'django_cleanup.apps.CleanupConfig',
-
-
 ]
 
 LOCAL_APPS = [
-    'about',
-    'music',
-    'comment',
-    'category',
-    'artist',
+    'about.apps.AboutConfig',
+    'music.apps.MusicConfig',
+    'comment.apps.CommentConfig',
+    'category.apps.CategoryConfig',
+    'artist.apps.ArtistConfig',
 ]
 
 INSTALLED_APPS = [
@@ -55,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    *LOCAL_APPS,
+    *THIRD_PARTY_APPS,
 ]
 
 MIDDLEWARE = [
@@ -67,9 +67,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'music.middelware.SaveIpAddressMiddleware',
     'music.middelware.WrongUrlRedirectMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    *LOCAL_APPS,
-    *THIRD_PARTY_APPS,
 ]
 
 INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
