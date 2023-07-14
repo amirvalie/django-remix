@@ -32,7 +32,6 @@ ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 THIRD_PARTY_APPS = [
-    'debug_toolbar',
     'site_control',
     'ckeditor',
     'django_cleanup.apps.CleanupConfig',
@@ -106,7 +105,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME':env('DB_Name'), 
+        'NAME': env('DB_Name'), 
         'USER': env('DB_USER'),
         'PASSWORD': env('DB_PASSWORD_USER'),
         'HOST': '127.0.0.1', 
@@ -146,12 +145,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+
+if ENVIRONMENT == 'production':
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+else:
+    STATICFILES_DIRS = [
+        BASE_DIR / "static",
+    ]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -163,3 +166,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+if ENVIRONMENT == 'production':
+    DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+    DROPBOX_OAUTH2_TOKEN = env('DROPBOX_ACCESS_TOKEN')
