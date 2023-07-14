@@ -31,6 +31,22 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
+THIRD_PARTY_APPS = [
+    'debug_toolbar',
+    'site_control',
+    'ckeditor',
+    'django_cleanup.apps.CleanupConfig',
+
+
+]
+
+LOCAL_APPS = [
+    'about',
+    'music',
+    'comment',
+    'category',
+    'artist',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -39,16 +55,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # apps
-    'django_cleanup.apps.CleanupConfig',
-    'about',
-    'ckeditor',
-    'music',
-    'comment',
-    'category',
-    'artist',
-    'site_control',
-    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +68,8 @@ MIDDLEWARE = [
     'music.middelware.SaveIpAddressMiddleware',
     'music.middelware.WrongUrlRedirectMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    *LOCAL_APPS,
+    *THIRD_PARTY_APPS,
 ]
 
 INTERNAL_IPS = ("127.0.0.1", "172.17.0.1")
@@ -143,12 +151,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
