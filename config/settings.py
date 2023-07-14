@@ -169,3 +169,4 @@ LOGOUT_REDIRECT_URL = '/'
 if ENVIRONMENT == 'production':
     DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
     DROPBOX_OAUTH2_TOKEN = env('DROPBOX_ACCESS_TOKEN')
+    DROPBOX_ROOT_PATH = env('DROPBOX_ROOT_PATH')
